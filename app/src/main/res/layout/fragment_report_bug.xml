@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="20dp">
+
+    <TextView
+        android:id="@+id/report_bug_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/report_bug"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textStyle="bold"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/report_bug_mail_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/report_bug_header"
+        android:hint="@string/enter_e_mail"/>
+
+    <EditText
+        android:id="@+id/report_bug_name_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/report_bug_mail_et"
+        android:hint="@string/enter_name"/>
+
+    <EditText
+        android:id="@+id/report_bug_message_et"
+        android:hint="@string/enter_message"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/report_bug_name_et"
+        android:background="@drawable/blue_stroke" />
+    <Button
+        android:id="@+id/report_bug_send_button"
+        android:text="@string/send"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/report_bug_message_et"/>
+
+</RelativeLayout>

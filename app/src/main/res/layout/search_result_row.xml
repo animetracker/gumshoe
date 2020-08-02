@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:weightSum="100"
+    android:padding="15dp"
+    android:id="@+id/parent_layout"
+    android:background="@drawable/back"
+    android:layout_margin="10dp">
+
+    <ImageView
+        android:layout_gravity="start"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="80"
+        android:id="@+id/image"/>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="20"
+        android:layout_marginStart="15dp"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/description"
+            android:id="@+id/title_rating_layout">
+
+            <HorizontalScrollView
+                android:layout_width="220dp"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/title_horizontal_scroll">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/title"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:gravity="start"/>
+            </HorizontalScrollView>
+
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:id="@+id/rating"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/title_horizontal_scroll"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginStart="2dp"
+                android:textSize="23sp"
+                android:gravity="end"
+                android:textColor=" #cd6155 "
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/description"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:textColor="#808b96"
+            app:layout_constraintTop_toTopOf="@+id/title_rating_layout"
+            />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/nextEpisode_status_layout"
+            app:layout_constraintTop_toBottomOf="@+id/description"
+            >
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/nextEpisode"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:textColor="#28b463"/>
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:id="@+id/status"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/nextEpisode"
+                android:layout_marginStart="15dp"
+                android:textSize="21sp"
+                android:gravity="end"
+                android:textColor="#2e4053"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

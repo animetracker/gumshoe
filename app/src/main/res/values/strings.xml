@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">GumShoe</string>
+    <string name="series_list">Series List</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="add">Add</string>
+    <string name="series_name">series name</string>
+    <string name="check_connection">Check Connection</string>
+    <string name="try_again">Try Again</string>
+    <string name="no_internet">no_internet</string>
+    <string name="no_internet_connection">No Internet Connection!</string>
+    <string name="problem_accessing_our_database">Problem accessing our database!</string>
+    <string name="please_report_this_issue_by_clicking_the_report_bug_button_in_settings">Please report this issue by clicking the below button or the\n\"Report Bug\" button in Settings.</string>
+    <string name="customisation">Customisation</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="alert_delay">Alert Delay</string>
+    <string name="time_zone">Time Zone</string>
+    <string name="general">General</string>
+    <string name="report_bug">Report Bug</string>
+    <string name="about">About</string>
+    <string name="share">Share</string>
+    <string name="layout">Layout</string>
+    <string name="enter_e_mail">Enter E-mail</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="send">send</string>
+
+    <string-array name="layout_drop_down_options">
+        <item>List</item>
+        <item>Grid</item>
+        <item>No Scroll</item>
+    </string-array>
+
+    <string-array name="alert_delay_drop_down_options">
+        <item>1 min</item>
+        <item>5 min</item>
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>30 min</item>
+        <item>1 hour</item>
+        <item>6 hour</item>
+        <item>12 hours</item>
+        <item>1 day</item>
+    </string-array>
+
+    <string-array name="time_zone_drop_down_options">
+        <item>GMT</item>
+        <item>JST</item>
+        <item>EST</item>
+        <item>EET</item>
+    </string-array>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>
