@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.series.series_list;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -97,9 +98,8 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             more_info = itemView.findViewById(R.id.series_more_info_image);
 
             itemView.setOnClickListener(v ->
-            {
-                onSeriesListener.onSeriesClick(list.get(getAdapterPosition()));
-            });
+                    onSeriesListener.onSeriesClick(list.get(getAdapterPosition()))
+            );
 
             more_info.setOnClickListener(v ->
             {
@@ -109,10 +109,39 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
                 popup.getMenuInflater().inflate(R.menu.series_more_info_dropdown, popup.getMenu());
 
+                setupDropDownOnClick(popup, list.get(getAdapterPosition()));
+
                 popup.show();
             });
         }
     }
+
+    private void setupDropDownOnClick(PopupMenu popup, Series selectedSeries)
+    {
+        String title = selectedSeries.title;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getTitle().toString())
+            {
+                case "Change Color":
+                    Toast.makeText(context, "You want to change color of \"" + title +"\"", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Change Alert Delay":
+                    Toast.makeText(context, "You want to change alert delay of \"" + title +"\"", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Hide":
+                    Toast.makeText(context, "You want to hide \"" + title +"\"", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Remove":
+                    Toast.makeText(context, "You want to remove \"" + title +"\"", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        });
+    }
+
 
     public interface OnSeriesListener
     {
