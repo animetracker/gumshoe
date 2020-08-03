@@ -8,14 +8,16 @@ public class Series implements Serializable
     String cover_image;
     String air_date;
     String description;
+    int anilist_id;
     int episode_number;
 
-    public Series(String title, String cover_image, String air_date, int episode_number, String description) {
+    public Series(String title, String cover_image, String air_date, String description, int anilist_id, int episode_number) {
         this.title = title;
         this.cover_image = cover_image;
         this.air_date = air_date;
-        this.episode_number = episode_number;
         this.description = description;
+        this.anilist_id = anilist_id;
+        this.episode_number = episode_number;
     }
 
     public int getEpisode_number() {
@@ -36,5 +38,9 @@ public class Series implements Serializable
 
     public String getDescription() {
         return description;
+    }
+
+    public int getAnilist_id() {
+        return anilist_id;
     }
 }

@@ -1,6 +1,7 @@
 package com.alexzamurca.animetrackersprint2.series.series_list;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -135,7 +137,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                     break;
 
                 case "Remove":
-                    Toast.makeText(context, "You want to remove \"" + title +"\"", Toast.LENGTH_SHORT).show();
+                    RemoveAsync removeAsync = new RemoveAsync();
+                    removeAsync.setSelectedSeries(selectedSeries);
+                    removeAsync.execute();
                     break;
             }
             return true;
@@ -146,6 +150,40 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     public interface OnSeriesListener
     {
         void onSeriesClick(Series series);
+    }
+
+    private class RemoveAsync extends AsyncTask<Void, Void, Void>
+    {
+        private boolean isSeriesRemoved;
+        private Series selectedSeries;
+        
+        public void setSelectedSeries(Series selectedSeries)
+        {
+            this.selectedSeries = selectedSeries;
+        }
+        
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            Remove remove = new Remove(0, selectedSeries.getAnilist_id());
+            isSeriesRemoved = remove.remove();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) 
+        {
+            String title = selectedSeries.getTitle();
+            if(isSeriesRemoved)
+            {
+                Toast.makeText(context, "\"" + title +"\" is no longer in your series list.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(context, "Failed to remove \"" + title +"\", it is still in your series list.", Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(aVoid);
+        }
     }
     
 }

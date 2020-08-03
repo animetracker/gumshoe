@@ -25,8 +25,9 @@ public class GraphQLRequest
         POST post = new POST("https://graphql.anilist.co",queryBuilder.get());
         try
         {
-            Log.println(Log.INFO,"graphQLRequest", post.getResponse());
-            return new JSONObject(post.getResponse());
+            String response = post.sendRequest();
+            Log.println(Log.INFO,"graphQLRequest", response);
+            return new JSONObject(response);
         }
         catch(JSONException e)
         {Log.println(Log.ERROR,"graphQLRequest", "Got a JSON Exception");}

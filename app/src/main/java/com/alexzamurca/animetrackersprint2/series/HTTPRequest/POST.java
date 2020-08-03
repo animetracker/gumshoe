@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 public class POST
 {
     private final String url;
-    private final JSONObject json_to_send;
+    private JSONObject json_to_send;
 
     private static final String TAG = "POST";
 
@@ -28,6 +28,29 @@ public class POST
     {
         this.url = url;
         this.json_to_send = json_to_send;
+    }
+
+    public POST(String url)
+    {
+        this.url = url;
+    }
+
+    public boolean sendSimpleRequest()
+    {
+        try
+        {
+            // Establish connection / request
+            URL url_object = new URL(url);
+            HttpURLConnection urlConnection = (HttpURLConnection) url_object.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoOutput(true);
+
+            urlConnection.connect();
+            return urlConnection.getResponseCode()==200;
+        }
+        catch(Exception e)
+        {Log.e("CATCH", e.toString());}
+        return false;
     }
 
     public String sendRequest()
@@ -103,11 +126,6 @@ public class POST
             Log.d(TAG, "getStringFromInputStream: NullPointerException");
         }
         return response.toString();
-    }
-
-    public String getResponse()
-    {
-        return sendRequest();
     }
 
 }

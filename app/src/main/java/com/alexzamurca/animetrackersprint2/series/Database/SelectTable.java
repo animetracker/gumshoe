@@ -54,6 +54,7 @@ public class SelectTable
             String air_date ="";
             String cover_image = "";
             String description = "";
+            int anilist_id = -1;
 
 
             try {
@@ -93,7 +94,13 @@ public class SelectTable
                 Log.d(TAG, "getTitles: JSONException when trying to get description");
             }
 
-            seriesList.add(new Series(title, cover_image, air_date, next_episode_number, description));
+            try {
+                anilist_id = jsonResponse.getJSONObject(i).getInt("anilist_id");
+            } catch (JSONException e) {
+                Log.d(TAG, "getTitles: JSONException when trying to get description");
+            }
+
+            seriesList.add(new Series(title, cover_image, air_date, description,anilist_id,next_episode_number));
         }
         wasRequestSuccessful = true;
         return seriesList;
