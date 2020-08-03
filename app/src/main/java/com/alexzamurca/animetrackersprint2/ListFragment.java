@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,11 +30,15 @@ import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 
+import net.sourceforge.htmlunit.corejs.javascript.tools.shell.Main;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener {
     private static final String TAG = "ListFragment";
+    private FragmentActivity mContext;
+
     private ArrayList<Series> list = new ArrayList<>();
     private SeriesRecyclerViewAdapter adapter;
     private TextView emptyListTV;
@@ -86,6 +92,15 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         ft.commit();
     }
 
+
+
+    @Override
+    public void onAttach(@NonNull Context context)
+    {
+        mContext = (FragmentActivity)context;
+        super.onAttach(context);
+    }
+
     private void showSeriesInfoFragment(Series series)
     {
         SeriesInfoFragment seriesInfoFragment = new SeriesInfoFragment();
@@ -94,7 +109,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         arguments.putSerializable("series", series);
         seriesInfoFragment.setArguments(arguments);
 
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        final FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, seriesInfoFragment, "SeriesInfoFragment");
         ft.addToBackStack("ListFragment");
         ft.commit();

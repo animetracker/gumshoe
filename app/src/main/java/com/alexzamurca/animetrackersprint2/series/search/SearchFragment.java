@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2.series.search;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,18 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.alexzamurca.animetrackersprint2.ListFragment;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 public class SearchFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SearchRecyclerViewAdapter.RowClickListener {
 
     private static final String TAG = "SearchActivity";
+    private FragmentActivity mContext;
 
     private ArrayList<SearchResult> list = new ArrayList<>();
     private SearchRecyclerViewAdapter adapter;
@@ -80,7 +80,7 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
         Bundle args = new Bundle();
         args.putSerializable("data", this);
         dialog.setArguments(args);
-        dialog.show(getFragmentManager(), "NoCustomDialog");
+        dialog.show(mContext.getSupportFragmentManager(), "NoCustomDialog");
     }
 
     private void initImageBitmaps()
@@ -92,19 +92,25 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new SearchRecyclerViewAdapter(getContext(), list, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), getFragmentManager());
+        adapter = new SearchRecyclerViewAdapter(getContext(), list, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), mContext.getSupportFragmentManager());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
+    @Override
+    public void onAttach(@NonNull Context context)
+    {
+        mContext = (FragmentActivity)context;
+        super.onAttach(context);
+    }
 
     @Override
     public void OnSuccessfulClick()
     {
         Toast.makeText(getContext(), "Search has refreshed", Toast.LENGTH_SHORT).show();
 
-        FragmentTransaction tr = getFragmentManager().beginTransaction();
+        FragmentTransaction tr = mContext.getSupportFragmentManager().beginTransaction();
         tr.replace(R.id.fragment_container, new SearchFragment());
         tr.commit();
 

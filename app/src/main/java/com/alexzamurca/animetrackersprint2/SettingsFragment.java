@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.alexzamurca.animetrackersprint2.settings.ReportBugFragment;
@@ -19,6 +21,14 @@ import com.alexzamurca.animetrackersprint2.settings.ReportBugFragment;
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
+    private FragmentActivity mContext;
+
+    @Override
+    public void onAttach(@NonNull Context context)
+    {
+        mContext = (FragmentActivity)context;
+        super.onAttach(context);
+    }
 
     @Nullable
     @Override
@@ -31,7 +41,7 @@ public class SettingsFragment extends Fragment
         reportBug.setOnClickListener(view1 ->
         {
             ReportBugFragment reportBugFragment = new ReportBugFragment();
-            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            final FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
             Log.d(TAG, "onCreateView: report bug clicked");
             ft.replace(R.id.fragment_container, reportBugFragment, "ReportBugFragment");
             ft.addToBackStack("SettingsFragment");
