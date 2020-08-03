@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/change_color"
+        android:title="@string/change_color"/>
+
+    <item
+        android:id="@+id/change_alert_delay"
+        android:title="@string/change_alert_delay"/>
+
+    <item
+        android:id="@+id/hide"
+        android:title="@string/hide"/>
+
+    <item
+        android:id="@+id/remove"
+        android:title="@string/remove"/>
+
+</menu>

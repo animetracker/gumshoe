@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,6 +104,12 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             more_info.setOnClickListener(v ->
             {
                 Toast.makeText(context, "You want more info for \""+ list.get(getAdapterPosition()).getTitle() +"\"!", Toast.LENGTH_SHORT).show();
+
+                PopupMenu popup = new PopupMenu(context, v);
+
+                popup.getMenuInflater().inflate(R.menu.series_more_info_dropdown, popup.getMenu());
+
+                popup.show();
             });
         }
     }

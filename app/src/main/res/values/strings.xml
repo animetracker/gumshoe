@@ -24,6 +24,8 @@
     <string name="enter_name">Enter Name</string>
     <string name="enter_message">Enter Message</string>
     <string name="send">send</string>
+    <string name="remove">Remove</string>
+    <string name="hide">Hide</string>
 
     <string-array name="layout_drop_down_options">
         <item>List</item>
@@ -63,4 +65,6 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="change_color">Change Color</string>
+    <string name="change_alert_delay">Change Alert Delay</string>
 </resources>
