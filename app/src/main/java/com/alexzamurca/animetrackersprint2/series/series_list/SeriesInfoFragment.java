@@ -31,9 +31,7 @@ public class SeriesInfoFragment extends Fragment
         titleTV = view.findViewById(R.id.individual_series_title);
         coverImage = view.findViewById(R.id.individual_series_cover_image);
 
-        // NEED TO CHANGE THIS
-        descriptionTV.setText("klfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbgklfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbgklfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbgklfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbgklfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbgklfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbgklfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbgklfjdbsglskdfjbgkb;lsdfkhbgk;ldbsf;kljgbsdfkjlbg;kjdsfbgjfdk;sbgkjsbdfgbkdjsbfk;gb;dfskbg");
-
+        descriptionTV.setText(selectedSeries.getDescription());
         titleTV.setText(selectedSeries.getTitle());
 
         String image_directory = selectedSeries.getCover_image();
