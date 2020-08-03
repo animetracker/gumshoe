@@ -13,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexzamurca.animetrackersprint2.ListFragment;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.bumptech.glide.Glide;
@@ -28,12 +30,14 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     private List<Series> list;
     private Context context;
     private OnSeriesListener onSeriesListener;
+    private FragmentManager fragmentManager;
 
-    public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener)
+    public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, FragmentManager fragmentManager)
     {
         this.list = list;
         this.context = context;
         this.onSeriesListener = onSeriesListener;
+        this.fragmentManager = fragmentManager;
     }
 
     @NonNull
@@ -118,6 +122,11 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         }
     }
 
+    private void refreshSeriesList()
+    {
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, new ListFragment(), "ListFragment").commit();
+    }
+
     private void setupDropDownOnClick(PopupMenu popup, Series selectedSeries)
     {
         String title = selectedSeries.title;
@@ -142,6 +151,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                     removeAsync.execute();
                     break;
             }
+            refreshSeriesList();
             return true;
         });
     }

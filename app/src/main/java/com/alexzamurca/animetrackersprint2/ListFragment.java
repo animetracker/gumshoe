@@ -206,7 +206,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             // Database connection dialog
             if(wasRequestSuccessful)
             {
-                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this);
+                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mContext.getSupportFragmentManager());
                 initRecyclerView();
             }
             else
