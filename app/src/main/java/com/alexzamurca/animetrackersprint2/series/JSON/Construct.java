@@ -25,25 +25,27 @@ public class Construct
         JSONObject json = new JSONObject();
         try
         {
+            Log.d(TAG, "constructFormattedJSON: INSERTING \n\n\n");
             json.put("user_id", user_id);
+            Log.d(TAG, "constructFormattedJSON: user_id: " + user_id);
             try
             {
                 String title = unformattedJson.getJSONObject("title").getString("english");
-                Log.d(TAG, "constructFormattedJSON: English title: " + title);
                 if (title.equals("null"))
                 {
-                    Log.d(TAG, "constructFormattedJSON: english title unavailable so using romaji title instead!");
                     title =  unformattedJson.getJSONObject("title").getString("romaji");
                 }
                 json.put("title", title);
+                Log.d(TAG, "constructFormattedJSON: title: " + title);
             }
             catch(JSONException e)
             {
-                Log.d(TAG, "constructFormattedJSON: english title unavailable so using romaji title instead!");
                 json.put("title", unformattedJson.getJSONObject("title").getString("romaji"));
+                Log.d(TAG, "constructFormattedJSON: title: " + unformattedJson.getJSONObject("title").getString("romaji"));
             }
 
-            json.put("AniList_id", unformattedJson.getInt("id"));
+            json.put("anilist_id", unformattedJson.getInt("id"));
+            Log.d(TAG, "constructFormattedJSON: anilist_id:" + unformattedJson.getInt("id"));
 
             try
             {
@@ -85,6 +87,11 @@ public class Construct
             json.put("air_date", air_date);
 
             json.put("cover_image", unformattedJson.getJSONObject("coverImage").getString("large"));
+
+
+            Log.d(TAG, "constructFormattedJSON: description" + unformattedJson.getString("description"));
+            json.put("description", unformattedJson.getString("description"));
+            Log.d(TAG, "constructFormattedJSON: \n\n\n");
 
         }
         catch(JSONException e)

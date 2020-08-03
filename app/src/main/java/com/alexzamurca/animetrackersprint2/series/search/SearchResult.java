@@ -11,6 +11,7 @@ public class SearchResult implements Serializable
     private String status;
     private String image_directory;
 
+
     public SearchResult(String title, String rating, String description, String next_episode, String status, String image_directory) {
         this.title = title;
         this.rating = rating;
