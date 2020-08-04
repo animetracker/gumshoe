@@ -36,7 +36,6 @@ public class SettingsFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-
         TextView reportBug = view.findViewById(R.id.settings_report_bug_header);
         reportBug.setOnClickListener(view1 ->
         {
@@ -51,11 +50,14 @@ public class SettingsFragment extends Fragment
         // This method is used to create the dark mode using the switch
         Switch darkModeSwitch= view.findViewById(R.id.settings_dark_mode_switch);
         darkModeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if(isChecked){
+            if(isChecked)
+            {
                 // Dark mode
                 Log.d(TAG, "onCheckedChanged: change to dark mode");
                 //getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            }else{
+            }
+            else
+            {
                 // Light mode
                 Log.d(TAG, "onCheckedChanged: change to light mode");
                 //getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);

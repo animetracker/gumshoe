@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/listFragment"
+    android:id="@+id/bottom_nav">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.alexzamurca.animetrackersprint2.ListFragment"
+        android:label="Series List"
+        tools:layout="@layout/fragment_series_list">
+        <action
+            android:id="@+id/action_listFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_seriesInfoFragment"
+            app:destination="@id/seriesInfoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.alexzamurca.animetrackersprint2.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile"/>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.alexzamurca.animetrackersprint2.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_reportBugFragment"
+            app:destination="@id/reportBugFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reportBugFragment"
+        android:name="com.alexzamurca.animetrackersprint2.settings.ReportBugFragment"
+        android:label="ReportBugFragment" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.alexzamurca.animetrackersprint2.series.search.SearchFragment"
+        android:label="SearchFragment" />
+    <fragment
+        android:id="@+id/seriesInfoFragment"
+        android:name="com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment"
+        android:label="fragment_series_info"
+        tools:layout="@layout/fragment_series_info" />
+
+</navigation>
