@@ -17,7 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,8 +30,6 @@ import com.alexzamurca.animetrackersprint2.series.search.SearchFragment;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
-
-import net.sourceforge.htmlunit.corejs.javascript.tools.shell.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +43,15 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private TextView emptyListTV;
     private ImageView emptyListImage;
     private LinearLayout emptyListLayout;
+    
+    private View mView;
+    private NavController mNavController;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_series_list, container, false);
+        mView = inflater.inflate(R.layout.fragment_series_list, container, false);
 
         Log.d(TAG, "onCreate: starting");
 
@@ -65,10 +67,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
         }
 
-        Button searchButton = view.findViewById(R.id.series_search_button);
-        emptyListTV = view.findViewById(R.id.series_empty_list);
-        emptyListImage = view.findViewById(R.id.series_empty_list_image);
-        emptyListLayout = view.findViewById(R.id.series_empty_list_linear_layout);
+        Button searchButton = mView.findViewById(R.id.series_search_button);
+        emptyListTV = mView.findViewById(R.id.series_empty_list);
+        emptyListImage = mView.findViewById(R.id.series_empty_list_image);
+        emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
 
         initImageBitmaps();
 
@@ -80,16 +82,26 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
             changeToSearchFragment();
         });
-        return view;
+        return mView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mNavController = Navigation.findNavController(view);
     }
 
     private void changeToSearchFragment()
     {
+        mNavController.navigate(R.id.action_adding_new_series);
+        /*
         SearchFragment searchFragment = new SearchFragment();
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        final FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, searchFragment, "SearchFragment");
         ft.addToBackStack("ListFragment");
         ft.commit();
+         */
     }
 
 
@@ -103,16 +115,22 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
     private void showSeriesInfoFragment(Series series)
     {
-        SeriesInfoFragment seriesInfoFragment = new SeriesInfoFragment();
+
 
         Bundle arguments = new Bundle();
         arguments.putSerializable("series", series);
-        seriesInfoFragment.setArguments(arguments);
 
+        mNavController.navigate(R.id.action_showing_series_info, arguments);
+
+        /*
+        SeriesInfoFragment seriesInfoFragment = new SeriesInfoFragment();
+        seriesInfoFragment.setArguments(arguments);
         final FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, seriesInfoFragment, "SeriesInfoFragment");
         ft.addToBackStack("ListFragment");
         ft.commit();
+
+         */
     }
 
 
@@ -122,7 +140,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         Bundle args = new Bundle();
         args.putSerializable("data", this);
         dialog.setArguments(args);
-        dialog.show(getFragmentManager(), "NoConnectionDialog");
+        dialog.show(mContext.getSupportFragmentManager(), "NoConnectionDialog");
     }
 
     private void initImageBitmaps()
@@ -150,9 +168,13 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     {
         Toast.makeText(getContext(), "Series List has refreshed", Toast.LENGTH_SHORT).show();
 
-        FragmentTransaction tr = getFragmentManager().beginTransaction();
+        mNavController.navigate(R.id.listFragment);
+
+        /*
+        FragmentTransaction tr = mContext.getSupportFragmentManager().beginTransaction();
         tr.replace(R.id.fragment_container, new ListFragment());
         tr.commit();
+         */
     }
 
     @Override
@@ -206,13 +228,13 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             // Database connection dialog
             if(wasRequestSuccessful)
             {
-                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mContext.getSupportFragmentManager());
+                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, Navigation.findNavController(mView));
                 initRecyclerView();
             }
             else
             {
                 NoDatabaseDialog dialog = new NoDatabaseDialog();
-                dialog.show(getFragmentManager(), "NoDatabaseDialog");
+                dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
             }
 
             super.onPostExecute(aVoid);

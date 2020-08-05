@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.settings.ReportBugFragment;
 
@@ -39,12 +41,16 @@ public class SettingsFragment extends Fragment
         TextView reportBug = view.findViewById(R.id.settings_report_bug_header);
         reportBug.setOnClickListener(view1 ->
         {
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_reporting_bug);
+            /*
             ReportBugFragment reportBugFragment = new ReportBugFragment();
             final FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
             Log.d(TAG, "onCreateView: report bug clicked");
             ft.replace(R.id.fragment_container, reportBugFragment, "ReportBugFragment");
             ft.addToBackStack("SettingsFragment");
             ft.commit();
+             */
         });
 
         // This method is used to create the dark mode using the switch

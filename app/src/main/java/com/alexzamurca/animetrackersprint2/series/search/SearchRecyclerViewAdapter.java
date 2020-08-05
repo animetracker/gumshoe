@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
@@ -40,16 +41,16 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     private TextView noSearchResultsTV;
     private View searchActivityView;
     public String title_content;
-    private FragmentManager fragmentManager;
+    private NavController navController;
 
-    public SearchRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, FragmentManager fragmentManager)
+    public SearchRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, NavController navController)
     {
         this.list = list;
         this.context = context;
         this.rowClickListener  = rowClickListener;
         this.noSearchResultsTV = noSearchResultsTV;
         this.searchActivityView = searchActivityView;
-        this.fragmentManager = fragmentManager;
+        this.navController = navController;
     }
 
     @NonNull
@@ -128,10 +129,14 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     insert(getAdapterPosition());
 
                     Log.d(TAG, "ViewHolder: selected result is stored");
+
+                    navController.navigate(R.id.action_selected_search_result);
+                    /*
                     //Go back to previous fragment
                     FragmentTransaction tr = fragmentManager.beginTransaction();
                     tr.replace(R.id.fragment_container, new ListFragment());
                     tr.commit();
+                     */
                 }
                 else
                 {

@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.ListFragment;
@@ -30,14 +32,14 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     private List<Series> list;
     private Context context;
     private OnSeriesListener onSeriesListener;
-    private FragmentManager fragmentManager;
+    private NavController navController;
 
-    public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, FragmentManager fragmentManager)
+    public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, NavController navController)
     {
         this.list = list;
         this.context = context;
         this.onSeriesListener = onSeriesListener;
-        this.fragmentManager = fragmentManager;
+        this.navController = navController;
     }
 
     @NonNull
@@ -124,7 +126,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
     private void refreshSeriesList()
     {
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, new ListFragment(), "ListFragment").commit();
+        navController.navigate(R.id.listFragment);
     }
 
     private void setupDropDownOnClick(PopupMenu popup, Series selectedSeries)

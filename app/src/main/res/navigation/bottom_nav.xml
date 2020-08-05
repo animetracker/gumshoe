@@ -11,10 +11,10 @@
         android:label="Series List"
         tools:layout="@layout/fragment_series_list">
         <action
-            android:id="@+id/action_listFragment_to_searchFragment"
+            android:id="@+id/action_adding_new_series"
             app:destination="@id/searchFragment" />
         <action
-            android:id="@+id/action_listFragment_to_seriesInfoFragment"
+            android:id="@+id/action_showing_series_info"
             app:destination="@id/seriesInfoFragment" />
     </fragment>
 
@@ -30,7 +30,7 @@
         android:label="Settings"
         tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_settingsFragment_to_reportBugFragment"
+            android:id="@+id/action_reporting_bug"
             app:destination="@id/reportBugFragment" />
     </fragment>
     <fragment
@@ -40,7 +40,11 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.search.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_selected_search_result"
+            app:destination="@id/listFragment" />
+    </fragment>
     <fragment
         android:id="@+id/seriesInfoFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment"

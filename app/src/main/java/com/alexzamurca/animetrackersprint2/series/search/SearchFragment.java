@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +30,7 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
 
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
+    private NavController navController;
 
     private ArrayList<SearchResult> list = new ArrayList<>();
     private SearchRecyclerViewAdapter adapter;
@@ -40,7 +43,16 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
     {
         globalView = inflater.inflate(R.layout.fragment_search, container, false);
         Log.d(TAG, "onCreate: started");
-        editText = globalView.findViewById(R.id.search_edit_text);
+
+
+        return globalView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+        editText = view.findViewById(R.id.search_edit_text);
         initImageBitmaps();
         initRecyclerView();
 
@@ -53,8 +65,6 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
             }
             return false;
         });
-        
-        return globalView;
     }
 
     private void searchProcess()
@@ -92,7 +102,7 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new SearchRecyclerViewAdapter(getContext(), list, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), mContext.getSupportFragmentManager());
+        adapter = new SearchRecyclerViewAdapter(getContext(), list, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -110,9 +120,14 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
     {
         Toast.makeText(getContext(), "Search has refreshed", Toast.LENGTH_SHORT).show();
 
+
+        navController.navigate(R.id.searchFragment);
+        /*
         FragmentTransaction tr = mContext.getSupportFragmentManager().beginTransaction();
         tr.replace(R.id.fragment_container, new SearchFragment());
         tr.commit();
+
+         */
 
     }
 
