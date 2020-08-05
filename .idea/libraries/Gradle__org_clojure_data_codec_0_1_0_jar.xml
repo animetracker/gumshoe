@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.clojure:data.codec:0.1.0@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.clojure/data.codec/0.1.0/7c1eb04238edd003bd2a89906003145a003ab5c3/data.codec-0.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.clojure/data.codec/0.1.0/863012ed5712c10452b1b75ad2fe3e5c831f4917/data.codec-0.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

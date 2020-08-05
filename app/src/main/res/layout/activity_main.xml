@@ -14,9 +14,12 @@
         app:menu="@menu/bottom_nav_menu"
         android:background="?android:attr/windowBackground"/>
 
-    <FrameLayout
+    <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment_container"
-        android:layout_above="@id/bottom_nav_view"/>
+        android:layout_above="@id/bottom_nav_view"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:defaultNavHost = "true"
+        app:navGraph="@navigation/bottom_nav"/>
 </RelativeLayout>
