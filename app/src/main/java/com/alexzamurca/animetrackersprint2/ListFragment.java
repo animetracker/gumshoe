@@ -115,8 +115,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
     private void showSeriesInfoFragment(Series series)
     {
-
-
         Bundle arguments = new Bundle();
         arguments.putSerializable("series", series);
 
@@ -222,6 +220,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             }
             else
             {
+                list.clear();
                 list.addAll(tempList);
             }
 

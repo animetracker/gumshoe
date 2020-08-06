@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity
 {
+    private NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -18,9 +19,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
-        NavController navController = Navigation.findNavController(this, R.id.fragment_container);
+        navController = Navigation.findNavController(this, R.id.fragment_container);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.listFragment, R.id.profileFragment, R.id.settingsFragment).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        navController.navigateUp();
+        return super.onSupportNavigateUp();
     }
 }

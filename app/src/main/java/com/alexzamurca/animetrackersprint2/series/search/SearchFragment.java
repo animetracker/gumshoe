@@ -48,6 +48,8 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
         return globalView;
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
