@@ -26,9 +26,7 @@ import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
-import com.alexzamurca.animetrackersprint2.series.search.SearchFragment;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
-import com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 
 import java.util.ArrayList;

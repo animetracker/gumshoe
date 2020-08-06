@@ -24,15 +24,17 @@ public class SeriesInfoFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
     {
         View view = inflater.inflate(R.layout.fragment_series_info, container, false);
-        
+
         Bundle arguments = getArguments();
         Series selectedSeries = (Series)arguments.getSerializable("series");
         descriptionTV = view.findViewById(R.id.individual_series_description);
         titleTV = view.findViewById(R.id.individual_series_title);
         coverImage = view.findViewById(R.id.individual_series_cover_image);
 
+        String title = selectedSeries.getTitle();
+
         descriptionTV.setText(selectedSeries.getDescription());
-        titleTV.setText(selectedSeries.getTitle());
+        titleTV.setText(title);
 
         String image_directory = selectedSeries.getCover_image();
         // Setting the image

@@ -12,10 +12,18 @@
         tools:layout="@layout/fragment_series_list">
         <action
             android:id="@+id/action_adding_new_series"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/searchFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_showing_series_info"
-            app:destination="@id/seriesInfoFragment" />
+            app:destination="@id/seriesInfoFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
 
     <fragment
@@ -31,24 +39,32 @@
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_reporting_bug"
-            app:destination="@id/reportBugFragment" />
+            app:destination="@id/reportBugFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
     <fragment
         android:id="@+id/reportBugFragment"
         android:name="com.alexzamurca.animetrackersprint2.settings.ReportBugFragment"
-        android:label="ReportBugFragment" />
+        android:label="Report A Bug" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.search.SearchFragment"
-        android:label="SearchFragment" >
+        android:label="Add a new Series" >
         <action
             android:id="@+id/action_selected_search_result"
-            app:destination="@id/listFragment" />
+            app:destination="@id/listFragment"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/seriesInfoFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment"
-        android:label="fragment_series_info"
+        android:label="More Series Info"
         tools:layout="@layout/fragment_series_info" />
 
 </navigation>
