@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 public class ProfileFragment extends Fragment
@@ -16,8 +18,13 @@ public class ProfileFragment extends Fragment
     
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: yoyoyyoyoyo");
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        Toolbar toolbar = view.findViewById(R.id.profile_toolbar_object);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+
+        return view;
     }
 }

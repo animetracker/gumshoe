@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
@@ -28,6 +33,7 @@ import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +59,11 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
         Log.d(TAG, "onCreate: starting");
 
+        Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
+        setHasOptionsMenu(true);
+
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
         CheckConnection checkConnection = new CheckConnection(getContext());
         boolean isConnected = checkConnection.isConnected();
         if (isConnected)
@@ -65,7 +76,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
         }
 
-        Button searchButton = mView.findViewById(R.id.series_search_button);
+        FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
         emptyListTV = mView.findViewById(R.id.series_empty_list);
         emptyListImage = mView.findViewById(R.id.series_empty_list_image);
         emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
@@ -74,9 +85,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
 
         // Search button
-        searchButton.setOnClickListener(v ->
+        addButton.setOnClickListener(v ->
         {
-            Log.d(TAG, "onClick: Clicked search_button");
+            Log.d(TAG, "onClick: Clicked add_button");
 
             changeToSearchFragment();
         });
@@ -90,16 +101,33 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         mNavController = Navigation.findNavController(view);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.series_list_toolbar_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.series_list_toolbar_search:
+                Toast.makeText(getContext(), "You want to search", Toast.LENGTH_LONG).show();
+                //navController.navigate(R.id.action_mainFragment_to_secondaryFragment);
+                break;
+
+            case R.id.series_list_toolbar_sort:
+                Toast.makeText(getContext(), "You want to sort", Toast.LENGTH_LONG).show();
+                break;
+        }
+
+
+        return true;
+    }
+
     private void changeToSearchFragment()
     {
         mNavController.navigate(R.id.action_adding_new_series);
-        /*
-        SearchFragment searchFragment = new SearchFragment();
-        final FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, searchFragment, "SearchFragment");
-        ft.addToBackStack("ListFragment");
-        ft.commit();
-         */
     }
 
 
@@ -117,16 +145,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         arguments.putSerializable("series", series);
 
         mNavController.navigate(R.id.action_showing_series_info, arguments);
-
-        /*
-        SeriesInfoFragment seriesInfoFragment = new SeriesInfoFragment();
-        seriesInfoFragment.setArguments(arguments);
-        final FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, seriesInfoFragment, "SeriesInfoFragment");
-        ft.addToBackStack("ListFragment");
-        ft.commit();
-
-         */
     }
 
 
@@ -165,12 +183,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         Toast.makeText(getContext(), "Series List has refreshed", Toast.LENGTH_SHORT).show();
 
         mNavController.navigate(R.id.listFragment);
-
-        /*
-        FragmentTransaction tr = mContext.getSupportFragmentManager().beginTransaction();
-        tr.replace(R.id.fragment_container, new ListFragment());
-        tr.commit();
-         */
     }
 
     @Override

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="@string/search"
+        android:id="@+id/series_list_toolbar_search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+
+        />
+
+    <item
+        android:title="@string/sort"
+        android:id="@+id/series_list_toolbar_sort"
+        android:icon="@drawable/ic_sort"
+        app:showAsAction="ifRoom"/>
+
+</menu>

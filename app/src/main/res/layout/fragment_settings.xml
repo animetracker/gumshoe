@@ -2,126 +2,138 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="20dp"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/settings_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/customisation"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textStyle="bold"
-        android:textSize="20sp" />
+    <include layout="@layout/settings_toolbar"
+        android:id="@+id/settings_toolbar_object"/>
 
-    <Switch
-        android:id="@+id/settings_dark_mode_switch"
-        android:layout_width="395dp"
-        android:layout_height="50dp"
-        android:text="@string/dark_mode"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_below="@id/settings_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_below="@id/settings_toolbar_object">
 
-    <TextView
-        android:id="@+id/settings_layout_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/settings_dark_mode_switch"
-        android:text="@string/layout"
-        android:gravity="center_vertical"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/settings_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/customisation"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
 
-    <Spinner
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/settings_alert_delay_header"
-        android:layout_alignEnd="@id/settings_layout_header"
-        android:entries="@array/layout_drop_down_options"
-        android:gravity="end" />
+        <Switch
+            android:id="@+id/settings_dark_mode_switch"
+            android:layout_width="395dp"
+            android:layout_height="50dp"
+            android:text="@string/dark_mode"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_below="@id/settings_title"/>
 
-    <TextView
-        android:id="@+id/settings_alert_delay_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/settings_layout_header"
-        android:gravity="center_vertical"
-        android:text="@string/alert_delay"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/settings_layout_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/settings_dark_mode_switch"
+            android:text="@string/layout"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <Spinner
-        android:layout_width="110dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/settings_layout_header"
-        android:layout_alignEnd="@+id/settings_alert_delay_header"
-        android:entries="@array/alert_delay_drop_down_options" />
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/settings_alert_delay_header"
+            android:layout_alignEnd="@id/settings_layout_header"
+            android:entries="@array/layout_drop_down_options"
+            android:gravity="end" />
 
-    <TextView
-        android:id="@+id/settings_time_zone_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/settings_alert_delay_header"
-        android:text="@string/time_zone"
-        android:gravity="center_vertical"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/settings_alert_delay_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/settings_layout_header"
+            android:gravity="center_vertical"
+            android:text="@string/alert_delay"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <Spinner
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/settings_alert_delay_header"
-        android:layout_alignEnd="@+id/settings_time_zone_header"
-        android:entries="@array/time_zone_drop_down_options" />
+        <Spinner
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/settings_layout_header"
+            android:layout_alignEnd="@+id/settings_alert_delay_header"
+            android:entries="@array/alert_delay_drop_down_options" />
 
-    <TextView
-        android:id="@+id/settings_general_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/general"
-        android:layout_below="@id/settings_time_zone_header"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:gravity="center_vertical"
-        />
-    <TextView
-        android:id="@+id/settings_report_bug_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/settings_general_header"
-        android:text="@string/report_bug"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center_vertical"/>
-    <TextView
-        android:id="@+id/settings_about_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/settings_report_bug_header"
-        android:text="@string/about"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center_vertical"/>
-    <TextView
-        android:id="@+id/settings_share_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/settings_about_header"
-        android:gravity="center_vertical"
-        android:text="@string/share"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-    <Button
-        android:id="@+id/settings_donate_button"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/settings_share_header"
-        android:text="DONATE"
-        android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/settings_time_zone_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/settings_alert_delay_header"
+            android:text="@string/time_zone"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/settings_alert_delay_header"
+            android:layout_alignEnd="@+id/settings_time_zone_header"
+            android:entries="@array/time_zone_drop_down_options" />
+
+        <TextView
+            android:id="@+id/settings_general_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/general"
+            android:layout_below="@id/settings_time_zone_header"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/settings_report_bug_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/settings_general_header"
+            android:text="@string/report_bug"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/settings_about_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/settings_report_bug_header"
+            android:text="@string/about"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/settings_share_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/settings_about_header"
+            android:gravity="center_vertical"
+            android:text="@string/share"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/settings_donate_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/settings_share_header"
+            android:text="DONATE"
+            android:textStyle="bold"/>
+
+
+    </RelativeLayout>
 
 </RelativeLayout>

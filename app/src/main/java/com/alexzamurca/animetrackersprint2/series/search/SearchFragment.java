@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
@@ -43,11 +46,14 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
         globalView = inflater.inflate(R.layout.fragment_search, container, false);
         Log.d(TAG, "onCreate: started");
 
+        Toolbar toolbar = globalView.findViewById(R.id.add_series_toolbar_object);
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         return globalView;
     }
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -66,6 +72,15 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
             }
             return false;
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home)
+        {
+            Toast.makeText(getContext(), "BugTest: go back clicked!", Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void searchProcess()

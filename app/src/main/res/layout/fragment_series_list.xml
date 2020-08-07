@@ -1,71 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="200dp"
-        android:text="@string/series_list"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:fontFamily="monospace"
-        android:textColor="#000"
-        android:textAllCaps="true"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    <include layout="@layout/series_list_toolbar"
+        android:id="@+id/series_list_toolbar_object"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/add"
-        android:id="@+id/series_search_button"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="15dp"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:id="@+id/series_recycler_view">
+        android:id="@+id/series_list_constraint_layout"
+        android:layout_below="@id/series_list_toolbar_object">
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal"
-        android:id="@+id/series_empty_list_linear_layout">
-
-        <ImageView
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/series_empty_list_image"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="20dp"/>
+            android:id="@+id/series_list_floating_add_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/pleasantBlue"
+            android:src="@drawable/ic_add"
+            />
 
-
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:textSize="15sp"
-            android:textColor="#ffffff"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:id="@+id/series_empty_list"
-            android:layout_marginEnd="20dp"/>
+            android:id="@+id/series_recycler_view">
 
-    </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal"
+            android:id="@+id/series_empty_list_linear_layout">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/series_empty_list_image"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:textColor="#ffffff"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:id="@+id/series_empty_list"
+                android:layout_marginEnd="20dp"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</RelativeLayout>

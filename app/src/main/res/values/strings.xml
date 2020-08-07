@@ -19,7 +19,6 @@
     <string name="general">General</string>
     <string name="report_bug">Report Bug</string>
     <string name="about">About</string>
-    <string name="share">Share</string>
     <string name="layout">Layout</string>
     <string name="enter_e_mail">Enter E-mail</string>
     <string name="enter_name">Enter Name</string>
@@ -68,4 +67,8 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="change_color">Change Color</string>
     <string name="change_alert_delay">Change Alert Delay</string>
+    <string name="search">Search</string>
+    <string name="sort">Sort</string>
+    <string name="share">Share</string>
+    <string name="go_back">Go Back</string>
 </resources>

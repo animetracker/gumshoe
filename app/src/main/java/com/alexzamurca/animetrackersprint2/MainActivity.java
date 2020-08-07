@@ -3,7 +3,6 @@ package com.alexzamurca.animetrackersprint2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
@@ -20,8 +19,6 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         navController = Navigation.findNavController(this, R.id.fragment_container);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.listFragment, R.id.profileFragment, R.id.settingsFragment).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
