@@ -4,32 +4,33 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexzamurca.animetrackersprint2.ListFragment;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecyclerViewAdapter.ViewHolder>
+public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecyclerViewAdapter.ViewHolder> implements Filterable
 {
     private static final String TAG = "SeriesRecyclerViewAdapter";
 
     private List<Series> list;
+    private List<Series> listBeforeChanges;
     private Context context;
     private OnSeriesListener onSeriesListener;
     private NavController navController;
@@ -37,6 +38,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, NavController navController)
     {
         this.list = list;
+        listBeforeChanges = list;
         this.context = context;
         this.onSeriesListener = onSeriesListener;
         this.navController = navController;
@@ -86,6 +88,61 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    Filter filter = new Filter()
+    {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<Series> filteredList = new ArrayList<>();
+
+            if(constraint.toString().isEmpty())
+            {
+                filteredList.addAll(list);
+            }
+            else
+            {
+                for(Series series:list)
+                {
+                    if(series.getTitle().toLowerCase().contains(constraint.toString().toLowerCase()))
+                    {
+                        filteredList.add(series);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results)
+        {
+            list.clear();
+            list.addAll((Collection<? extends Series>) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    public List<Series> getList()
+    {
+        return list;
+    }
+
+    public void restoreFromList(List<Series> oldList)
+    {
+        list.clear();
+        list.addAll(oldList);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

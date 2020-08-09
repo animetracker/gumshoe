@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -43,6 +45,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private FragmentActivity mContext;
 
     private ArrayList<Series> list = new ArrayList<>();
+    private List<Series> oldList;
     private SeriesRecyclerViewAdapter adapter;
     private TextView emptyListTV;
     private ImageView emptyListImage;
@@ -95,6 +98,13 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     }
 
     @Override
+    public void onAttach(@NonNull Context context)
+    {
+        mContext = (FragmentActivity)context;
+        super.onAttach(context);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -104,6 +114,31 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.series_list_toolbar_menu, menu);
+        MenuItem item = menu.findItem(R.id.series_list_toolbar_search);
+        oldList = new ArrayList<>();
+        
+        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand: expanded");
+                oldList.clear();
+                oldList.addAll(adapter.getList());
+                printList(oldList);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse: collapsed");
+                adapter.restoreFromList(oldList);
+                printList(oldList);
+                Log.d(TAG, "onMenuItemActionCollapse: space needed");
+                printList(adapter.getList());
+                return true;
+            }
+        });
+        SearchView searchView = (SearchView) item.getActionView();
+        manageSearchView(searchView);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -113,30 +148,49 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         {
             case R.id.series_list_toolbar_search:
                 Toast.makeText(getContext(), "You want to search", Toast.LENGTH_LONG).show();
-                //navController.navigate(R.id.action_mainFragment_to_secondaryFragment);
                 break;
 
             case R.id.series_list_toolbar_sort:
                 Toast.makeText(getContext(), "You want to sort", Toast.LENGTH_LONG).show();
                 break;
         }
-
-
         return true;
+    }
+
+    private void manageSearchView(SearchView searchView)
+    {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            // After SearchView closes
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                Log.d(TAG, "onQueryTextSubmit: submitted");
+
+                // Hide keyboard
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mView.findViewById(R.id.series_list_layout).getWindowToken(), 0);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                if(!newText.isEmpty())
+                {
+                    Log.d(TAG, "onQueryTextChange: checking \"" + newText + "\"");
+                    adapter.restoreFromList(oldList);
+                    adapter.getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
     }
 
     private void changeToSearchFragment()
     {
         mNavController.navigate(R.id.action_adding_new_series);
-    }
-
-
-
-    @Override
-    public void onAttach(@NonNull Context context)
-    {
-        mContext = (FragmentActivity)context;
-        super.onAttach(context);
     }
 
     private void showSeriesInfoFragment(Series series)
