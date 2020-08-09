@@ -138,6 +138,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             }
         });
         SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint("search the series list");
         manageSearchView(searchView);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -167,6 +168,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             {
                 Log.d(TAG, "onQueryTextSubmit: submitted");
 
+                adapter.getFilter().filter(query);
+
                 // Hide keyboard
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mView.findViewById(R.id.series_list_layout).getWindowToken(), 0);
@@ -180,8 +183,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 if(!newText.isEmpty())
                 {
                     Log.d(TAG, "onQueryTextChange: checking \"" + newText + "\"");
-                    adapter.restoreFromList(oldList);
-                    adapter.getFilter().filter(newText);
+                    //adapter.restoreFromList(oldList);
+                    //adapter.getFilter().filter(newText);
                 }
                 return true;
             }
