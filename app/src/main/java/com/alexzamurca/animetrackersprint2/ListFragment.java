@@ -31,7 +31,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
+import com.alexzamurca.animetrackersprint2.series.Date.ConvertDateToMillis;
+import com.alexzamurca.animetrackersprint2.series.Date.ConvertMillisToDate;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
+import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
@@ -176,6 +179,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         popup.setOnMenuItemClickListener(item ->
         {
             AlphabeticalSortList alphabeticalSortList = new AlphabeticalSortList(adapter.getList());
+            DateSortSeriesList dateSortSeriesList = new DateSortSeriesList(adapter.getList());
             switch (item.getTitle().toString())
             {
                 case "A-Z":
@@ -204,10 +208,18 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
                 case "Latest":
                     Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
+                    sortedList = dateSortSeriesList.sortMostRecent();
+                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                    printList(sortedList);
+                    adapter.restoreFromList(sortedList);
                     break;
 
                 case "Oldest":
                     Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
+                    sortedList = dateSortSeriesList.sortLeastRecent();
+                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                    printList(sortedList);
+                    adapter.restoreFromList(sortedList);
                     break;
             }
             return true;
