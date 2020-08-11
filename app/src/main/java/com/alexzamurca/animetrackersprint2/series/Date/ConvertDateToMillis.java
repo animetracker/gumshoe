@@ -13,7 +13,7 @@ public class ConvertDateToMillis
 
     public long getDate(String stringDate)
     {
-        if(stringDate != "")
+        if(stringDate.equals(""))
         {
             SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm");
             try
@@ -26,7 +26,6 @@ public class ConvertDateToMillis
                 Log.d(TAG, "getDate: ParseException when converting date to millis");
                 return -1;
             }
-
         }
         return -1;
     }

@@ -35,12 +35,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     private String series_name;
     private Context context;
     private RowClickListener rowClickListener;
+    private LoadedListener loadedListener;
     private TextView noSearchResultsTV;
     private View searchActivityView;
     public String title_content;
     private NavController navController;
 
-    public AddRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, NavController navController)
+    public AddRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, LoadedListener loadedListener, TextView noSearchResultsTV, View searchActivityView, NavController navController)
     {
         this.list = list;
         this.context = context;
@@ -48,6 +49,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         this.noSearchResultsTV = noSearchResultsTV;
         this.searchActivityView = searchActivityView;
         this.navController = navController;
+        this.loadedListener = loadedListener;
     }
 
     @NonNull
@@ -85,6 +87,11 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public interface RowClickListener
     {
         void onFailedClick();
+    }
+
+    public interface LoadedListener
+    {
+        void onFinishedLoading();
     }
 
 
@@ -182,7 +189,9 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Void aVoid)
+        {
+            loadedListener.onFinishedLoading();
             notifyDataSetChanged();
             Log.d("OnPostExecute", "Data set is changed");
             if(list.size() == 0)

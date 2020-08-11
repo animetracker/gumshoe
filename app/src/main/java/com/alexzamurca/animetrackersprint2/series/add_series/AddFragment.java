@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,10 +27,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class AddFragment extends Fragment implements NoConnectionDialog.TryAgainListener, AddRecyclerViewAdapter.RowClickListener {
+public class AddFragment extends Fragment implements NoConnectionDialog.TryAgainListener, AddRecyclerViewAdapter.RowClickListener, AddRecyclerViewAdapter.LoadedListener {
 
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
@@ -38,6 +41,8 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     private AddRecyclerViewAdapter adapter;
     private EditText editText;
     private View globalView;
+    private TextView loadingTV;
+    private ImageView loadingImage;
 
     @Nullable
     @Override
@@ -52,6 +57,9 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        loadingTV = globalView.findViewById(R.id.search_loading_text);
+        loadingImage = globalView.findViewById(R.id.search_loading_image);
+
         return globalView;
     }
 
@@ -63,11 +71,15 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         initImageBitmaps();
         initRecyclerView();
 
-
         editText.setOnEditorActionListener((v, actionId, event) ->
         {
             if (actionId == EditorInfo.IME_ACTION_SEARCH)
             {
+                // Show loading - (credit: http://www.lowgif.com/view.html)
+                Glide.with(getContext())
+                        .load(R.drawable.loading)
+                        .into(loadingImage);
+                loadingTV.setText("Loading...");
                 searchProcess();
             }
             return false;
@@ -118,7 +130,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new AddRecyclerViewAdapter(getContext(), list, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
+        adapter = new AddRecyclerViewAdapter(getContext(), list, this, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -135,14 +147,11 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     public void OnSuccessfulClick()
     {
         Toast.makeText(getContext(), "Search has refreshed", Toast.LENGTH_SHORT).show();
-
-
         navController.navigate(R.id.searchFragment);
         /*
         FragmentTransaction tr = mContext.getSupportFragmentManager().beginTransaction();
         tr.replace(R.id.fragment_container, new SearchFragment());
         tr.commit();
-
          */
 
     }
@@ -151,5 +160,14 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     public void onFailedClick()
     {
         newInstance();
+    }
+
+    @Override
+    public void onFinishedLoading()
+    {
+        Log.d(TAG, "onFinishedLoading: hiding loading");
+        // Hide loading
+        Glide.with(getContext()).clear(loadingImage);
+        loadingTV.setText("");
     }
 }

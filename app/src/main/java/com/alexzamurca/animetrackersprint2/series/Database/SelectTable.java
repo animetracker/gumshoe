@@ -8,6 +8,7 @@ import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class SelectTable
@@ -105,4 +106,5 @@ public class SelectTable
         wasRequestSuccessful = true;
         return seriesList;
     }
+
 }

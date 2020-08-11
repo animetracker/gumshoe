@@ -31,8 +31,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
-import com.alexzamurca.animetrackersprint2.series.Date.ConvertDateToMillis;
-import com.alexzamurca.animetrackersprint2.series.Date.ConvertMillisToDate;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
@@ -40,6 +38,7 @@ import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -55,6 +54,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private TextView emptyListTV;
     private ImageView emptyListImage;
     private LinearLayout emptyListLayout;
+    private TextView loadingTV;
+    private ImageView loadingImage;
     
     private View mView;
     private NavController mNavController;
@@ -69,8 +70,13 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
         Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
         setHasOptionsMenu(true);
-
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        emptyListTV = mView.findViewById(R.id.series_empty_list);
+        emptyListImage = mView.findViewById(R.id.series_empty_list_image);
+        emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
+        loadingTV = mView.findViewById(R.id.series_loading_text);
+        loadingImage = mView.findViewById(R.id.series_loading_image);
 
         CheckConnection checkConnection = new CheckConnection(getContext());
         boolean isConnected = checkConnection.isConnected();
@@ -84,14 +90,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
         }
 
-        FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
-        emptyListTV = mView.findViewById(R.id.series_empty_list);
-        emptyListImage = mView.findViewById(R.id.series_empty_list_image);
-        emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
-
         initImageBitmaps();
 
-
+        FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
         // Search button
         addButton.setOnClickListener(v ->
         {
@@ -298,6 +299,13 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private void initList()
     {
         Log.d(TAG, "initList: db connection");
+
+        // Show loading - (credit: http://www.lowgif.com/view.html)
+        Glide.with(getContext())
+                .load(R.drawable.loading)
+                .into(loadingImage);
+        loadingTV.setText("Loading...");
+
         MySQLConnection mySQLConnection = new MySQLConnection();
         mySQLConnection.execute();
     }
@@ -346,6 +354,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         @Override
         protected void onPostExecute(Void aVoid)
         {
+            // Hide loading
+            Glide.with(getContext()).clear(loadingImage);
+            loadingTV.setText("");
+
             // Empty List
             if(tempList.size() == 0)
             {
