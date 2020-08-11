@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
+import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
@@ -117,9 +119,11 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         MenuItem item = menu.findItem(R.id.series_list_toolbar_search);
         oldList = new ArrayList<>();
         
-        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener()
+        {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(MenuItem item)
+            {
                 Log.d(TAG, "onMenuItemActionExpand: expanded");
                 oldList.clear();
                 oldList.addAll(adapter.getList());
@@ -128,7 +132,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(MenuItem item)
+            {
                 Log.d(TAG, "onMenuItemActionCollapse: collapsed");
                 adapter.restoreFromList(oldList);
                 printList(oldList);
@@ -144,18 +149,69 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
         switch (item.getItemId())
         {
             case R.id.series_list_toolbar_search:
-                Toast.makeText(getContext(), "You want to search", Toast.LENGTH_LONG).show();
                 break;
 
             case R.id.series_list_toolbar_sort:
-                Toast.makeText(getContext(), "You want to sort", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "BugTest: sort clicked", Toast.LENGTH_LONG).show();
+
+                PopupMenu popup = new PopupMenu(getContext(), mView.findViewById(R.id.series_list_toolbar_sort));
+
+                popup.getMenuInflater().inflate(R.menu.series_sort_dropdown, popup.getMenu());
+
+                setupDropDownOnClick(popup);
+
+                popup.show();
                 break;
         }
         return true;
+    }
+
+    private void setupDropDownOnClick(PopupMenu popup)
+    {
+        popup.setOnMenuItemClickListener(item ->
+        {
+            AlphabeticalSortList alphabeticalSortList = new AlphabeticalSortList(adapter.getList());
+            switch (item.getTitle().toString())
+            {
+                case "A-Z":
+                    Log.d(TAG, "setupDropDownOnClick: sort A-Z clicked");
+                    List<Series> sortedList = alphabeticalSortList.sortAlphabetically();
+                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                    printList(sortedList);
+                    adapter.restoreFromList(sortedList);
+                    break;
+
+                case "Z-A":
+                    Log.d(TAG, "setupDropDownOnClick: sort Z-A clicked");
+                    sortedList = alphabeticalSortList.sortReverseAlphabetically();
+                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                    printList(sortedList);
+                    adapter.restoreFromList(sortedList);
+                    break;
+
+                case "Most Favourite":
+                    Log.d(TAG, "setupDropDownOnClick: sort Most Favourite clicked");
+                    break;
+
+                case "Least Favourite":
+                    Log.d(TAG, "setupDropDownOnClick: sort Least Favourite clicked");
+                    break;
+
+                case "Latest":
+                    Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
+                    break;
+
+                case "Oldest":
+                    Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
+                    break;
+            }
+            return true;
+        });
     }
 
     private void manageSearchView(SearchView searchView)

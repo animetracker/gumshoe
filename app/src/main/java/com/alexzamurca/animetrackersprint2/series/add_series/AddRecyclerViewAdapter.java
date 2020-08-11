@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.search;
+package com.alexzamurca.animetrackersprint2.series.add_series;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +26,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
-public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecyclerViewAdapter.ViewHolder>
+public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerViewAdapter.ViewHolder>
 {
     private static final String TAG = "RecyclerViewAdapter";
 
@@ -40,7 +40,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     public String title_content;
     private NavController navController;
 
-    public SearchRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, NavController navController)
+    public AddRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, NavController navController)
     {
         this.list = list;
         this.context = context;
@@ -52,7 +52,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
 
     @NonNull
     @Override
-    public SearchRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AddRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_result_row, parent, false);
         return new ViewHolder(view);
     }

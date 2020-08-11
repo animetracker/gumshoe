@@ -71,4 +71,11 @@
     <string name="sort">Sort</string>
     <string name="share">Share</string>
     <string name="go_back">Go Back</string>
+    <string name="alphabetical">Alphabetical</string>
+    <string name="a_z">A-Z</string>
+    <string name="z_a">Z-A</string>
+    <string name="most_favorite">Most Favorite</string>
+    <string name="least_favourite">Least Favourite</string>
+    <string name="latest">Latest</string>
+    <string name="oldest">Oldest</string>
 </resources>

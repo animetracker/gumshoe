@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecyclerViewAdapter.ViewHolder> implements Filterable
@@ -30,7 +31,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     private static final String TAG = "SeriesRecyclerViewAdapter";
 
     private List<Series> list;
-    private List<Series> listBeforeChanges;
     private Context context;
     private OnSeriesListener onSeriesListener;
     private NavController navController;
@@ -38,7 +38,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, NavController navController)
     {
         this.list = list;
-        listBeforeChanges = list;
         this.context = context;
         this.onSeriesListener = onSeriesListener;
         this.navController = navController;
@@ -97,7 +96,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
     Filter filter = new Filter()
     {
-
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
@@ -140,9 +138,17 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
     public void restoreFromList(List<Series> oldList)
     {
-        list.clear();
-        list.addAll(oldList);
+        list = oldList;
         notifyDataSetChanged();
+    }
+
+    public void printList(List<Series> list)
+    {
+        Log.d(TAG, "printList: printing");
+        for(Series sr:list)
+        {
+            Log.d(TAG, "||" + sr.getCover_image() + "|" + sr.getTitle() + "|" + sr.getAir_date() + "|" + sr.getEpisode_number() + "||");
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

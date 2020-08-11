@@ -5,97 +5,85 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:padding="16dp"
+    android:paddingVertical="10dp"
     android:background="@drawable/back"
     android:layout_margin="5dp">
 
     <ImageView
         android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_height="100dp"
         android:src="@mipmap/ic_launcher"
-        android:id="@+id/coverImage_series"/>
+        android:id="@+id/coverImage_series"
+        android:layout_weight=".30"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_marginStart="5dp">
+        android:orientation="vertical"
+        android:id="@+id/info_layout"
+        android:layout_weight=".60">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/info_layout">
+        <HorizontalScrollView
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
-            <HorizontalScrollView
-                android:layout_width="250dp"
-                android:layout_height="35dp">
-
-                <TextView
-                    android:id="@+id/title_series"
-                    android:layout_width="match_parent"
-                    android:minWidth="210dp"
-                    android:layout_height="match_parent"
-                    android:text="Title"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:layout_weight="30"/>
-            </HorizontalScrollView>
-
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/title_series"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                android:background="@drawable/air_date_background">
-
-                <TextView
-                    android:id="@+id/nextEpisode_series"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:text="EpisodeNumber"
-                    android:textColor=" #641e16 "
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    app:layout_constraintLeft_toLeftOf="parent"/>
-
-                <TextView
-                    android:id="@+id/airDate_series"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:text="AirDate"
-                    android:textColor="#283747"
-                    android:textStyle="italic"
-                    android:textSize="15sp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginEnd="15dp"
-                    app:layout_constraintLeft_toRightOf="@id/nextEpisode_series"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:gravity="end"/>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="match_parent"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+        </HorizontalScrollView>
 
 
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="@drawable/air_date_background">
 
-        </LinearLayout>
-        <ImageView
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:contentDescription="TODO"
-            android:src="@drawable/ic_baseline_more_vert_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/info_layout"
-            android:id="@+id/series_more_info_image"/>
+            <TextView
+                android:id="@+id/nextEpisode_series"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:textColor=" #641e16 "
+                android:textSize="15sp"
+                android:layout_marginTop="3dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentLeft="true"
+                android:gravity="start|center_vertical"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/airDate_series"
+                android:layout_width="125dp"
+                android:layout_height="match_parent"
+                android:textColor="#283747"
+                android:textStyle="italic"
+                android:textSize="15sp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_alignParentRight="true"/>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="75dp"
+        android:layout_height="match_parent"
+        android:contentDescription="TODO"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        android:id="@+id/series_more_info_image"
+        android:layout_alignRight="@+id/info_layout"
+        android:layout_marginStart="-20dp"
+        android:layout_marginEnd="-15dp"
+        android:layout_weight=".1"/>
+
 
 
 

@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.search;
+package com.alexzamurca.animetrackersprint2.series.add_series;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -28,14 +28,14 @@ import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 
 import java.util.ArrayList;
 
-public class SearchFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SearchRecyclerViewAdapter.RowClickListener {
+public class AddFragment extends Fragment implements NoConnectionDialog.TryAgainListener, AddRecyclerViewAdapter.RowClickListener {
 
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
     private NavController navController;
 
     private ArrayList<SearchResult> list = new ArrayList<>();
-    private SearchRecyclerViewAdapter adapter;
+    private AddRecyclerViewAdapter adapter;
     private EditText editText;
     private View globalView;
 
@@ -118,7 +118,7 @@ public class SearchFragment extends Fragment implements NoConnectionDialog.TryAg
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new SearchRecyclerViewAdapter(getContext(), list, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
+        adapter = new AddRecyclerViewAdapter(getContext(), list, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));

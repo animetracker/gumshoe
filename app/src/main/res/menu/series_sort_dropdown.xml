@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/sort_alphabetical"
+        android:title="@string/a_z"/>
+
+    <item
+        android:id="@+id/sort_reverse_alphabetical"
+        android:title="@string/z_a"/>
+
+    <item
+        android:id="@+id/sort_favourite"
+        android:title="@string/most_favorite"/>
+
+    <item
+        android:id="@+id/sort_reverse_favourite"
+        android:title="@string/least_favourite"/>
+
+    <item
+        android:id="@+id/sort_latest_release"
+        android:title="@string/latest"/>
+
+    <item
+        android:id="@+id/sort_oldest_release"
+        android:title="@string/oldest"/>
+
+</menu>

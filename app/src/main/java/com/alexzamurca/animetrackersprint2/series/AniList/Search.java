@@ -3,7 +3,7 @@ package com.alexzamurca.animetrackersprint2.series.AniList;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.series.JSON.SortFiltering;
-import com.alexzamurca.animetrackersprint2.series.search.SearchResult;
+import com.alexzamurca.animetrackersprint2.series.add_series.SearchResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;

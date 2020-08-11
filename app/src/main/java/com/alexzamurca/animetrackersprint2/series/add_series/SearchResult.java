@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.search;
+package com.alexzamurca.animetrackersprint2.series.add_series;
 
 import java.io.Serializable;
 

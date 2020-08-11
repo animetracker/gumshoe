@@ -51,7 +51,7 @@
         android:label="Report A Bug" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.alexzamurca.animetrackersprint2.series.search.SearchFragment"
+        android:name="com.alexzamurca.animetrackersprint2.series.add_series.AddFragment"
         android:label="Add a new Series" >
         <action
             android:id="@+id/action_selected_search_result"
@@ -66,5 +66,10 @@
         android:name="com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment"
         android:label="More Series Info"
         tools:layout="@layout/fragment_series_info" />
+    <fragment
+        android:id="@+id/noDatabaseDialog"
+        android:name="com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog"
+        android:label="NoDatabaseDialog"
+        tools:layout="@layout/dialog_database_error"/>
 
 </navigation>
