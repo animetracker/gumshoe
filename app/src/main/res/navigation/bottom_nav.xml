@@ -66,10 +66,5 @@
         android:name="com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment"
         android:label="More Series Info"
         tools:layout="@layout/fragment_series_info" />
-    <fragment
-        android:id="@+id/noDatabaseDialog"
-        android:name="com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog"
-        android:label="NoDatabaseDialog"
-        tools:layout="@layout/dialog_database_error"/>
 
 </navigation>

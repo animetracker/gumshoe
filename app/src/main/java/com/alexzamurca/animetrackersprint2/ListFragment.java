@@ -44,7 +44,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener {
     private static final String TAG = "ListFragment";
     private FragmentActivity mContext;
 
@@ -113,7 +113,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mNavController = Navigation.findNavController(view);
     }
 
@@ -128,22 +127,34 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             @Override
             public boolean onMenuItemActionExpand(MenuItem item)
             {
-                Log.d(TAG, "onMenuItemActionExpand: expanded");
-                oldList.clear();
-                oldList.addAll(adapter.getList());
-                printList(oldList);
-                return true;
+                if(list.size()!=0)
+                {
+                    Log.d(TAG, "onMenuItemActionExpand: expanded");
+                    oldList.clear();
+                    oldList.addAll(adapter.getList());
+                    printList(oldList);
+                    return true;
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Can't search when list is empty!", Toast.LENGTH_LONG).show();
+                }
+                return false;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item)
             {
+
                 Log.d(TAG, "onMenuItemActionCollapse: collapsed");
-                adapter.restoreFromList(oldList);
-                printList(oldList);
-                Log.d(TAG, "onMenuItemActionCollapse: space needed");
-                printList(adapter.getList());
-                return true;
+                if(list.size()!=0)
+                {
+                    adapter.restoreFromList(oldList);
+                    printList(oldList);
+                    printList(adapter.getList());
+                    return true;
+                }
+                return false;
             }
         });
         SearchView searchView = (SearchView) item.getActionView();
@@ -333,6 +344,12 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         }
     }
 
+    @Override
+    public void OnReportBugButtonClick()
+    {
+        mNavController.navigate(R.id.reportBugFragment);
+    }
+
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
     public class MySQLConnection extends AsyncTask<Void, Void, Void>
     {
@@ -380,6 +397,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             else
             {
                 NoDatabaseDialog dialog = new NoDatabaseDialog();
+                Bundle args = new Bundle();
+                args.putSerializable("reportBugListener", ListFragment.this);
+                dialog.setArguments(args);
                 dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
             }
 
