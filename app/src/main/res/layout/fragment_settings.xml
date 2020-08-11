@@ -116,20 +116,11 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center_vertical"/>
-        <TextView
-            android:id="@+id/settings_share_header"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@+id/settings_about_header"
-            android:gravity="center_vertical"
-            android:text="@string/share"
-            android:textSize="20sp"
-            android:textStyle="bold" />
         <Button
             android:id="@+id/settings_donate_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/settings_share_header"
+            android:layout_below="@+id/settings_report_bug_header"
             android:text="DONATE"
             android:textStyle="bold"/>
 

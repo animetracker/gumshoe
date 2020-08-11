@@ -29,6 +29,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
@@ -56,7 +57,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private LinearLayout emptyListLayout;
     private TextView loadingTV;
     private ImageView loadingImage;
-    
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     private View mView;
     private NavController mNavController;
 
@@ -77,18 +79,11 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
         loadingTV = mView.findViewById(R.id.series_loading_text);
         loadingImage = mView.findViewById(R.id.series_loading_image);
+        swipeRefreshLayout = mView.findViewById(R.id.series_swipe_refresh_layout);
 
-        CheckConnection checkConnection = new CheckConnection(getContext());
-        boolean isConnected = checkConnection.isConnected();
-        if (isConnected)
-        {
-            initList();
-        }
-        else
-        {
-            newDialogInstance();
-            Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
-        }
+        swipeRefreshLayout.setOnRefreshListener(this::checkConnectionAndInitList);
+
+        checkConnectionAndInitList();
 
         initImageBitmaps();
 
@@ -166,24 +161,32 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
-        switch (item.getItemId())
+        if (item.getItemId() == R.id.series_list_toolbar_sort)
         {
-            case R.id.series_list_toolbar_search:
-                break;
+            PopupMenu popup = new PopupMenu(getContext(), mView.findViewById(R.id.series_list_toolbar_sort));
 
-            case R.id.series_list_toolbar_sort:
-                Toast.makeText(getContext(), "BugTest: sort clicked", Toast.LENGTH_LONG).show();
+            popup.getMenuInflater().inflate(R.menu.series_sort_dropdown, popup.getMenu());
 
-                PopupMenu popup = new PopupMenu(getContext(), mView.findViewById(R.id.series_list_toolbar_sort));
+            setupDropDownOnClick(popup);
 
-                popup.getMenuInflater().inflate(R.menu.series_sort_dropdown, popup.getMenu());
-
-                setupDropDownOnClick(popup);
-
-                popup.show();
-                break;
+            popup.show();
         }
         return true;
+    }
+
+    private void checkConnectionAndInitList()
+    {
+        CheckConnection checkConnection = new CheckConnection(getContext());
+        boolean isConnected = checkConnection.isConnected();
+        if (isConnected)
+        {
+            initList();
+        }
+        else
+        {
+            newDialogInstance();
+            Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupDropDownOnClick(PopupMenu popup)
@@ -347,7 +350,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void OnReportBugButtonClick()
     {
-        mNavController.navigate(R.id.reportBugFragment);
+        mNavController.navigate(R.id.action_report_bug_dialog_button_clicked);
     }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
@@ -374,6 +377,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             // Hide loading
             Glide.with(getContext()).clear(loadingImage);
             loadingTV.setText("");
+
+            // Stop refreshing (need this in case swipe refresh is used)
+            swipeRefreshLayout.setRefreshing(false);
 
             // Empty List
             if(tempList.size() == 0)
