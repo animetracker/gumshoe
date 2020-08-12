@@ -136,7 +136,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
                     navController.navigate(R.id.action_selected_search_result);
                     /*
-                    //Go back to previous fragment
+                    //Go series_row_background to previous fragment
                     FragmentTransaction tr = fragmentManager.beginTransaction();
                     tr.replace(R.id.fragment_container, new ListFragment());
                     tr.commit();

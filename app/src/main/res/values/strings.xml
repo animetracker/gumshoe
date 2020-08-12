@@ -78,4 +78,6 @@
     <string name="least_favourite">Least Favourite</string>
     <string name="latest">Latest</string>
     <string name="oldest">Oldest</string>
+    <string name="favourite">Favourite</string>
+    <string name="turn_notifications_off">Turn Notifications Off</string>
 </resources>

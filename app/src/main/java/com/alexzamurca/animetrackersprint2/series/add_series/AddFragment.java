@@ -90,7 +90,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home)
         {
-            Toast.makeText(getContext(), "BugTest: go back clicked!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "BugTest: go series_row_background clicked!", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecyclerViewAdapter.ViewHolder> implements Filterable
@@ -157,7 +156,12 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         TextView title;
         TextView next_episode;
         TextView air_date;
-        ImageView more_info;
+        ImageView favourite;
+        ImageView notifications_off;
+        ImageView remove;
+        ImageView hide;
+        ImageView change_alert_delay;
+        ImageView change_color;
 
         public ViewHolder(View itemView)
         {
@@ -166,59 +170,66 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             title = itemView.findViewById(R.id.title_series);
             next_episode = itemView.findViewById(R.id.nextEpisode_series);
             air_date = itemView.findViewById(R.id.airDate_series);
-            more_info = itemView.findViewById(R.id.series_more_info_image);
+            favourite = itemView.findViewById(R.id.favourite_series);
+            notifications_off = itemView.findViewById(R.id.notification_off_series);
+            remove = itemView.findViewById(R.id.remove_series);
+            hide = itemView.findViewById(R.id.hide_series);
+            change_alert_delay = itemView.findViewById(R.id.change_alert_delay_series);
+            change_color = itemView.findViewById(R.id.change_color_series);
 
             itemView.setOnClickListener(v ->
                     onSeriesListener.onSeriesClick(list.get(getAdapterPosition()))
             );
 
-            more_info.setOnClickListener(v ->
-            {
-                Toast.makeText(context, "You want more info for \""+ list.get(getAdapterPosition()).getTitle() +"\"!", Toast.LENGTH_SHORT).show();
+            favourite.setOnClickListener(v ->
+                    {
+                        Log.d(TAG, "ViewHolder: favourite clicked");
+                        if(favourite.getTag().toString().equals("notFavourite"))
+                        {
+                            favourite.setImageResource(R.drawable.ic_favorite);
+                            favourite.setTag("favourite");
+                        }
+                        else if(favourite.getTag().toString().equals("favourite"))
+                        {
+                            favourite.setImageResource(R.drawable.ic_favorite_border);
+                            favourite.setTag("notFavourite");
+                        }
 
-                PopupMenu popup = new PopupMenu(context, v);
+                    }
 
-                popup.getMenuInflater().inflate(R.menu.series_more_info_dropdown, popup.getMenu());
+            );
 
-                setupDropDownOnClick(popup, list.get(getAdapterPosition()));
+            notifications_off.setOnClickListener(v ->
+                    Log.d(TAG, "ViewHolder: notifications_off clicked")
+            );
 
-                popup.show();
+            remove.setOnClickListener(v -> {
+                Log.d(TAG, "ViewHolder: remove clicked");
+
+                RemoveAsync removeAsync = new RemoveAsync();
+                removeAsync.setSelectedSeries(list.get(getAdapterPosition()));
+                removeAsync.execute();
+
+                refreshSeriesList();
             });
+
+            hide.setOnClickListener(v ->
+                    Log.d(TAG, "ViewHolder: hide clicked")
+            );
+
+            change_alert_delay.setOnClickListener(v ->
+                    Log.d(TAG, "ViewHolder: change_alert_delay clicked")
+            );
+
+            change_color.setOnClickListener(v ->
+                    Log.d(TAG, "ViewHolder: change color clicked")
+            );
         }
     }
 
     private void refreshSeriesList()
     {
         navController.navigate(R.id.listFragment);
-    }
-
-    private void setupDropDownOnClick(PopupMenu popup, Series selectedSeries)
-    {
-        String title = selectedSeries.title;
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getTitle().toString())
-            {
-                case "Change Color":
-                    Toast.makeText(context, "You want to change color of \"" + title +"\"", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "Change Alert Delay":
-                    Toast.makeText(context, "You want to change alert delay of \"" + title +"\"", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "Hide":
-                    Toast.makeText(context, "You want to hide \"" + title +"\"", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "Remove":
-                    RemoveAsync removeAsync = new RemoveAsync();
-                    removeAsync.setSelectedSeries(selectedSeries);
-                    removeAsync.execute();
-                    break;
-            }
-            refreshSeriesList();
-            return true;
-        });
     }
 
 
