@@ -1,114 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:weightSum="100"
-    android:padding="15dp"
-    android:id="@+id/parent_layout"
-    android:background="@drawable/series_row_background"
-    android:layout_margin="10dp">
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    android:background="@drawable/series_row_buttons_background">
 
-    <ImageView
-        android:layout_gravity="start"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="80"
-        android:id="@+id/image"/>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="@drawable/series_row_background">
 
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginStart="5dp"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/search_row_cover_image"
+            android:layout_weight=".30"
+            android:layout_marginVertical="5dp"
+            android:layout_gravity="center"/>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_gravity="end"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="20"
-        android:layout_marginStart="15dp"
-        >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            app:layout_constraintBottom_toTopOf="@+id/description"
-            android:id="@+id/title_rating_layout">
-
-            <HorizontalScrollView
-                android:layout_width="220dp"
-                android:layout_height="match_parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/title_horizontal_scroll">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/title"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:gravity="start"/>
-            </HorizontalScrollView>
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/info_layout"
+            android:layout_marginStart="10dp"
+            android:layout_weight="10">
 
             <TextView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:id="@+id/rating"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/title_horizontal_scroll"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginStart="2dp"
-                android:textSize="23sp"
-                android:gravity="end"
-                android:textColor=" #cd6155 "
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:id="@+id/search_row_title"
+                android:layout_width="250dp"
+                android:layout_height="90dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/actor"
+                android:minWidth="250dp"
+                android:minHeight="70dp"
+                android:gravity="center_vertical"
+                android:textColor="#000000"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/search_row_status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:minHeight="40dp"
+                android:textColor="#283747"
+                android:textSize="15sp"
+                android:layout_marginEnd="10dp"
+                android:gravity="start|center_vertical"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/series_row_expandable_layout"
+        android:orientation="vertical"
+        android:tag="notShowing">
 
         <TextView
+            android:id="@+id/search_row_average"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:id="@+id/description"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:minHeight="20dp"
+            android:textColor="#283747"
             android:textSize="15sp"
-            android:textStyle="italic"
-            android:textColor="#808b96"
-            app:layout_constraintTop_toTopOf="@+id/title_rating_layout"
-            />
+            android:gravity="start|center_vertical"/>
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/search_row_active_users"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:id="@+id/nextEpisode_status_layout"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            >
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:minHeight="20dp"
+            android:textColor="#283747"
+            android:textSize="15sp"
+            android:gravity="start|center_vertical"/>
 
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/nextEpisode"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="start"
-                android:textColor="#28b463"/>
+        <TextView
+            android:id="@+id/search_row_adult_rating"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:minHeight="20dp"
+            android:textColor="#283747"
+            android:textSize="15sp"
+            android:gravity="start|center_vertical"/>
 
-            <TextView
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:id="@+id/status"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/nextEpisode"
-                android:layout_marginStart="15dp"
-                android:textSize="21sp"
-                android:gravity="end"
-                android:textColor="#2e4053"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/search_row_synonyms"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:minHeight="20dp"
+            android:textColor="#283747"
+            android:textSize="15sp"
+            android:gravity="start|center_vertical"/>
+
+        <TextView
+            android:id="@+id/search_row_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:minHeight="20dp"
+            android:textColor="#283747"
+            android:textSize="15sp"
+            android:gravity="start|center_vertical"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_arrow_down"
+            android:id="@+id/search_row_expand_collapse"
+            android:contentDescription="@string/expand_or_collapse"/>
+    </RelativeLayout>
 
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </LinearLayout>

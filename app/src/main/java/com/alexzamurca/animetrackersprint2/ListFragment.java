@@ -384,7 +384,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             // Empty List
             if(tempList.size() == 0)
             {
-                emptyListTV.setText(" Your Series List is empty!\nAdd any series you're watching\nor planning to watch\nby tapping the add button.");
+                emptyListTV.setText(" Your Series List is empty!\nAdd any airing series series_row.xmlor\nseries soon to be aired\nby tapping the + button below.");
                 emptyListLayout.setBackgroundResource(R.drawable.button);
                 emptyListImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
             }

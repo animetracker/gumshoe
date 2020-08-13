@@ -3,16 +3,19 @@ package com.alexzamurca.animetrackersprint2.series.add_series;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,9 +67,9 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         Log.d(TAG, "onBindViewHolder: called.");
 
         final String title = list.get(position).getTitle();
-        String rating = list.get(position).getRating();
-        String description = list.get(position).getDescription();
-        String next_episode = list.get(position).getNext_episode();
+        String rating = "<b> Average Rating (out of 100): </b>" + list.get(position).getRating();
+        String description = "<b> Description: </b> <br>" + list.get(position).getDescription();
+        //String next_episode = list.get(position).getNext_episode();
         String status = list.get(position).getStatus();
         String image_directory = list.get(position).getImage_directory();
 
@@ -78,10 +81,11 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
         // Setting the text views
         holder.title.setText(title);
-        holder.rating.setText(rating);
-        holder.description.setText(description);
-        holder.next_episode.setText(next_episode);
+        holder.average.setText(HtmlCompat.fromHtml(rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.description.setText(HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        //holder.next_episode.setText(next_episode);
         holder.status.setText(status);
+        holder.expandableLayout.setVisibility(View.GONE);
     }
 
     public interface RowClickListener
@@ -103,25 +107,52 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         ImageView image;
+        ImageView expand_collapse;
         TextView title;
-        TextView rating;
+        TextView average;
         TextView description;
-        TextView next_episode;
+        TextView active_watchers;
+        TextView adult_rating;
         TextView status;
+
+        LinearLayout expandableLayout;
 
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            image = itemView.findViewById(R.id.image);
-            title = itemView.findViewById(R.id.title);
-            rating = itemView.findViewById(R.id.rating);
-            description = itemView.findViewById(R.id.description);
-            next_episode = itemView.findViewById(R.id.nextEpisode);
-            status = itemView.findViewById(R.id.status);
+            image = itemView.findViewById(R.id.search_row_cover_image);
+            title = itemView.findViewById(R.id.search_row_title);
+            expand_collapse = itemView.findViewById(R.id.search_row_expand_collapse);
+            average = itemView.findViewById(R.id.search_row_average);
+            description = itemView.findViewById(R.id.search_row_description);
+            adult_rating = itemView.findViewById(R.id.search_row_adult_rating);
+            active_watchers = itemView.findViewById(R.id.search_row_active_users);
+            status = itemView.findViewById(R.id.search_row_status);
+
+            expandableLayout = itemView.findViewById(R.id.series_row_expandable_layout);
+
+            
+            expand_collapse.setOnClickListener(v -> 
+            {
+
+                if(expandableLayout.getTag().equals("notShowing"))
+                {
+                    expandableLayout.setVisibility(View.VISIBLE);
+                    expandableLayout.setTag("showing");
+                    expand_collapse.setImageResource(R.drawable.ic_arrow_up);
+                }
+                else if(expandableLayout.getTag().equals("showing"))
+                {
+                    expandableLayout.setVisibility(View.GONE);
+                    expandableLayout.setTag("notShowing");
+                    expand_collapse.setImageResource(R.drawable.ic_arrow_down);
+                }
+            });
 
 
 
-            itemView.setOnClickListener(v -> {
+            itemView.setOnClickListener(v -> 
+            {
 
                 title_content = list.get(getAdapterPosition()).getTitle();
                 Log.d(TAG, "onClick: clicked on: " + title_content);
