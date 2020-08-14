@@ -2,6 +2,8 @@ package com.alexzamurca.animetrackersprint2.series.add_series;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +30,7 @@ import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerViewAdapter.ViewHolder>
@@ -69,8 +73,22 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         final String title = list.get(position).getTitle();
         String rating = "<b> Average Rating (out of 100): </b>" + list.get(position).getRating();
         String description = "<b> Description: </b> <br>" + list.get(position).getDescription();
-        //String next_episode = list.get(position).getNext_episode();
-        String status = list.get(position).getStatus();
+        String adult_rating = "<b> Adult Series?: </b>" + list.get(position).getIsAdult();
+        String start_date = "<b> Release Date: </b>" + list.get(position).getStart_date();
+        String active_users = "<b> Number of Active Watchers: </b>" + list.get(position).getActive_users();
+        String synonyms = "<b> Other Names: </b>";
+        ArrayList<String> synonymList = list.get(position).getSynonyms();
+        for(int i = 0; i < synonymList.size(); i++)
+        {
+            synonyms += synonymList.get(i);
+            if(i != synonymList.size() - 1)
+            {
+                synonyms += ", ";
+            }
+        }
+        String trailer_URL = list.get(position).getTrailer_URL();
+        String APIStatus = list.get(position).getStatus();
+        String status = APIStatus.equals("RELEASING") ? "Airing" : "Not Yet Released";
         String image_directory = list.get(position).getImage_directory();
 
         // Setting the image
@@ -83,9 +101,18 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         holder.title.setText(title);
         holder.average.setText(HtmlCompat.fromHtml(rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.description.setText(HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY));
-        //holder.next_episode.setText(next_episode);
+        holder.adult_rating.setText(HtmlCompat.fromHtml(adult_rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.start_date.setText(HtmlCompat.fromHtml(start_date, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.active_watchers.setText(HtmlCompat.fromHtml(active_users, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.synonyms.setText(HtmlCompat.fromHtml(synonyms, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.status.setText(status);
         holder.expandableLayout.setVisibility(View.GONE);
+
+        holder.show_trailer.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(trailer_URL));
+            context.startActivity(intent);
+        });
     }
 
     public interface RowClickListener
@@ -111,11 +138,15 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         TextView title;
         TextView average;
         TextView description;
+        TextView start_date;
         TextView active_watchers;
+        TextView synonyms;
+        Button show_trailer;
         TextView adult_rating;
         TextView status;
 
         LinearLayout expandableLayout;
+        LinearLayout moreInfoLayout;
 
         public ViewHolder(@NonNull View itemView)
         {
@@ -125,11 +156,15 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             expand_collapse = itemView.findViewById(R.id.search_row_expand_collapse);
             average = itemView.findViewById(R.id.search_row_average);
             description = itemView.findViewById(R.id.search_row_description);
+            start_date = itemView.findViewById(R.id.search_row_start_date);
             adult_rating = itemView.findViewById(R.id.search_row_adult_rating);
             active_watchers = itemView.findViewById(R.id.search_row_active_users);
+            synonyms = itemView.findViewById(R.id.search_row_synonyms);
+            show_trailer = itemView.findViewById(R.id.search_row_trailer_button);
             status = itemView.findViewById(R.id.search_row_status);
 
             expandableLayout = itemView.findViewById(R.id.series_row_expandable_layout);
+            moreInfoLayout = itemView.findViewById(R.id.series_row_expandable_possibly_null);
 
             
             expand_collapse.setOnClickListener(v -> 
@@ -139,6 +174,17 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 {
                     expandableLayout.setVisibility(View.VISIBLE);
                     expandableLayout.setTag("showing");
+
+                    //check status to determine whether to show more info or not
+                    if(status.getText().equals("Airing"))
+                    {
+                        moreInfoLayout.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        moreInfoLayout.setVisibility(View.GONE);
+                    }
+
                     expand_collapse.setImageResource(R.drawable.ic_arrow_up);
                 }
                 else if(expandableLayout.getTag().equals("showing"))

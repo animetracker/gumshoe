@@ -66,7 +66,17 @@
         android:tag="notShowing">
 
         <TextView
-            android:id="@+id/search_row_average"
+            android:id="@+id/search_row_adult_rating"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:minHeight="20dp"
+            android:textColor="#283747"
+            android:textSize="15sp"
+            android:gravity="start|center_vertical"/>
+
+        <TextView
+            android:id="@+id/search_row_start_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
@@ -85,25 +95,59 @@
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 
-        <TextView
-            android:id="@+id/search_row_adult_rating"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:minHeight="20dp"
-            android:textColor="#283747"
-            android:textSize="15sp"
-            android:gravity="start|center_vertical"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/series_row_expandable_possibly_null">
 
-        <TextView
-            android:id="@+id/search_row_synonyms"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:minHeight="20dp"
-            android:textColor="#283747"
-            android:textSize="15sp"
-            android:gravity="start|center_vertical"/>
+
+            <TextView
+                android:id="@+id/search_row_average"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:minHeight="20dp"
+                android:textColor="#283747"
+                android:textSize="15sp"
+                android:gravity="start|center_vertical"/>
+
+            <TextView
+                android:id="@+id/search_row_synonyms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:minHeight="20dp"
+                android:textColor="#283747"
+                android:textSize="15sp"
+                android:gravity="start|center_vertical"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/search_row_trailer_text"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="5dp"
+                    android:textColor="#283747"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_alignParentStart="true"
+                    android:gravity="start|bottom"
+                    android:text="@string/trailer"/>
+
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="20dp"
+                    android:id="@+id/search_row_trailer_button"
+                    android:text="@string/show"/>
+            </RelativeLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/search_row_description"
@@ -117,20 +161,13 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_arrow_down"
-            android:id="@+id/search_row_expand_collapse"
-            android:contentDescription="@string/expand_or_collapse"/>
-    </RelativeLayout>
+        android:layout_height="36dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_arrow_down"
+        android:id="@+id/search_row_expand_collapse"
+        android:contentDescription="@string/expand_or_collapse"/>
 
 
 

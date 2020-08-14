@@ -120,7 +120,7 @@
             android:id="@+id/settings_donate_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/settings_report_bug_header"
+            android:layout_below="@+id/settings_about_header"
             android:text="DONATE"
             android:textStyle="bold"/>
 

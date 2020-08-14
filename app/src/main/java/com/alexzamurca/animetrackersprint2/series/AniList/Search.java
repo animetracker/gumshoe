@@ -30,15 +30,9 @@ public class Search
     {
         for(SearchResult sr:list)
         {
-            Log.d("printList", "||" + sr.getImage_directory() + "|" + sr.getTitle() + "|" + sr.getRating() + "|" + sr.getDescription() + "|" + sr.getNext_episode() + "|"+ sr.getStatus() + "||");
+            Log.d("printList", "||" + sr.getImage_directory() + "|" + sr.getTitle() + "|" + sr.getStatus() + "|" + sr.getIsAdult() + "|" + sr.getStart_date() + "|"+ sr.getActive_users() + "|"+ sr.getRating() + "|"+ sr.getSynonyms().toString() + "|"+ sr.getTrailer_URL() + "|"+ sr.getDescription()  + "||");
         }
     }
-
-    public String getStringSearchResult(SearchResult sr)
-    {
-            return  "||" + sr.getImage_directory() + "|" + sr.getTitle() + "|" + sr.getRating() + "|" + sr.getDescription() + "|" + sr.getNext_episode() + "|"+ sr.getStatus() + "||";
-    }
-
     public JSONArray getSearchArray()
     {
         return search_array;
@@ -54,7 +48,11 @@ public class Search
                 String title;
                 String rating;
                 String description = "";
-                String next_episode;
+                boolean isAdult = false;
+                int active_users = -1;
+                String start_date;
+                ArrayList<String> synonyms = new ArrayList<>();
+                String trailer_URL = "";
                 String status = "";
                 String image_directory = "";
                 try
@@ -97,12 +95,102 @@ public class Search
 
                 try
                 {
-                    next_episode = Integer.toString(search_array.getJSONObject(i).getJSONObject("nextAiringEpisode").getInt("episode"));
+                    isAdult = search_array.getJSONObject(i).getBoolean("isAdult");
                 }
                 catch(JSONException e)
                 {
-                    Log.e("getList" , "Can't get next_episode");
-                    next_episode = "N/A";
+                    Log.e("getList" , "Can't get isAdult");
+                }
+
+                try
+                {
+                    active_users = search_array.getJSONObject(i).getInt("popularity");
+                }
+                catch(JSONException e)
+                {
+                    Log.e("getList" , "Can't get popularity");
+                }
+
+                int day = -1, month = -1, year = -1;
+                try
+                {
+                    day = search_array.getJSONObject(i).getJSONObject("startDate").getInt("day");
+                }
+                catch(JSONException e)
+                {
+                    Log.e("getList" , "Can't get startDate day");
+                }
+
+                try
+                {
+                    month = search_array.getJSONObject(i).getJSONObject("startDate").getInt("month");
+                }
+                catch(JSONException e)
+                {
+                    Log.e("getList" , "Can't get startDate month");
+                }
+
+                try
+                {
+                    year = search_array.getJSONObject(i).getJSONObject("startDate").getInt("year");
+                }
+                catch(JSONException e)
+                {
+                    Log.e("getList" , "Can't get startDate year");
+                }
+
+                if(year!=-1)
+                {
+                    if(month!=-1)
+                    {
+                        if(day!=-1)
+                        {
+                            start_date = day+ "/" + month + "/" + year;
+                        }
+                        else
+                        {
+                            start_date = month + "/" + year;
+                        }
+                    }
+                    else
+                    {
+                        start_date = Integer.toString(year);
+                    }
+                }
+                else
+                {
+                    start_date = "Unknown";
+                }
+
+                try
+                {
+                    JSONArray array = search_array.getJSONObject(i).getJSONArray("synonyms");
+                    for(int j = 0; j<array.length() ; j++)
+                    {
+                        synonyms.add(array.getString(j));
+                    }
+                }
+                catch(JSONException e)
+                {
+                    Log.e("getList" , "Can't get synonyms");
+                }
+
+                try
+                {
+                    String video_provider = search_array.getJSONObject(i).getJSONObject("trailer").getString("site");
+                    String id =  search_array.getJSONObject(i).getJSONObject("trailer").getString("id");
+                    if(video_provider.equals("youtube"))
+                    {
+                        trailer_URL = "https://www.youtube.com/watch?v=" + id;
+                    }
+                    else if(video_provider.equals("dailymotion"))
+                    {
+                        trailer_URL = "https://www.dailymotion.com/video/" + id;
+                    }
+                }
+                catch(JSONException e)
+                {
+                    Log.e("getList" , "Can't get trailerURL");
                 }
 
                 try
@@ -123,7 +211,7 @@ public class Search
                     Log.e("getList" , "Can't get image_directory");
                 }
 
-                list.add(new SearchResult(title, rating, description, next_episode, status, image_directory));
+                list.add(new SearchResult(title, rating, description, isAdult, active_users, start_date, synonyms, trailer_URL, status, image_directory));
             }
         }
         catch(JSONException e)

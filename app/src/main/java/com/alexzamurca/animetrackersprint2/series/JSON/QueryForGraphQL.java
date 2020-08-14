@@ -18,7 +18,7 @@ public class QueryForGraphQL
     public JSONObject get(){
         // Building query
         String query = "query ($id: Int, $page: Int, $perPage: Int, $search: String) { " +
-                "Page (page: $page, perPage: $perPage) { media (id: $id, search: $search, type:ANIME, sort:STATUS_DESC) { id  coverImage{large} title{ english romaji}  status streamingEpisodes { title }  description averageScore nextAiringEpisode {  airingAt timeUntilAiring  episode}} }" +
+                "Page (page: $page, perPage: $perPage) { media (id: $id, search: $search, type:ANIME, sort:STATUS_DESC) { id  coverImage{large} title{ english romaji}  status bannerImage trailer{id, site, thumbnail} synonyms popularity isAdult startDate{day, month, year} streamingEpisodes { title }  description averageScore nextAiringEpisode {  airingAt timeUntilAiring  episode}} }" +
                 "}";
         // Building variables
         JSONObject variables = new JSONObject();
