@@ -75,7 +75,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         String description = "<b> Description: </b> <br>" + list.get(position).getDescription();
         String adult_rating = "<b> Adult Series?: </b>" + list.get(position).getIsAdult();
         String start_date = "<b> Release Date: </b>" + list.get(position).getStart_date();
-        String active_users = "<b> Number of Active Watchers: </b>" + list.get(position).getActive_users();
+        String active_users = "<b> Number of Users with this Series in their List: </b>" + list.get(position).getActive_users();
         String synonyms = "<b> Other Names: </b>";
         ArrayList<String> synonymList = list.get(position).getSynonyms();
         for(int i = 0; i < synonymList.size(); i++)
