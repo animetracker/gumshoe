@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,8 +66,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             next_episode += Integer.toString(next_episode_number);
         }
 
-
-        String air_date = "Coming out on:\n" + list.get(position).getAir_date();
+        String air_date = "Releasing:\n" + list.get(position).getAir_date();
         String cover_image = list.get(position).getCover_image();
 
         // Setting the image
