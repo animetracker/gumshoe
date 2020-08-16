@@ -74,13 +74,15 @@
     <string name="alphabetical">Alphabetical</string>
     <string name="a_z">A-Z</string>
     <string name="z_a">Z-A</string>
-    <string name="most_favorite">Most Favorite</string>
-    <string name="least_favourite">Least Favourite</string>
-    <string name="latest">Latest</string>
-    <string name="oldest">Oldest</string>
+    <string name="favourite_up">Favourite↑</string>
+    <string name="favourite_down">Favourite↓</string>
     <string name="favourite">Favourite</string>
     <string name="turn_notifications_off">Turn Notifications Off</string>
     <string name="expand_or_collapse">Expand or Collapse</string>
     <string name="show">show</string>
     <string name="trailer">Trailer:</string>
+    <string name="air_date_up">Air Date ↑</string>
+    <string name="air_date_down">Air Date ↓</string>
+    <string name="add_date_up">Date Added to List ↑</string>
+    <string name="add_date_down">Date Added to List ↓</string>
 </resources>

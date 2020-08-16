@@ -173,7 +173,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
             // Get sort state from SharedPreferences
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-            int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", 7);
 
             popup.getMenu().getItem(selection).setChecked(true);
 
@@ -296,6 +296,16 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 Log.d(TAG, "setupDropDownOnClick: printing sortedList");
                 printList(sortedList);
                 adapter.restoreFromList(sortedList);
+                return;
+
+                // Add Date up
+            case 6:
+                Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
+                return;
+
+            // Add Date down
+            case 7:
+                Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
         }
     }
 
