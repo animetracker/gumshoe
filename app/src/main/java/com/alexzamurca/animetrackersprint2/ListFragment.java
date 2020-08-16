@@ -2,6 +2,7 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,6 +115,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.series_list_toolbar_menu, menu);
+
+
+
         MenuItem item = menu.findItem(R.id.series_list_toolbar_search);
         oldList = new ArrayList<>();
         
@@ -167,6 +171,12 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
             popup.getMenuInflater().inflate(R.menu.series_sort_dropdown, popup.getMenu());
 
+            // Get sort state from SharedPreferences
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+
+            popup.getMenu().getItem(selection).setChecked(true);
+
             setupDropDownOnClick(popup);
 
             popup.show();
@@ -193,52 +203,100 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     {
         popup.setOnMenuItemClickListener(item ->
         {
-            AlphabeticalSortList alphabeticalSortList = new AlphabeticalSortList(adapter.getList());
-            DateSortSeriesList dateSortSeriesList = new DateSortSeriesList(adapter.getList());
-            switch (item.getTitle().toString())
-            {
-                case "A-Z":
-                    Log.d(TAG, "setupDropDownOnClick: sort A-Z clicked");
-                    List<Series> sortedList = alphabeticalSortList.sortAlphabetically();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
+            int itemIndex = findIndexOfItem(item, popup.getMenu());
 
-                case "Z-A":
-                    Log.d(TAG, "setupDropDownOnClick: sort Z-A clicked");
-                    sortedList = alphabeticalSortList.sortReverseAlphabetically();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
+            checkSelectionUncheckRest(item, popup.getMenu());
 
-                case "Most Favourite":
-                    Log.d(TAG, "setupDropDownOnClick: sort Most Favourite clicked");
-                    break;
+            sortListAccordingToSelection(itemIndex);
 
-                case "Least Favourite":
-                    Log.d(TAG, "setupDropDownOnClick: sort Least Favourite clicked");
-                    break;
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                case "Latest":
-                    Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
-                    sortedList = dateSortSeriesList.sortMostRecent();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
+            editor.putInt("selected_sort_option_index", itemIndex);
 
-                case "Oldest":
-                    Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
-                    sortedList = dateSortSeriesList.sortLeastRecent();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
-            }
+            editor.apply();
             return true;
         });
+    }
+
+    private int findIndexOfItem(MenuItem item, Menu menu)
+    {
+        for(int i = 0; i < menu.size(); i++)
+        {
+            if(menu.getItem(i).getItemId() == item.getItemId()) return i;
+        }
+        return -1;
+    }
+
+    private void checkSelectionUncheckRest(MenuItem item, Menu menu)
+    {
+        // Set all items to unchecked
+        for(int i = 0; i < menu.size(); i++)
+        {
+            menu.getItem(i).setChecked(false);
+        }
+
+        // Then check the selected item
+        item.setChecked(true);
+
+    }
+
+    private void sortListAccordingToSelection(int selection)
+    {
+        List<Series> listFromAdapter = adapter.getList();
+        AlphabeticalSortList alphabeticalSortList = new AlphabeticalSortList(listFromAdapter);
+        DateSortSeriesList dateSortSeriesList = new DateSortSeriesList(listFromAdapter);
+        switch (selection)
+        {
+            // No selection
+            case -1:
+                return;
+
+            // A-Z
+            case 0:
+                Log.d(TAG, "setupDropDownOnClick: sort A-Z clicked");
+                List<Series> sortedList = alphabeticalSortList.sortAlphabetically();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+                return;
+
+            // Z-A
+            case 1:
+                Log.d(TAG, "setupDropDownOnClick: sort Z-A clicked");
+                sortedList = alphabeticalSortList.sortReverseAlphabetically();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+                return;
+
+            //Most Favourite
+            case 2:
+                Log.d(TAG, "setupDropDownOnClick: sort Most Favourite clicked");
+                break;
+
+            // Least Favourite
+            case 3:
+                Log.d(TAG, "setupDropDownOnClick: sort Least Favourite clicked");
+                return;
+
+            // Latest
+            case 4:
+                Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
+                sortedList = dateSortSeriesList.sortMostRecent();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+                return;
+
+            // Oldest
+            case 5:
+                Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
+                sortedList = dateSortSeriesList.sortLeastRecent();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+        }
     }
 
     private void manageSearchView(SearchView searchView)
@@ -408,6 +466,11 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 dialog.setArguments(args);
                 dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
             }
+
+            // Get sort state from SharedPreferences
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+            sortListAccordingToSelection(selection);
 
             super.onPostExecute(aVoid);
         }

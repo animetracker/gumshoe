@@ -1,6 +1,7 @@
 package com.alexzamurca.animetrackersprint2;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
     private FragmentActivity mContext;
+    private Switch darkModeSwitch;
 
     @Override
     public void onAttach(@NonNull Context context)
@@ -57,23 +59,44 @@ public class SettingsFragment extends Fragment
         });
 
         // This method is used to create the dark mode using the switch
-        Switch darkModeSwitch= view.findViewById(R.id.settings_dark_mode_switch);
+        darkModeSwitch= view.findViewById(R.id.settings_dark_mode_switch);
         darkModeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
             if(isChecked)
             {
                 // Dark mode
                 Log.d(TAG, "onCheckedChanged: change to dark mode");
                 //getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+                editor.putBoolean("dark_mode_on", true);
+
             }
             else
             {
                 // Light mode
                 Log.d(TAG, "onCheckedChanged: change to light mode");
                 //getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+                editor.putBoolean("dark_mode_on", false);
+
             }
+            editor.apply();
         });
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        boolean selection = sharedPreferences.getBoolean("dark_mode_on", false);
+        darkModeSwitch.setChecked(selection);
     }
 
     @Override
