@@ -36,39 +36,22 @@
             android:layout_below="@id/settings_title"/>
 
         <TextView
-            android:id="@+id/settings_layout_header"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@id/settings_dark_mode_switch"
-            android:text="@string/layout"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <Spinner
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_above="@+id/settings_alert_delay_header"
-            android:layout_alignEnd="@id/settings_layout_header"
-            android:entries="@array/layout_drop_down_options"
-            android:gravity="end" />
-
-        <TextView
             android:id="@+id/settings_alert_delay_header"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/settings_layout_header"
+            android:layout_below="@+id/settings_dark_mode_switch"
             android:gravity="center_vertical"
             android:text="@string/alert_delay"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <Spinner
-            android:layout_width="110dp"
+            android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_below="@id/settings_layout_header"
+            android:layout_below="@id/settings_dark_mode_switch"
             android:layout_alignEnd="@+id/settings_alert_delay_header"
-            android:entries="@array/alert_delay_drop_down_options" />
+            android:entries="@array/alert_delay_drop_down_options"
+            android:id="@+id/settings_alert_delay_spinner"/>
 
         <TextView
             android:id="@+id/settings_time_zone_header"

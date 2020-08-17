@@ -73,7 +73,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
         Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
         setHasOptionsMenu(true);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
         emptyListTV = mView.findViewById(R.id.series_empty_list);
         emptyListImage = mView.findViewById(R.id.series_empty_list_image);
@@ -322,7 +322,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 adapter.getFilter().filter(query);
 
                 // Hide keyboard
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mView.findViewById(R.id.series_list_layout).getWindowToken(), 0);
 
                 return true;
@@ -373,7 +373,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private void initRecyclerView()
     {
         Log.d(TAG, "initRecyclerView: initialising");
-        RecyclerView recyclerView = getView().findViewById(R.id.series_recycler_view);
+        RecyclerView recyclerView = requireView().findViewById(R.id.series_recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -383,10 +383,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         Log.d(TAG, "initList: db connection");
 
         // Show loading - (credit: http://www.lowgif.com/view.html)
-        Glide.with(getContext())
+        Glide.with(requireContext())
                 .load(R.drawable.loading)
                 .into(loadingImage);
-        loadingTV.setText("Loading...");
+        loadingTV.setText(R.string.loading_3_dots);
 
         MySQLConnection mySQLConnection = new MySQLConnection();
         mySQLConnection.execute();
@@ -443,7 +443,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         protected void onPostExecute(Void aVoid)
         {
             // Hide loading
-            Glide.with(getContext()).clear(loadingImage);
+            Glide.with(requireContext()).clear(loadingImage);
             loadingTV.setText("");
 
             // Stop refreshing (need this in case swipe refresh is used)

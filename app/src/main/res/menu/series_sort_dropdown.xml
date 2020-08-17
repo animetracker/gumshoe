@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/sort_alphabetical"
-        android:title="@string/a_z"
+        android:title="@string/alphabetical_up"
         android:checkable="true"/>
 
     <item
         android:id="@+id/sort_reverse_alphabetical"
-        android:title="@string/z_a"
+        android:title="@string/alphabetical_down"
         android:checkable="true"/>
 
     <item
