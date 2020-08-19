@@ -66,9 +66,9 @@
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="change">Change</string>
     <string name="change_color">Change Color</string>
     <string name="change_alert_delay">Change Alert Delay</string>
     <string name="search">Search</string>

@@ -30,12 +30,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.alexzamurca.animetrackersprint2.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile"/>
-
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.alexzamurca.animetrackersprint2.SettingsFragment"
         android:label="Settings"

@@ -81,59 +81,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
+        android:orientation="horizontal"
         android:weightSum="100">
 
         <ImageView
             android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_favorite_border"
-            android:id="@+id/favourite_series"
-            android:tag="notFavourite"
-            android:contentDescription="@string/favourite"
-            android:layout_weight="16.67"/>
-
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_notifications_off"
             android:id="@+id/notification_off_series"
             android:contentDescription="@string/turn_notifications_off"
-            android:layout_weight="16.67"/>
+            android:layout_weight="33.3"
+            android:layout_marginTop="5dp"/>
 
         <ImageView
             android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_remove"
             android:id="@+id/remove_series"
             android:contentDescription="@string/remove"
-            android:layout_weight="16.67"/>
+            android:layout_weight="33.3"
+            android:layout_marginTop="5dp"/>
 
         <ImageView
             android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_eye_off"
-            android:id="@+id/hide_series"
-            android:contentDescription="@string/hide"
-            android:layout_weight="16.67"/>
-
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_timer_sand"
             android:id="@+id/change_alert_delay_series"
             android:contentDescription="@string/change_alert_delay"
-            android:layout_weight="16.67"/>
-
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="3dp"
-            android:src="@drawable/ic_color_fill"
-            android:id="@+id/change_color_series"
-            android:contentDescription="@string/change_color"
-            android:layout_weight="16.67"/>
+            android:layout_weight="33.3"
+            android:layout_marginTop="5dp"/>
     </LinearLayout>
 
 

@@ -12,13 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -27,7 +27,7 @@ import androidx.navigation.Navigation;
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
-    private Switch darkModeSwitch;
+    private SwitchCompat darkModeSwitch;
 
     @Override
     public void onAttach(@NonNull Context context)
