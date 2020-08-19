@@ -116,8 +116,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.series_list_toolbar_menu, menu);
 
-
-
         MenuItem item = menu.findItem(R.id.series_list_toolbar_search);
         oldList = new ArrayList<>();
         
@@ -467,6 +465,11 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             {
                 adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, Navigation.findNavController(mView));
                 initRecyclerView();
+
+                // Get sort state from SharedPreferences
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+                int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+                sortListAccordingToSelection(selection);
             }
             else
             {
@@ -476,11 +479,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 dialog.setArguments(args);
                 dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
             }
-
-            // Get sort state from SharedPreferences
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-            int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
-            sortListAccordingToSelection(selection);
 
             super.onPostExecute(aVoid);
         }

@@ -89,5 +89,6 @@
     <string name="air_date_down">Air Date ↓</string>
     <string name="add_date_up">Date Added to List ↑</string>
     <string name="add_date_down">Date Added to List ↓</string>
-    <string name="loading_3_dots">Loading...</string>
+    <string name="loading_3_dots">Loading…</string>
+    <string name="login">Login</string>
 </resources>

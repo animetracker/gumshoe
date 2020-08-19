@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Date;
+package com.alexzamurca.animetrackersprint2.Date;
 
 import android.util.Log;
 
@@ -13,7 +13,7 @@ public class ConvertDateToMillis
 
     public long getDate(String stringDate)
     {
-        if(stringDate.equals(""))
+        if(!stringDate.equals(""))
         {
             SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm");
             try

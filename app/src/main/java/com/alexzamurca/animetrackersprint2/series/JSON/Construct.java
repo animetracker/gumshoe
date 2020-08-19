@@ -2,7 +2,7 @@ package com.alexzamurca.animetrackersprint2.series.JSON;
 
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.series.Date.ConvertMillisToDate;
+import com.alexzamurca.animetrackersprint2.Date.ConvertMillisToDate;
 
 import org.json.JSONException;
 import org.json.JSONObject;

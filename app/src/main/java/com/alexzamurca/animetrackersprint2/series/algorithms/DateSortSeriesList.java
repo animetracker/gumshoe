@@ -2,7 +2,7 @@ package com.alexzamurca.animetrackersprint2.series.algorithms;
 
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.series.Date.ConvertDateToMillis;
+import com.alexzamurca.animetrackersprint2.Date.ConvertDateToMillis;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.ArrayList;
