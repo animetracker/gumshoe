@@ -91,7 +91,9 @@ public class Construct
 
             Log.d(TAG, "constructFormattedJSON: description" + unformattedJson.getString("description"));
             json.put("description", unformattedJson.getString("description"));
-            Log.d(TAG, "constructFormattedJSON: \n\n\n");
+
+            json.put("notification_on", 1);
+            json.put("notification_change" , "");
 
         }
         catch(JSONException e)

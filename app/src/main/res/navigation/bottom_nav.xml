@@ -27,6 +27,12 @@
         <action
             android:id="@+id/action_report_bug_dialog_button_clicked"
             app:destination="@id/reportBugFragment" />
+        <action
+            android:id="@+id/action_dialog_change_time_zone"
+            app:destination="@id/changeTimeZoneFragment" />
+        <action
+            android:id="@+id/action_dialog_change_air_date"
+            app:destination="@id/changeAirDateFragment" />
     </fragment>
 
     <fragment
@@ -41,15 +47,20 @@
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_change_time_zone"
+            app:destination="@id/changeTimeZoneFragment" />
     </fragment>
     <fragment
         android:id="@+id/reportBugFragment"
         android:name="com.alexzamurca.animetrackersprint2.settings.ReportBugFragment"
-        android:label="Report A Bug" />
+        android:label="Report A Bug"
+        tools:layout="@layout/fragment_report_bug"/>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.add_series.AddFragment"
-        android:label="Add a new Series" >
+        android:label="Add a new Series"
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_selected_search_result"
             app:destination="@id/listFragment"
@@ -63,5 +74,15 @@
         android:name="com.alexzamurca.animetrackersprint2.series.series_list.SeriesInfoFragment"
         android:label="More Series Info"
         tools:layout="@layout/fragment_series_info" />
+    <fragment
+        android:id="@+id/changeTimeZoneFragment"
+        android:name="com.alexzamurca.animetrackersprint2.ChangeTimeZoneFragment"
+        android:label="ChangeTimeZoneFragment"
+        tools:layout="@layout/fragment_change_time_zone"/>
+    <fragment
+        android:id="@+id/changeAirDateFragment"
+        android:name="com.alexzamurca.animetrackersprint2.ChangeAirDateFragment"
+        android:label="ChangeAirDateFragment"
+        tools:layout="@layout/fragment_change_air_date"/>
 
 </navigation>

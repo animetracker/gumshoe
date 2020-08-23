@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        layout="@layout/change_air_date_toolbar"
+        android:id="@+id/change_air_date_toolbar_object"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/series_list_floating_add_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/pleasantBlue"
+        android:src="@drawable/ic_save_white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/change_air_date_toolbar_object">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/change_air_date_layout"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/c_air_date_identified_header"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/c_air_date_identified_air_date"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/pleasantBlue"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:layout_marginHorizontal="10dp"
+                    android:gravity="center"
+                    android:text="@string/wrong_air_date_explanation"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="100"
+                    android:id="@+id/logo_layout"
+                    >
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/anichart"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="33.3"/>
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/crunchyroll"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_weight="33.3"/>
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/livechart"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="33.3" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/logo_explanation"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/logo_copyright_explanation"
+                    android:textStyle="italic"/>
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/change_air_date_question"
+                android:text="@string/change_air_date_question"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:layout_below="@id/change_air_date_layout"
+                android:layout_centerInParent="true"/>
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_layout"
+                android:orientation="horizontal"
+                android:layout_below="@id/change_air_date_question"
+                android:layout_centerInParent="true"
+                style="?attr/buttonBarButtonStyle">
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginVertical="10dp"
+                    android:id="@+id/change_air_date_button_no"
+                    android:text="@string/no"
+                    android:textSize="24sp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/red_button"
+                    style="?attr/buttonBarButtonStyle" />
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginVertical="10dp"
+                    android:id="@+id/change_air_date_button_yes"
+                    android:text="@string/yes"
+                    android:textSize="24sp"
+                    android:textColor="@color/pleasantBlue"
+                    android:background="@drawable/white_button"
+                    style="?attr/buttonBarButtonStyle"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/button_layout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/air_date_changes_instructions"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="230dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/sign_positive_or_negative"/>
+
+                    <Spinner
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/air_date_sign_spinner"
+                        android:layout_alignParentEnd="true"
+                        android:entries="@array/sign_spinner_options"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/hours"/>
+
+                    <Spinner
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/air_date_hours_spinner"
+                        android:layout_alignParentEnd="true"
+                        android:entries="@array/hours_spinner_options"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/minutes"/>
+
+                    <Spinner
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/air_date_minutes_spinner"
+                        android:layout_alignParentEnd="true"
+                        android:entries="@array/minutes_spinner_options"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:layout_marginHorizontal="10dp"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/change_air_time_new_time"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/pleasantBlue"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:textStyle="italic"
+                    android:gravity="center_vertical"
+                    android:text="@string/tap_the_save_icon_on_the_bottom_right_if_the_new_time_is_correct"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+
+
+
+
+</RelativeLayout>
