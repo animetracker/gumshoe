@@ -17,51 +17,43 @@ import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.io.Serializable;
 
-public class IncorrectAirDateDialog extends DialogFragment
+public class NotificationsOffDialog extends DialogFragment
 {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_wrong_air_date, container, false);
+        View view = inflater.inflate(R.layout.dialog_notifications_off, container, false);
         setCancelable(false);
 
         assert getArguments() != null;
-        IncorrectAirDateListener listener = (IncorrectAirDateListener)getArguments().getSerializable("incorrectAirDateListener");
         Series series  = (Series) getArguments().getSerializable("series");
 
-        TextView explanation = view.findViewById(R.id.wrong_air_date_explanation);
+        TextView explanation = view.findViewById(R.id.notifications_off_explanation);
         assert series != null;
         explanation.setText(buildExplanation(series));
 
-        Button changeTimeZone = view.findViewById(R.id.wrong_air_date_change_time_zone_button);
-        changeTimeZone.setOnClickListener(v ->
+        Button yesButton = view.findViewById(R.id.notifications_off_yes_button);
+        yesButton.setOnClickListener(v ->
         {
-            listener.OnChangeTimeZoneClick();
+            // Communicate with database and update Notification_off state of series
             dismiss();
         });
 
-        Button changeAirDate = view.findViewById(R.id.wrong_air_date_change_air_date_button);
-        changeAirDate.setOnClickListener(v ->
+        Button noButton = view.findViewById(R.id.notifications_off_no_button);
+        noButton.setOnClickListener(v ->
         {
-            listener.OnChangeAirDateClick();
             dismiss();
         });
 
-        ImageButton closeButton = view.findViewById(R.id.wrong_air_date_close);
+        ImageButton closeButton = view.findViewById(R.id.notifications_off_close);
         closeButton.setOnClickListener(v -> dismiss());
         return view;
     }
 
     private String buildExplanation(Series series)
     {
-        // format: "It appears, the air date we have \n for {series_name} is incorrect!"
-        return "It appears, the air date we have \n for \"" + series.getTitle() + "\"  is incorrect!";
-    }
-
-    public interface IncorrectAirDateListener extends Serializable
-    {
-        void OnChangeTimeZoneClick();
-        void OnChangeAirDateClick();
+        // format: "It appears, you do not want to receive notifications for when a {series_name} episode is airing! Notifications can be turned back on in the future."
+        return "It appears, you do not want to receive notifications for when a \"" + series.getTitle() + "\"  episode is airing! Notifications can be turned back on in the future.";
     }
 }

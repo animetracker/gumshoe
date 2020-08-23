@@ -49,12 +49,6 @@
         <item>1 day after</item>
     </string-array>
 
-    <string-array name="time_zone_drop_down_options">
-        <item>GMT</item>
-        <item>JST</item>
-        <item>EST</item>
-        <item>EET</item>
-    </string-array>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -70,7 +64,7 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="change">Change</string>
     <string name="change_color">Change Color</string>
-    <string name="change_alert_delay">Change Alert Delay</string>
+    <string name="change_notification_reminder">Change Notification Reminder</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
     <string name="share">Share</string>
@@ -91,8 +85,8 @@
     <string name="add_date_down">Date Added to List ↓</string>
     <string name="loading_3_dots">Loading…</string>
     <string name="login">Login</string>
-    <string name="change_air_date">Change Air Date</string>
-    <string name="change_time_zone">Change Time Zone</string>
+    <string name="change_air_date">Change\nAir Date</string>
+    <string name="change_time_zone">Change\nTime Zone</string>
     <string name="_30">30</string>
     <string name="_45">45</string>
     <string name="this_is_the_time_zone_we_identified_for_your_region">This is the Time Zone we identified for your region:</string>
@@ -106,9 +100,20 @@
     <string name="minutes">Minutes:</string>
     <string name="meaning_the_new_time_in_your_region_is">Meaning the time when you entered this screen is:</string>
     <string name="tap_the_save_icon_on_the_bottom_right_if_the_new_time_is_correct">Tap the save icon on the bottom right if the new time is correct</string>
+    <string name="tap_the_save_icon_on_the_bottom_right_if_the_new_change_is_correct">Tap the save icon on the bottom right if the new change is correct</string>
+
     <string name="change_air_date_question">Is our air date above the same as the air date provided by the external sources?</string>
     <string name="wrong_air_date_explanation">We unfortunately rely on an API to tell us when a series airs. When the API is wrong only your feedback and changes can help. Please check your series’ air data using either one of the below release calendars and fill in the changes you want to apply to the current air date, if it is incorrect.</string>
     <string name="logo_explanation">Click on any of the logos to open their release calendars</string>
     <string name="logo_copyright_explanation">We do not own any of the above logos, we are simply recommending their services.</string>
     <string name="air_date_changes_instructions">Please specify the changes you want to make to the air date</string>
+    <string name="error_wrong_air_date">Error: wrong air date</string>
+    <string name="would_you_like_to">Would you like to</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="do_you_wish_to_change_this">Do you wish to change this?</string>
+    <string name="please_specify_your_new_notification_change">Please specify your new Notification Change:</string>
+    <string name="quantity">Quantity:</string>
+    <string name="positive_num">positive num</string>
+    <string name="metric">Metric:</string>
+    <string name="before_after">Before/After:</string>
 </resources>

@@ -39,6 +39,7 @@ import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
+import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.bumptech.glide.Glide;
@@ -407,11 +408,29 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     }
 
     @Override
+    public void onNotificationsOff(Series series)
+    {
+        NotificationsOffDialog dialog = new NotificationsOffDialog();
+        // need to pass series
+        Bundle args = new Bundle();
+        args.putSerializable("series", series);
+        dialog.setArguments(args);
+        dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+    }
+
+    @Override
     public void onChangeNotificationTime(Series series)
+    {
+        mNavController.navigate(R.id.action_change_notification_reminder);
+    }
+
+    @Override
+    public void onErrorWrongAirDate(Series series)
     {
         IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
         Bundle args = new Bundle();
         args.putSerializable("incorrectAirDateListener", ListFragment.this);
+        args.putSerializable("series", series);
         dialog.setArguments(args);
         dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
     }
