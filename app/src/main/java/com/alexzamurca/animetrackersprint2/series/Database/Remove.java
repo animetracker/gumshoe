@@ -16,7 +16,7 @@ public class Remove
 
     private void constructURL()
     {
-        URL = "http://192.168.0.15:2000/remove/" + user_id + "/" + anilist_id + "/";
+        URL = "http://192.168.0.27/remove/" + user_id + "/" + anilist_id + "/";
     }
 
     public boolean remove()
