@@ -60,6 +60,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settingsFragment_to_tutorialActivity"
+            app:destination="@id/tutorialActivity" />
     </fragment>
     <fragment
         android:id="@+id/reportBugFragment"
@@ -104,5 +107,10 @@
         android:name="com.alexzamurca.animetrackersprint2.settings.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" />
+    <activity
+        android:id="@+id/tutorialActivity"
+        android:name="com.alexzamurca.animetrackersprint2.TutorialActivity"
+        android:label="activity_tutorial"
+        tools:layout="@layout/activity_tutorial" />
 
 </navigation>

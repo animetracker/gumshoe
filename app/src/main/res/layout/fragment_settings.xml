@@ -118,11 +118,22 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center_vertical"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/settings_about_header"
+            android:id="@+id/settings_tutorial_header"
+            android:text="Tutorial"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"/>
+
         <Button
             android:id="@+id/settings_donate_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/settings_about_header"
+            android:layout_below="@+id/settings_tutorial_header"
             android:text="DONATE"
             android:textStyle="bold"/>
 

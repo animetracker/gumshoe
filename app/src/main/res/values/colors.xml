@@ -7,4 +7,6 @@
     <color name="vibrantGreen"> #2ecc71</color>
     <color name="pleasantRed"> #cb4335</color>
     <color name="greyishWhite">#e5e7e9 </color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTransparentWhite">#cccccc</color>
 </resources>
