@@ -365,19 +365,7 @@ public class ChangeTimeZoneFragment extends Fragment
         int integerPartOfDouble = Integer.parseInt(doubleAsString.substring(0, indexOfDecimal));
         boolean sign = -1==Integer.signum(integerPartOfDouble);
         int hours = Math.abs(integerPartOfDouble);
-        int minutes = (int) Double.parseDouble(doubleAsString.substring(indexOfDecimal)) * 60;
-
-        Log.d(TAG, "findDifference: old isnegativesign" + negative_sign);
-        Log.d(TAG, "findDifference: old hours" + hours_change);
-        Log.d(TAG, "findDifference: old minutes" + minutes_change);
-
-        Log.d(TAG, "findDifference: new isnegativesign" + isSignNegative);
-        Log.d(TAG, "findDifference: new hours" + hours_to_change);
-        Log.d(TAG, "findDifference: new minutes" + minutes_to_change);
-
-        Log.d(TAG, "findDifference: isnegativesign" + sign);
-        Log.d(TAG, "findDifference: hours" + hours);
-        Log.d(TAG, "findDifference: minutes" + minutes);
+        int minutes = (int) (Double.parseDouble(doubleAsString.substring(indexOfDecimal)) * 60);
 
         // Form JSON
         JSONObject json = new JSONObject();

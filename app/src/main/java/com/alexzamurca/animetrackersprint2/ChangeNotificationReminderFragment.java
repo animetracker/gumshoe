@@ -72,6 +72,8 @@ public class ChangeNotificationReminderFragment extends Fragment
                 }
         );
 
+        Toast.makeText(getContext(), "Any changes made will not change the air date shown in the series list screen.", Toast.LENGTH_LONG).show();
+
         return view;
     }
 
