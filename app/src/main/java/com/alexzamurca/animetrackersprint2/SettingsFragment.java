@@ -1,7 +1,10 @@
 package com.alexzamurca.animetrackersprint2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +34,9 @@ public class SettingsFragment extends Fragment
     private SwitchCompat darkModeSwitch;
     private NavController navController;
 
+    String message = "Test";
+    String number = "0123456789";
+
     @Override
     public void onAttach(@NonNull Context context)
     {
@@ -52,6 +58,13 @@ public class SettingsFragment extends Fragment
         reportBug.setOnClickListener(view1 ->
         {
             navController.navigate(R.id.action_reporting_bug);
+        });
+
+        TextView aboutUs = view.findViewById(R.id.settings_about_header);
+        aboutUs.setOnClickListener(view12 ->
+        {
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_settingsFragment_to_aboutFragment);
         });
 
         Button changeTimeZone = view.findViewById(R.id.settings_change_time_zone_button);
@@ -144,9 +157,29 @@ public class SettingsFragment extends Fragment
     {
         if(item.getItemId() == R.id.settings_toolbar_share)
         {
-            Toast.makeText(getContext(), "BugTest: share clicked!", Toast.LENGTH_LONG).show();
-            // this is a test.
+            //Toast.makeText(getContext(), "BugTest: share clicked!", Toast.LENGTH_LONG).show();
+            Boolean installed = checkIfInstalled("com.whatsapp");
+            if(installed == true) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+"+44"+number+"&text="+message));
+                startActivity(intent);
+            }
+            else {
+                Toast.makeText(getContext(), "Please install WhatsApp to share GumShoe with your friends!", Toast.LENGTH_SHORT).show();
+            }
         }
         return true;
+    }
+
+    private boolean checkIfInstalled(String url) {
+        PackageManager packageManager = getActivity().getPackageManager();
+        boolean installed;
+        try {
+            packageManager.getPackageInfo(url, PackageManager.GET_ACTIVITIES);
+            installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            installed = false;
+        }
+        return installed;
     }
 }
