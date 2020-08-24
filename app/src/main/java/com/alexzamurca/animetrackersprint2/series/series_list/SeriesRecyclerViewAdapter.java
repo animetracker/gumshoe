@@ -154,12 +154,10 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         TextView title;
         TextView next_episode;
         TextView air_date;
-        ImageView favourite;
         ImageView notifications_off;
         ImageView remove;
-        ImageView hide;
-        ImageView change_alert_delay;
-        ImageView change_color;
+        ImageView change_notification_time;
+        ImageView error_wrong_air_date;
 
         public ViewHolder(View itemView)
         {
@@ -168,37 +166,21 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             title = itemView.findViewById(R.id.title_series);
             next_episode = itemView.findViewById(R.id.nextEpisode_series);
             air_date = itemView.findViewById(R.id.airDate_series);
-            favourite = itemView.findViewById(R.id.favourite_series);
             notifications_off = itemView.findViewById(R.id.notification_off_series);
             remove = itemView.findViewById(R.id.remove_series);
-            hide = itemView.findViewById(R.id.hide_series);
-            change_alert_delay = itemView.findViewById(R.id.change_alert_delay_series);
-            change_color = itemView.findViewById(R.id.change_color_series);
+            change_notification_time = itemView.findViewById(R.id.change_notification_reminder_series);
+            error_wrong_air_date = itemView.findViewById(R.id.error_wrong_air_date_series);
 
             itemView.setOnClickListener(v ->
                     onSeriesListener.onSeriesClick(list.get(getAdapterPosition()))
             );
 
-            favourite.setOnClickListener(v ->
+            notifications_off.setOnClickListener(v ->
                     {
-                        Log.d(TAG, "ViewHolder: favourite clicked");
-                        if(favourite.getTag().toString().equals("notFavourite"))
-                        {
-                            favourite.setImageResource(R.drawable.ic_favorite);
-                            favourite.setTag("favourite");
-                        }
-                        else if(favourite.getTag().toString().equals("favourite"))
-                        {
-                            favourite.setImageResource(R.drawable.ic_favorite_border);
-                            favourite.setTag("notFavourite");
-                        }
-
+                        Log.d(TAG, "ViewHolder: notifications_off clicked");
+                        onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
                     }
 
-            );
-
-            notifications_off.setOnClickListener(v ->
-                    Log.d(TAG, "ViewHolder: notifications_off clicked")
             );
 
             remove.setOnClickListener(v -> {
@@ -211,17 +193,18 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                 refreshSeriesList();
             });
 
-            hide.setOnClickListener(v ->
-                    Log.d(TAG, "ViewHolder: hide clicked")
+            change_notification_time.setOnClickListener(v ->
+                {
+                    Log.d(TAG, "ViewHolder: change_notification_time clicked");
+                    onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()));
+                }
             );
 
-            change_alert_delay.setOnClickListener(v ->
-                    Log.d(TAG, "ViewHolder: change_alert_delay clicked")
-            );
-
-            change_color.setOnClickListener(v ->
-                    Log.d(TAG, "ViewHolder: change color clicked")
-            );
+            error_wrong_air_date.setOnClickListener(v ->
+            {
+                Log.d(TAG, "ViewHolder: error_wrong_air_date clicked");
+                onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
+            });
         }
     }
 
@@ -234,6 +217,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     public interface OnSeriesListener
     {
         void onSeriesClick(Series series);
+        void onNotificationsOff(Series series);
+        void onChangeNotificationTime(Series series);
+        void onErrorWrongAirDate(Series series);
     }
 
     private class RemoveAsync extends AsyncTask<Void, Void, Void>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="230dp"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/greyishWhite">
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_close_black"
+        android:background="@color/greyishWhite"
+        android:id="@+id/wrong_air_date_close"
+        android:contentDescription="@string/no_internet"
+        android:layout_alignParentEnd="true"
+        android:layout_marginVertical="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wrong_air_date_explanation"
+        android:textColor="#000000"
+        android:layout_below="@id/wrong_air_date_close"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wrong_air_date_question"
+        android:text="@string/would_you_like_to"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_below="@id/wrong_air_date_explanation"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/wrong_air_date_question"
+        android:weightSum="100"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:id="@+id/wrong_air_date_change_time_zone_button"
+            android:text="@string/change_time_zone"
+            android:textSize="17sp"
+            android:textColor="#ffffff"
+            android:background="@drawable/blue_button"
+            android:layout_weight="50"
+            />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:id="@+id/wrong_air_date_change_air_date_button"
+            android:text="@string/change_air_date"
+            android:textSize="17sp"
+            android:textColor="@color/pleasantBlue"
+            android:background="@drawable/white_button"
+            android:layout_weight="50"/>
+    </LinearLayout>
+
+
+
+
+
+
+</RelativeLayout>

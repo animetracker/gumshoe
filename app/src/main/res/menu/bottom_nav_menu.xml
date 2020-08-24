@@ -7,13 +7,8 @@
         android:title="@string/list"/>
 
     <item
-        android:id="@+id/profileFragment"
-        android:icon="@drawable/ic_baseline_person_24"
-        android:title="@string/profile"/>
-
-    <item
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+        android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings"/>
 
 </menu>

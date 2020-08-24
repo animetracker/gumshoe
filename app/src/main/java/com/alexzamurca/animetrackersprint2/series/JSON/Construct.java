@@ -2,7 +2,7 @@ package com.alexzamurca.animetrackersprint2.series.JSON;
 
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.series.Date.ConvertMillisToDate;
+import com.alexzamurca.animetrackersprint2.Date.ConvertMillisToDate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +91,9 @@ public class Construct
 
             Log.d(TAG, "constructFormattedJSON: description" + unformattedJson.getString("description"));
             json.put("description", unformattedJson.getString("description"));
-            Log.d(TAG, "constructFormattedJSON: \n\n\n");
+
+            json.put("notification_on", 1);
+            json.put("notification_change" , "");
 
         }
         catch(JSONException e)

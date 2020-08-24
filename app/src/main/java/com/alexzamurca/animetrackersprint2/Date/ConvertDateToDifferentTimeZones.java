@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Date;
+package com.alexzamurca.animetrackersprint2.Date;
 
 import java.util.HashMap;
 

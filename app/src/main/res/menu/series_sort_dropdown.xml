@@ -3,26 +3,42 @@
 
     <item
         android:id="@+id/sort_alphabetical"
-        android:title="@string/a_z"/>
+        android:title="@string/alphabetical_up"
+        android:checkable="true"/>
 
     <item
         android:id="@+id/sort_reverse_alphabetical"
-        android:title="@string/z_a"/>
+        android:title="@string/alphabetical_down"
+        android:checkable="true"/>
 
     <item
-        android:id="@+id/sort_favourite"
-        android:title="@string/most_favorite"/>
+        android:id="@+id/sort_favourite_down"
+        android:title="@string/favourite_up"
+        android:checkable="true"/>
 
     <item
-        android:id="@+id/sort_reverse_favourite"
-        android:title="@string/least_favourite"/>
+        android:id="@+id/sort_favourite_up"
+        android:title="@string/favourite_down"
+        android:checkable="true"/>
 
     <item
         android:id="@+id/sort_latest_release"
-        android:title="@string/latest"/>
+        android:title="@string/air_date_up"
+        android:checkable="true"/>
 
     <item
         android:id="@+id/sort_oldest_release"
-        android:title="@string/oldest"/>
+        android:title="@string/air_date_down"
+        android:checkable="true"/>
+
+    <item
+        android:id="@+id/sort_latest_add"
+        android:title="@string/add_date_up"
+        android:checkable="true"/>
+
+    <item
+        android:id="@+id/sort_oldest_add"
+        android:title="@string/add_date_down"
+        android:checkable="true"/>
 
 </menu>

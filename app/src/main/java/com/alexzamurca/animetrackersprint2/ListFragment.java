@@ -2,6 +2,7 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,8 +36,10 @@ import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
+import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.bumptech.glide.Glide;
@@ -45,7 +48,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener {
     private static final String TAG = "ListFragment";
     private FragmentActivity mContext;
 
@@ -72,7 +75,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
         Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
         setHasOptionsMenu(true);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
         emptyListTV = mView.findViewById(R.id.series_empty_list);
         emptyListImage = mView.findViewById(R.id.series_empty_list_image);
@@ -114,6 +117,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.series_list_toolbar_menu, menu);
+
         MenuItem item = menu.findItem(R.id.series_list_toolbar_search);
         oldList = new ArrayList<>();
         
@@ -167,6 +171,12 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
             popup.getMenuInflater().inflate(R.menu.series_sort_dropdown, popup.getMenu());
 
+            // Get sort state from SharedPreferences
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", 7);
+
+            popup.getMenu().getItem(selection).setChecked(true);
+
             setupDropDownOnClick(popup);
 
             popup.show();
@@ -193,52 +203,110 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     {
         popup.setOnMenuItemClickListener(item ->
         {
-            AlphabeticalSortList alphabeticalSortList = new AlphabeticalSortList(adapter.getList());
-            DateSortSeriesList dateSortSeriesList = new DateSortSeriesList(adapter.getList());
-            switch (item.getTitle().toString())
-            {
-                case "A-Z":
-                    Log.d(TAG, "setupDropDownOnClick: sort A-Z clicked");
-                    List<Series> sortedList = alphabeticalSortList.sortAlphabetically();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
+            int itemIndex = findIndexOfItem(item, popup.getMenu());
 
-                case "Z-A":
-                    Log.d(TAG, "setupDropDownOnClick: sort Z-A clicked");
-                    sortedList = alphabeticalSortList.sortReverseAlphabetically();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
+            checkSelectionUncheckRest(item, popup.getMenu());
 
-                case "Most Favourite":
-                    Log.d(TAG, "setupDropDownOnClick: sort Most Favourite clicked");
-                    break;
+            sortListAccordingToSelection(itemIndex);
 
-                case "Least Favourite":
-                    Log.d(TAG, "setupDropDownOnClick: sort Least Favourite clicked");
-                    break;
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                case "Latest":
-                    Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
-                    sortedList = dateSortSeriesList.sortMostRecent();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
+            editor.putInt("selected_sort_option_index", itemIndex);
 
-                case "Oldest":
-                    Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
-                    sortedList = dateSortSeriesList.sortLeastRecent();
-                    Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                    printList(sortedList);
-                    adapter.restoreFromList(sortedList);
-                    break;
-            }
+            editor.apply();
             return true;
         });
+    }
+
+    private int findIndexOfItem(MenuItem item, Menu menu)
+    {
+        for(int i = 0; i < menu.size(); i++)
+        {
+            if(menu.getItem(i).getItemId() == item.getItemId()) return i;
+        }
+        return -1;
+    }
+
+    private void checkSelectionUncheckRest(MenuItem item, Menu menu)
+    {
+        // Set all items to unchecked
+        for(int i = 0; i < menu.size(); i++)
+        {
+            menu.getItem(i).setChecked(false);
+        }
+
+        // Then check the selected item
+        item.setChecked(true);
+
+    }
+
+    private void sortListAccordingToSelection(int selection)
+    {
+        List<Series> listFromAdapter = adapter.getList();
+        AlphabeticalSortList alphabeticalSortList = new AlphabeticalSortList(listFromAdapter);
+        DateSortSeriesList dateSortSeriesList = new DateSortSeriesList(listFromAdapter);
+        switch (selection)
+        {
+            // No selection
+            case -1:
+                return;
+
+            // A-Z
+            case 0:
+                Log.d(TAG, "setupDropDownOnClick: sort A-Z clicked");
+                List<Series> sortedList = alphabeticalSortList.sortAlphabetically();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+                return;
+
+            // Z-A
+            case 1:
+                Log.d(TAG, "setupDropDownOnClick: sort Z-A clicked");
+                sortedList = alphabeticalSortList.sortReverseAlphabetically();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+                return;
+
+            //Most Favourite
+            case 2:
+                Log.d(TAG, "setupDropDownOnClick: sort Most Favourite clicked");
+                break;
+
+            // Least Favourite
+            case 3:
+                Log.d(TAG, "setupDropDownOnClick: sort Least Favourite clicked");
+                return;
+
+            // Latest
+            case 4:
+                Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
+                sortedList = dateSortSeriesList.sortMostRecent();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+                return;
+
+            // Oldest
+            case 5:
+                Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
+                sortedList = dateSortSeriesList.sortLeastRecent();
+                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
+                printList(sortedList);
+                adapter.restoreFromList(sortedList);
+                return;
+
+                // Add Date up
+            case 6:
+                Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
+                return;
+
+            // Add Date down
+            case 7:
+                Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
+        }
     }
 
     private void manageSearchView(SearchView searchView)
@@ -254,7 +322,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 adapter.getFilter().filter(query);
 
                 // Hide keyboard
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mView.findViewById(R.id.series_list_layout).getWindowToken(), 0);
 
                 return true;
@@ -305,7 +373,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private void initRecyclerView()
     {
         Log.d(TAG, "initRecyclerView: initialising");
-        RecyclerView recyclerView = getView().findViewById(R.id.series_recycler_view);
+        RecyclerView recyclerView = requireView().findViewById(R.id.series_recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -315,10 +383,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         Log.d(TAG, "initList: db connection");
 
         // Show loading - (credit: http://www.lowgif.com/view.html)
-        Glide.with(getContext())
+        Glide.with(requireContext())
                 .load(R.drawable.loading)
                 .into(loadingImage);
-        loadingTV.setText("Loading...");
+        loadingTV.setText(R.string.loading_3_dots);
 
         MySQLConnection mySQLConnection = new MySQLConnection();
         mySQLConnection.execute();
@@ -339,6 +407,34 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         showSeriesInfoFragment(series);
     }
 
+    @Override
+    public void onNotificationsOff(Series series)
+    {
+        NotificationsOffDialog dialog = new NotificationsOffDialog();
+        // need to pass series
+        Bundle args = new Bundle();
+        args.putSerializable("series", series);
+        dialog.setArguments(args);
+        dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+    }
+
+    @Override
+    public void onChangeNotificationTime(Series series)
+    {
+        mNavController.navigate(R.id.action_change_notification_reminder);
+    }
+
+    @Override
+    public void onErrorWrongAirDate(Series series)
+    {
+        IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
+        Bundle args = new Bundle();
+        args.putSerializable("incorrectAirDateListener", ListFragment.this);
+        args.putSerializable("series", series);
+        dialog.setArguments(args);
+        dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
+    }
+
     public void printList(List<Series> list)
     {
         for(Series sr:list)
@@ -351,6 +447,18 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     public void OnReportBugButtonClick()
     {
         mNavController.navigate(R.id.action_report_bug_dialog_button_clicked);
+    }
+
+    @Override
+    public void OnChangeTimeZoneClick()
+    {
+        mNavController.navigate(R.id.action_dialog_change_time_zone);
+    }
+
+    @Override
+    public void OnChangeAirDateClick()
+    {
+        mNavController.navigate(R.id.action_dialog_change_air_date);
     }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
@@ -375,7 +483,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         protected void onPostExecute(Void aVoid)
         {
             // Hide loading
-            Glide.with(getContext()).clear(loadingImage);
+            Glide.with(requireContext()).clear(loadingImage);
             loadingTV.setText("");
 
             // Stop refreshing (need this in case swipe refresh is used)
@@ -384,7 +492,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             // Empty List
             if(tempList.size() == 0)
             {
-                emptyListTV.setText(" Your Series List is empty!\nAdd any airing series series_row.xmlor\nseries soon to be aired\nby tapping the + button below.");
+                emptyListTV.setText(" Your Series List is empty!\nAdd any airing series or\nseries soon to be aired\nby tapping the + button below.");
                 emptyListLayout.setBackgroundResource(R.drawable.button);
                 emptyListImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
             }
@@ -399,6 +507,11 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             {
                 adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, Navigation.findNavController(mView));
                 initRecyclerView();
+
+                // Get sort state from SharedPreferences
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+                int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+                sortListAccordingToSelection(selection);
             }
             else
             {
