@@ -145,6 +145,7 @@ public class SettingsFragment extends Fragment
         if(item.getItemId() == R.id.settings_toolbar_share)
         {
             Toast.makeText(getContext(), "BugTest: share clicked!", Toast.LENGTH_LONG).show();
+            // this is a test.
         }
         return true;
     }

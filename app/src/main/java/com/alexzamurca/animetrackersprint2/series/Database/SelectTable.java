@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class SelectTable
 {
     private static final String TAG = "SelectTable";
-    String URL = "http://192.168.0.15:2000/list/";
+    String URL = "http://192.168.0.27:2000/list/";
 
     private final int userId;
     private boolean wasRequestSuccessful;
