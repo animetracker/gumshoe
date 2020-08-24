@@ -23,8 +23,8 @@ public class Insert
 
     private void constructFromUnformattedJSON(JSONObject json)
     {
-        Construct jsonConstructor = new Construct(user_id, json);
-        this.json = jsonConstructor.constructFormattedJSON();
+        Construct jsonConstructor = new Construct();
+        this.json = jsonConstructor.constructFormattedInsertJSON(json, user_id);
     }
 
     // 0 = successful new addition, 1 = already in list, 2: fail

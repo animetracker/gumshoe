@@ -32,7 +32,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
+import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationsOn;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
@@ -48,7 +50,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener {
     private static final String TAG = "ListFragment";
     private FragmentActivity mContext;
 
@@ -414,8 +416,17 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         // need to pass series
         Bundle args = new Bundle();
         args.putSerializable("series", series);
+        args.putSerializable("onResponseListener",this);
         dialog.setArguments(args);
         dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+    }
+
+    @Override
+    public void onNotificationsOn(Series series)
+    {
+        UpdateNotificationsOnAsync updateNotificationsOnAsync = new UpdateNotificationsOnAsync();
+        updateNotificationsOnAsync.setSelectedSeries(series);
+        updateNotificationsOnAsync.execute();
     }
 
     @Override
@@ -459,6 +470,14 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     public void OnChangeAirDateClick()
     {
         mNavController.navigate(R.id.action_dialog_change_air_date);
+    }
+
+    @Override
+    public void onYesClickListener(Series series)
+    {
+        UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
+        updateNotificationsOffAsync.setSelectedSeries(series);
+        updateNotificationsOffAsync.execute();
     }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
@@ -522,6 +541,76 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
             }
 
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class UpdateNotificationsOffAsync extends AsyncTask<Void, Void, Void>
+    {
+        private boolean isSuccessful;
+        private Series selectedSeries;
+
+        public void setSelectedSeries(Series selectedSeries)
+        {
+            this.selectedSeries = selectedSeries;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(0, selectedSeries.getAnilist_id(), 0);
+            isSuccessful = updateNotificationsOn.update() == 0;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            String title = selectedSeries.getTitle();
+            if(isSuccessful)
+            {
+                Toast.makeText(getContext(), "You will no longer receive notifications for \"" + title +"\"!", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Failed to turn notifications off for \"" + title +"\", notifications are still on.", Toast.LENGTH_LONG).show();
+            }
+            mNavController.navigate(R.id.listFragment);
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class UpdateNotificationsOnAsync extends AsyncTask<Void, Void, Void>
+    {
+        private boolean isSuccessful;
+        private Series selectedSeries;
+
+        public void setSelectedSeries(Series selectedSeries)
+        {
+            this.selectedSeries = selectedSeries;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(0, selectedSeries.getAnilist_id(), 1);
+            isSuccessful = updateNotificationsOn.update() == 0;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            String title = selectedSeries.getTitle();
+            if(isSuccessful)
+            {
+                Toast.makeText(getContext(), "You will now receive notifications for \"" + title +"\"!", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Failed to turn notifications on for \"" + title +"\", notifications are still off.", Toast.LENGTH_LONG).show();
+            }
+            mNavController.navigate(R.id.listFragment);
             super.onPostExecute(aVoid);
         }
     }

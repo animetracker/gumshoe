@@ -1,24 +1,30 @@
 package com.alexzamurca.animetrackersprint2.series.dialog;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.series.Database.Remove;
+import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationsOn;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.io.Serializable;
 
 public class NotificationsOffDialog extends DialogFragment
 {
+    private OnResponseListener onResponseListener;
 
     @Nullable
     @Override
@@ -28,6 +34,7 @@ public class NotificationsOffDialog extends DialogFragment
 
         assert getArguments() != null;
         Series series  = (Series) getArguments().getSerializable("series");
+        onResponseListener = (OnResponseListener)getArguments().getSerializable("onResponseListener");
 
         TextView explanation = view.findViewById(R.id.notifications_off_explanation);
         assert series != null;
@@ -36,7 +43,7 @@ public class NotificationsOffDialog extends DialogFragment
         Button yesButton = view.findViewById(R.id.notifications_off_yes_button);
         yesButton.setOnClickListener(v ->
         {
-            // Communicate with database and update Notification_off state of series
+            onResponseListener.onYesClickListener(series);
             dismiss();
         });
 
@@ -55,5 +62,10 @@ public class NotificationsOffDialog extends DialogFragment
     {
         // format: "It appears, you do not want to receive notifications for when a {series_name} episode is airing! Notifications can be turned back on in the future."
         return "It appears, you do not want to receive notifications for when a \"" + series.getTitle() + "\"  episode is airing! Notifications can be turned back on in the future.";
+    }
+
+    public interface OnResponseListener
+    {
+        void onYesClickListener(Series series);
     }
 }

@@ -11,16 +11,8 @@ import org.json.JSONObject;
 public class Construct 
 {
     private static final String TAG = "Construct";
-    private int user_id;
-    JSONObject unformattedJson;
 
-    public Construct(int user_id, JSONObject unformattedJson)
-    {
-        this.user_id = user_id;
-        this.unformattedJson = unformattedJson;
-    }
-
-    public JSONObject constructFormattedJSON()
+    public JSONObject constructFormattedInsertJSON(JSONObject unformattedJson, int user_id)
     {
         JSONObject json = new JSONObject();
         try
@@ -92,8 +84,8 @@ public class Construct
             Log.d(TAG, "constructFormattedJSON: description" + unformattedJson.getString("description"));
             json.put("description", unformattedJson.getString("description"));
 
-            json.put("notification_on", 1);
-            json.put("notification_change" , "");
+            json.put("notifications_on", 1);
+            json.put("notification_change" , 0);
 
         }
         catch(JSONException e)
@@ -101,6 +93,66 @@ public class Construct
             Log.d(TAG, "construct: JSONException");
         }
 
+        return json;
+    }
+
+    public JSONObject constructFormattedUpdateNotificationsOnJSON(int notifications_on)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("notifications_on", notifications_on);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationsOnJSON: JSONException");
+        }
+        return json;
+    }
+
+    public JSONObject constructFormattedUpdateNotificationChangeJSON(int notification_change)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("notification_change", notification_change);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException");
+        }
+        return json;
+    }
+
+    public JSONObject constructFormattedUpdateSeriesAiringJSON(int next_episode_number, String air_date, String status)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("next_episode_number", next_episode_number);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, next episode number");
+        }
+
+        try
+        {
+            json.put("air_date", air_date);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, air_date");
+        }
+
+        try
+        {
+            json.put("status", status);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, status");
+        }
         return json;
     }
 }

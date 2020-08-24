@@ -68,6 +68,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
         String air_date = "Releasing:\n" + list.get(position).getAir_date();
         String cover_image = list.get(position).getCover_image();
+        int notifications_on = list.get(position).getNotifications_on();
 
         // Setting the image
         Glide.with(context)
@@ -79,6 +80,18 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         holder.title.setText(title);
         holder.next_episode.setText(next_episode);
         holder.air_date.setText(air_date);
+        if(notifications_on==1)
+        {
+            holder.notifications_off.setImageResource(R.drawable.ic_notifications_on);
+            holder.notifications_off.setTag("notifications_on");
+            Log.d(TAG, "onBindViewHolder: " + title + " has notifications on");
+        }
+        else if(notifications_on==0)
+        {
+            holder.notifications_off.setImageResource(R.drawable.ic_notifications_off_blue);
+            holder.notifications_off.setTag("notifications_off");
+            Log.d(TAG, "onBindViewHolder: " + title + "has notifications off");
+        }
     }
 
     @Override
@@ -178,7 +191,14 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             notifications_off.setOnClickListener(v ->
                     {
                         Log.d(TAG, "ViewHolder: notifications_off clicked");
-                        onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
+                        if(notifications_off.getTag()=="notifications_off")
+                        {
+                            onSeriesListener.onNotificationsOn(list.get(getAdapterPosition()));
+                        }
+                        else if(notifications_off.getTag()=="notifications_on")
+                        {
+                            onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
+                        }
                     }
 
             );
@@ -218,6 +238,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     {
         void onSeriesClick(Series series);
         void onNotificationsOff(Series series);
+        void onNotificationsOn(Series series);
         void onChangeNotificationTime(Series series);
         void onErrorWrongAirDate(Series series);
     }

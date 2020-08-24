@@ -8,7 +8,6 @@ import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class SelectTable
@@ -56,6 +55,8 @@ public class SelectTable
             String cover_image = "";
             String description = "";
             int anilist_id = -1;
+            int notifications_on = 1;
+            int notification_change = 0;
 
 
             try {
@@ -98,10 +99,22 @@ public class SelectTable
             try {
                 anilist_id = jsonResponse.getJSONObject(i).getInt("anilist_id");
             } catch (JSONException e) {
-                Log.d(TAG, "getTitles: JSONException when trying to get description");
+                Log.d(TAG, "getTitles: JSONException when trying to get anilist_id");
             }
 
-            seriesList.add(new Series(title, cover_image, air_date, description,anilist_id,next_episode_number));
+            try {
+                notification_change = jsonResponse.getJSONObject(i).getInt("notification_change");
+            } catch (JSONException e) {
+                Log.d(TAG, "getTitles: JSONException when trying to get notification_change");
+            }
+
+            try {
+                notifications_on = jsonResponse.getJSONObject(i).getInt("notifications_on");
+            } catch (JSONException e) {
+                Log.d(TAG, "getTitles: JSONException when trying to get notifications_on");
+            }
+
+            seriesList.add(new Series(title, cover_image, air_date, description,anilist_id,next_episode_number,notification_change,notifications_on));
         }
         wasRequestSuccessful = true;
         return seriesList;
