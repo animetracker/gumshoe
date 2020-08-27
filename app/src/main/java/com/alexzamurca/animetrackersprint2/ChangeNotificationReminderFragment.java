@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +25,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -230,7 +232,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         {
 
             Toast.makeText(getContext(), "Your changes have been saved!", Toast.LENGTH_LONG).show();
-            navController.navigateUp();
+            updateNotificationChangeDB();
         });
     }
 
@@ -345,5 +347,53 @@ public class ChangeNotificationReminderFragment extends Fragment
         String newDate = convertDateToCalendar.reverseConvert(calendar);
         String notificationChange = quantity + " " + metric + " " + beforeAfter + "\nMeaning you will be notified on: " + newDate;
         newChangeTV.setText(notificationChange);
+    }
+
+    private void updateNotificationChangeDB()
+    {
+        UpdateNotificationReminderAsync updateNotificationReminderAsync = new UpdateNotificationReminderAsync();
+        updateNotificationReminderAsync.execute();
+    }
+
+    private class UpdateNotificationReminderAsync extends AsyncTask<Void, Void, Void>
+    {
+        private boolean isSuccessful;
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            String change;
+            if(quantity==0) change = "";
+            else
+            {
+                change = quantity + " " + metric + " " + beforeAfter;
+            }
+            UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(0, series.getAnilist_id(), change);
+            isSuccessful = updateNotificationChange.update() == 0;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            String title = series.getTitle();
+            if(isSuccessful)
+            {
+                if(quantity==0)
+                {
+                    Toast.makeText(getContext(), "You have changed to be reminded the moment a " + "\"" + title +"\" episode releases!", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "You have changed to be reminded\n" + quantity + " " + metric + " " + beforeAfter +  "\n\"" + title +"\"'s air date!", Toast.LENGTH_LONG).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Failed to change notification reminder for \"" + title +"\", report this bug.", Toast.LENGTH_LONG).show();
+            }
+            navController.navigateUp();
+            super.onPostExecute(aVoid);
+        }
     }
 }

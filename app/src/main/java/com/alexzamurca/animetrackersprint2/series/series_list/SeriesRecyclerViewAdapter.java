@@ -69,6 +69,8 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         String air_date = "Releasing:\n" + list.get(position).getAir_date();
         String cover_image = list.get(position).getCover_image();
         int notifications_on = list.get(position).getNotifications_on();
+        String notification_change = list.get(position).getNotification_change();
+        String air_date_change = list.get(position).getAir_date_change();
 
         // Setting the image
         Glide.with(context)
@@ -92,6 +94,15 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             holder.notifications_off.setTag("notifications_off");
             Log.d(TAG, "onBindViewHolder: " + title + "has notifications off");
         }
+        if(!notification_change.equals(""))
+        {
+            holder.change_notification_time.setImageResource(R.drawable.ic_timer_sand_blue);
+        }
+        if(!air_date_change.equals(""))
+        {
+            holder.error_wrong_air_date.setImageResource(R.drawable.ic_error_blue);
+        }
+
     }
 
     @Override
