@@ -2,6 +2,7 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +28,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.series.Database.UpdateAirDateChange;
+import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -191,6 +195,10 @@ public class ChangeAirDateFragment extends Fragment
     private void setupSaveButton(View view)
     {
         saveButton = view.findViewById(R.id.change_air_date_save_button);
+        saveButton.setVisibility(View.GONE);
+        saveButton.setOnClickListener(v ->
+            updateAirDateDB()
+        );
     }
 
     private void openURL(String URL)
@@ -359,5 +367,56 @@ public class ChangeAirDateFragment extends Fragment
 
         hoursErrorLayout = view.findViewById(R.id.hours_air_date_warning);
         hoursErrorLayout.setVisibility(View.GONE);
+    }
+
+    private void updateAirDateDB()
+    {
+        UpdateAirDateAsync updateAirDateAsync = new UpdateAirDateAsync();
+        updateAirDateAsync.execute();
+    }
+
+    private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
+    {
+        private boolean isSuccessful;
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            String change;
+            if(hours_to_change==0 && minutes_to_change==0) change = "";
+            else
+            {
+                String sign;
+                if(isSignNegative) sign = "-";
+                else sign = "+";
+                change = sign + hours_to_change + minutes_to_change;
+            }
+            UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(0, series.getAnilist_id(), change);
+            isSuccessful = updateAirDateChange.update() == 0;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            String title = series.getTitle();
+            if(isSuccessful)
+            {
+                if(hours_to_change==0 && minutes_to_change==0)
+                {
+                    Toast.makeText(getContext(), "You have changed to use the air date provided by AniList for " + "\"" + title +"\"!", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "You have changed the air date of" +  "\n\"" + title +"\"!", Toast.LENGTH_LONG).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Failed to change air date for \"" + title +"\", report this bug.", Toast.LENGTH_LONG).show();
+            }
+            navController.navigateUp();
+            super.onPostExecute(aVoid);
+        }
     }
 }

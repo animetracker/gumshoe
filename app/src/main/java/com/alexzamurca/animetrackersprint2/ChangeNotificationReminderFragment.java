@@ -263,11 +263,8 @@ public class ChangeNotificationReminderFragment extends Fragment
         saveButton = view.findViewById(R.id.change_notification_reminder_save_button);
         saveButton.setVisibility(View.GONE);
         saveButton.setOnClickListener(v ->
-        {
-
-            Toast.makeText(getContext(), "Your changes have been saved!", Toast.LENGTH_LONG).show();
-            updateNotificationChangeDB();
-        });
+            updateNotificationChangeDB()
+        );
     }
 
     private void setupTextViews(View view)
