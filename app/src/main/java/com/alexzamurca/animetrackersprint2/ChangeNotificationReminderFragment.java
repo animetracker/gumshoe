@@ -64,6 +64,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         initSeries();
+        setVariables();
         navController = Navigation.findNavController(view);
         Toast.makeText(getContext(), "Any changes made will not change the air date shown in the series list screen.", Toast.LENGTH_LONG).show();
         setupToolbar(view);
@@ -87,6 +88,23 @@ public class ChangeNotificationReminderFragment extends Fragment
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void setVariables()
+    {
+        String notification__change = series.getNotification_change();
+        if(!notification__change.equals(""))
+        {
+            String[] quantityMetricBAArray  = notification__change.split(" ");
+            int quantityValue = Integer.parseInt(quantityMetricBAArray[0]);
+            String metricValue = quantityMetricBAArray[1];
+            String before_after = quantityMetricBAArray[2];
+
+
+            quantity = quantityValue;
+            metric = metricValue;
+            beforeAfter = before_after;
+        }
+    }
+
     private void setupSpinners(View view)
     {
         setupMetricSpinner(view);
@@ -97,6 +115,18 @@ public class ChangeNotificationReminderFragment extends Fragment
     {
         Spinner spinner = view.findViewById(R.id.change_notification_reminder_metric_spinner);
 
+        switch (metric)
+        {
+            case "minutes":
+                spinner.setSelection(0);
+                break;
+            case "hours":
+                spinner.setSelection(1);
+                break;
+            case "days":
+                spinner.setSelection(2);
+                break;
+        }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -144,6 +174,9 @@ public class ChangeNotificationReminderFragment extends Fragment
     {
         Spinner spinner = view.findViewById(R.id.change_notification_reminder_before_after_spinner);
 
+        if(beforeAfter.equals("before")) spinner.setSelection(0);
+        if(beforeAfter.equals("after")) spinner.setSelection(1);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -167,6 +200,7 @@ public class ChangeNotificationReminderFragment extends Fragment
     private void setupEditText(View view)
     {
         EditText quantityET = view.findViewById(R.id.change_notification_reminder_quantity);
+        if(quantity!=0) quantityET.setText(Integer.toString(quantity), TextView.BufferType.NORMAL);
         quantityET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -258,7 +292,6 @@ public class ChangeNotificationReminderFragment extends Fragment
             changeText = change;
         }
         TextView changeTV = view.findViewById(R.id.change_notification_reminder_change);
-
         changeTV.setText(changeText);
 
         newChangeTV = view.findViewById(R.id.change_notification_reminder_new_change);

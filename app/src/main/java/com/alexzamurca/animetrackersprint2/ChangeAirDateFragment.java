@@ -3,12 +3,15 @@ package com.alexzamurca.animetrackersprint2;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -39,10 +42,12 @@ public class ChangeAirDateFragment extends Fragment
 
     private ConvertDateToCalendar convertDateToCalendar;
     private Series series;
-    private Calendar oldTimeCalendar;
     private TextView newTimeTV;
     private FloatingActionButton saveButton;
     private NavController navController;
+    private LinearLayout errorLayout;
+    private LinearLayout hoursErrorLayout;
+    private LinearLayout minutesErrorLayout;
 
     @Nullable
     @Override
@@ -56,14 +61,32 @@ public class ChangeAirDateFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         initSeries();
         convertDateToCalendar = new ConvertDateToCalendar();
-        oldTimeCalendar = convertDateToCalendar.convert(series.getAir_date());
         navController = Navigation.findNavController(view);
         setupToolbar(view);
         setupTextViews(view);
         setupCalendarButtons(view);
         setupSaveButton(view);
         setupHiddenLayoutAndButtons(view);
-        setupSpinners(view);
+        setupSignSpinner(view);
+        setupErrorLayouts(view);
+        setupHoursEditText(view);
+        setupMinutesEditText(view);
+    }
+
+    private void setVariables()
+    {
+        String air_date_change = series.getAir_date_change();
+        if(!air_date_change.equals(""))
+        {
+            String[] signHoursMinutesArray  = air_date_change.split(":");
+            Character sign = air_date_change.toCharArray()[0];
+            int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+            int minutes = Integer.parseInt(signHoursMinutesArray[1]);
+
+            isSignNegative = sign.equals('-');
+            hours_to_change = hours;
+            minutes_to_change =  minutes;
+        }
     }
 
     private void setupToolbar(View view)
@@ -94,6 +117,24 @@ public class ChangeAirDateFragment extends Fragment
 
         newTimeTV = view.findViewById(R.id.change_air_time_new_time);
         newTimeTV.setText(oldAirDate);
+
+        String oldTitle = "Current Air Date Change for\n\"" + series.getTitle() + "\":";
+        TextView changeTitle = view.findViewById(R.id.change_air_date_change_title);
+        changeTitle.setText(oldTitle);
+
+        String change = series.getAir_date_change();
+        String changeText;
+        if(change.equals(""))
+        {
+            changeText = "There is currently no air date change set for this series, you will be notified at the time specified by AniList!";
+        }
+        else
+        {
+            changeText = change;
+        }
+        TextView changeTV = view.findViewById(R.id.change_air_date_change);
+        changeTV.setText(changeText);
+
     }
 
     private void initSeries()
@@ -101,6 +142,8 @@ public class ChangeAirDateFragment extends Fragment
         assert getArguments() != null;
         ChangeNotificationReminderFragmentArgs args = ChangeNotificationReminderFragmentArgs.fromBundle(getArguments());
         series = args.getSeries();
+
+        setVariables();
     }
 
     private void setupCalendarButtons(View view)
@@ -157,16 +200,12 @@ public class ChangeAirDateFragment extends Fragment
         requireContext().startActivity(intent);
     }
 
-    private void setupSpinners(View view)
-    {
-        setupSignSpinner(view);
-        setupHoursSpinner(view);
-        setupMinutesSpinner(view);
-    }
-
     private void setupSignSpinner(View view)
     {
         Spinner spinner = view.findViewById(R.id.air_date_sign_spinner);
+
+        if(isSignNegative) spinner.setSelection(1);
+        else spinner.setSelection(0);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -195,58 +234,106 @@ public class ChangeAirDateFragment extends Fragment
         });
     }
 
-    private void setupHoursSpinner(View view)
+    private void setupHoursEditText(View view)
     {
-        Spinner spinner = view.findViewById(R.id.air_date_hours_spinner);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        EditText hoursET = view.findViewById(R.id.air_date_hours_edit_text);
+        hoursET.setText(Integer.toString(hours_to_change), TextView.BufferType.NORMAL);
+        hoursET.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
             {
-                String selectionString = parent.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: hours selected:" + selectionString);
 
-                hours_to_change = Integer.parseInt(selectionString);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                errorLayout.setVisibility(View.GONE);
+                hoursErrorLayout.setVisibility(View.GONE);
+
+                // if the edit text is not empty (cant convert nothing to integer)
+                if(!s.toString().equals(""))
+                {
+                    if(Integer.parseInt(s.toString())>23)
+                    {
+                        errorLayout.setVisibility(View.VISIBLE);
+                        hoursErrorLayout.setVisibility(View.VISIBLE);
+                        saveButton.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        hours_to_change = Integer.parseInt(s.toString());
+                        saveButton.setVisibility(View.VISIBLE);
+                    }
+                }
+                else
+                {
+                    saveButton.setVisibility(View.GONE);
+                }
+
                 updateNewTimeTV();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
+            public void afterTextChanged(Editable s) {
 
             }
         });
     }
 
-    private void setupMinutesSpinner(View view)
+    private void setupMinutesEditText(View view)
     {
-        Spinner spinner = view.findViewById(R.id.air_date_minutes_spinner);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        EditText minutesET = view.findViewById(R.id.air_date_minutes_edit_text);
+        minutesET.setText(Integer.toString(minutes_to_change), TextView.BufferType.EDITABLE);
+        minutesET.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
             {
-                String selectionString = parent.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: minutes selected:" + selectionString);
 
-                minutes_to_change = Integer.parseInt(selectionString);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                errorLayout.setVisibility(View.GONE);
+                minutesErrorLayout.setVisibility(View.GONE);
+
+                // if the edit text is not empty (cant convert nothing to integer)
+                if(!s.toString().equals(""))
+                {
+                    if(Integer.parseInt(s.toString())>59)
+                    {
+                        errorLayout.setVisibility(View.VISIBLE);
+                        minutesErrorLayout.setVisibility(View.VISIBLE);
+                        saveButton.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        minutes_to_change = Integer.parseInt(s.toString());
+                        saveButton.setVisibility(View.VISIBLE);
+                    }
+                }
+                else
+                {
+                    saveButton.setVisibility(View.GONE);
+                }
+
                 updateNewTimeTV();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
+            public void afterTextChanged(Editable s) {
 
             }
         });
     }
+
+
 
     private void updateNewTimeTV()
     {
         // Form string
-        Calendar newCalendar = oldTimeCalendar;
+        Calendar newCalendar = convertDateToCalendar.convert(series.getAir_date());
         // Add hours, minutes
         if(isSignNegative)
         {
@@ -260,5 +347,17 @@ public class ChangeAirDateFragment extends Fragment
         }
         String text = convertDateToCalendar.reverseConvert(newCalendar);
         newTimeTV.setText(text);
+    }
+
+    private void setupErrorLayouts(View view)
+    {
+        errorLayout = view.findViewById(R.id.change_air_date_error_layout);
+        errorLayout.setVisibility(View.GONE);
+
+        minutesErrorLayout = view.findViewById(R.id.minutes_air_date_warning);
+        minutesErrorLayout.setVisibility(View.GONE);
+
+        hoursErrorLayout = view.findViewById(R.id.hours_air_date_warning);
+        hoursErrorLayout.setVisibility(View.GONE);
     }
 }

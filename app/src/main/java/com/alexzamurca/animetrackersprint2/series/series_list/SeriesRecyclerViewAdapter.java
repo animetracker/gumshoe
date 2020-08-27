@@ -16,11 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -66,13 +68,13 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             next_episode += Integer.toString(next_episode_number);
         }
 
-        String air_date = "Releasing:\n" + list.get(position).getAir_date();
+        String air_date = list.get(position).getAir_date();
         String cover_image = list.get(position).getCover_image();
         int notifications_on = list.get(position).getNotifications_on();
         String notification_change = list.get(position).getNotification_change();
         String air_date_change = list.get(position).getAir_date_change();
 
-        // Setting the image
+        // Setting the cover image
         Glide.with(context)
                 .asBitmap()
                 .load(cover_image)
@@ -81,27 +83,10 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         // Setting the text views
         holder.title.setText(title);
         holder.next_episode.setText(next_episode);
-        holder.air_date.setText(air_date);
-        if(notifications_on==1)
-        {
-            holder.notifications_off.setImageResource(R.drawable.ic_notifications_on);
-            holder.notifications_off.setTag("notifications_on");
-            Log.d(TAG, "onBindViewHolder: " + title + " has notifications on");
-        }
-        else if(notifications_on==0)
-        {
-            holder.notifications_off.setImageResource(R.drawable.ic_notifications_off_blue);
-            holder.notifications_off.setTag("notifications_off");
-            Log.d(TAG, "onBindViewHolder: " + title + "has notifications off");
-        }
-        if(!notification_change.equals(""))
-        {
-            holder.change_notification_time.setImageResource(R.drawable.ic_timer_sand_blue);
-        }
-        if(!air_date_change.equals(""))
-        {
-            holder.error_wrong_air_date.setImageResource(R.drawable.ic_error_blue);
-        }
+        showAirDate(holder, air_date, air_date_change);
+        sortNotificationStateColours(holder, notifications_on, title);
+        sortNotificationReminderAndErrorColours(holder, notification_change, air_date_change);
+
 
     }
 
@@ -163,13 +148,70 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         notifyDataSetChanged();
     }
 
-    public void printList(List<Series> list)
+    private void sortNotificationStateColours(SeriesRecyclerViewAdapter.ViewHolder holder, int notifications_on, String title)
     {
-        Log.d(TAG, "printList: printing");
-        for(Series sr:list)
+        if(notifications_on==1)
         {
-            Log.d(TAG, "||" + sr.getCover_image() + "|" + sr.getTitle() + "|" + sr.getAir_date() + "|" + sr.getEpisode_number() + "||");
+            holder.notifications_off.setImageResource(R.drawable.ic_notifications_on);
+            holder.notifications_off.setTag("notifications_on");
+            Log.d(TAG, "onBindViewHolder: " + title + " has notifications on");
         }
+        else if(notifications_on==0)
+        {
+            holder.notifications_off.setImageResource(R.drawable.ic_notifications_off_blue);
+            holder.notifications_off.setTag("notifications_off");
+            Log.d(TAG, "onBindViewHolder: " + title + "has notifications off");
+        }
+    }
+
+    private void sortNotificationReminderAndErrorColours(SeriesRecyclerViewAdapter.ViewHolder holder, String notification_change, String air_date_change)
+    {
+        if(!notification_change.equals(""))
+        {
+            holder.change_notification_time.setImageResource(R.drawable.ic_timer_sand_blue);
+        }
+        if(!air_date_change.equals(""))
+        {
+            holder.error_wrong_air_date.setImageResource(R.drawable.ic_error_blue);
+        }
+    }
+
+    private void showAirDate(SeriesRecyclerViewAdapter.ViewHolder holder, String air_date, String air_date_change)
+    {
+        String newAirDate;
+        // Account for the fact that there may not be any change
+        if(!air_date_change.equals(""))
+        {
+            ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+            Calendar calendar = convertDateToCalendar.convert(air_date);
+
+            // get sign, hours, minutes from air_date change
+            String[] signHoursMinutesArray  = air_date_change.split(":");
+            Character sign = air_date_change.toCharArray()[0];
+            int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+            int minutes = Integer.parseInt(signHoursMinutesArray[1]);
+
+            if(sign.equals('+'))
+            {
+                calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                calendar.add(Calendar.MINUTE, +minutes);
+            }
+            else if(sign.equals('-'))
+            {
+                calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                calendar.add(Calendar.MINUTE, -minutes);
+            }
+
+            newAirDate = convertDateToCalendar.reverseConvert(calendar);
+        }
+        else
+        {
+            newAirDate = air_date;
+        }
+
+        newAirDate = "Releasing:\n" + newAirDate;
+
+        holder.air_date.setText(newAirDate);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
