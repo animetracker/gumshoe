@@ -31,8 +31,8 @@ public class NotificationAiringChannel
     // Will happen at login and at additions to list
     public void setNotification()
     {
-        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar(series.getAir_date());
-        Calendar calendarAirTime  = convertDateToCalendar.convert();
+        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+        Calendar calendarAirTime  = convertDateToCalendar.convert(series.getAir_date());
         if(calendarAirTime != null)
         {
             startAlarm(calendarAirTime);

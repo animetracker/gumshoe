@@ -28,15 +28,18 @@ public class IncorrectAirDateDialog extends DialogFragment
 
         assert getArguments() != null;
         IncorrectAirDateListener listener = (IncorrectAirDateListener)getArguments().getSerializable("incorrectAirDateListener");
+        assert listener != null;
         Series series  = (Series) getArguments().getSerializable("series");
+        assert series != null;
 
         TextView explanation = view.findViewById(R.id.wrong_air_date_explanation);
-        assert series != null;
+
         explanation.setText(buildExplanation(series));
 
         Button changeTimeZone = view.findViewById(R.id.wrong_air_date_change_time_zone_button);
         changeTimeZone.setOnClickListener(v ->
         {
+
             listener.OnChangeTimeZoneClick();
             dismiss();
         });
@@ -44,7 +47,7 @@ public class IncorrectAirDateDialog extends DialogFragment
         Button changeAirDate = view.findViewById(R.id.wrong_air_date_change_air_date_button);
         changeAirDate.setOnClickListener(v ->
         {
-            listener.OnChangeAirDateClick();
+            listener.OnChangeAirDateClick(series);
             dismiss();
         });
 
@@ -62,6 +65,6 @@ public class IncorrectAirDateDialog extends DialogFragment
     public interface IncorrectAirDateListener extends Serializable
     {
         void OnChangeTimeZoneClick();
-        void OnChangeAirDateClick();
+        void OnChangeAirDateClick(Series series);
     }
 }

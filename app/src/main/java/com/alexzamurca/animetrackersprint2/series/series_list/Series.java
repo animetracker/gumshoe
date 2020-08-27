@@ -10,10 +10,11 @@ public class Series implements Serializable
     String description;
     int anilist_id;
     int episode_number;
-    int notification_change;
+    String notification_change;
+    String air_date_change;
     int notifications_on;
 
-    public Series(String title, String cover_image, String air_date, String description, int anilist_id, int episode_number, int notification_change, int notifications_on) {
+    public Series(String title, String cover_image, String air_date, String description, int anilist_id, int episode_number, String notification_change, String air_date_change, int notifications_on) {
         this.title = title;
         this.cover_image = cover_image;
         this.air_date = air_date;
@@ -21,6 +22,7 @@ public class Series implements Serializable
         this.anilist_id = anilist_id;
         this.episode_number = episode_number;
         this.notification_change = notification_change;
+        this.air_date_change = air_date_change;
         this.notifications_on = notifications_on;
     }
 
@@ -48,9 +50,13 @@ public class Series implements Serializable
         return anilist_id;
     }
 
-    public int getNotification_change()
+    public String getNotification_change()
     {
         return notification_change;
+    }
+
+    public String getAir_date_change() {
+        return air_date_change;
     }
 
     public int getNotifications_on() {

@@ -10,9 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,15 +48,11 @@ public class SettingsFragment extends Fragment
 
         TextView reportBug = view.findViewById(R.id.settings_report_bug_header);
         reportBug.setOnClickListener(view1 ->
-        {
-            navController.navigate(R.id.action_reporting_bug);
-        });
+                navController.navigate(R.id.action_reporting_bug));
 
         Button changeTimeZone = view.findViewById(R.id.settings_change_time_zone_button);
         changeTimeZone.setOnClickListener(view1 ->
-        {
-            navController.navigate(R.id.action_change_time_zone);
-        });
+                navController.navigate(R.id.action_change_time_zone));
 
         // This method is used to create the dark mode using the switch
         darkModeSwitch= view.findViewById(R.id.settings_dark_mode_switch);
@@ -86,35 +80,6 @@ public class SettingsFragment extends Fragment
 
             }
             editor.apply();
-        });
-
-
-        Spinner alertDelaySpinner = view.findViewById(R.id.settings_alert_delay_spinner);
-
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        // By default no delay
-        int alertDelayOptionIndex = sharedPreferences.getInt("global_alert_delay_option_index", 6);
-        alertDelaySpinner.setSelection(alertDelayOptionIndex);
-
-        alertDelaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                String selectionString = parent.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: selected:" + selectionString);
-
-                // Set index preference
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("global_alert_delay_option_index", position);
-                editor.apply();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
         });
 
         return view;

@@ -25,12 +25,10 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.eclipse.jetty.util.ajax.JSON;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.TimeZone;
 

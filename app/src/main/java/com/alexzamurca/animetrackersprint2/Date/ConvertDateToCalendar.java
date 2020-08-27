@@ -11,14 +11,8 @@ import java.util.Locale;
 public class ConvertDateToCalendar
 {
     private static final String TAG = "ConvertDateToCalendar";
-    private String dateInFormat;
 
-    public ConvertDateToCalendar(String dateInFormat)
-    {
-        this.dateInFormat = dateInFormat;
-    }
-
-    public Calendar convert()
+    public Calendar convert(String dateInFormat)
     {
         Calendar calendar = Calendar.getInstance();
         if(!dateInFormat.equals(""))
@@ -38,6 +32,17 @@ public class ConvertDateToCalendar
             }
         }
         return null;
+    }
+
+    public String reverseConvert(Calendar calendar)
+    {
+        if(calendar!=null)
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm", Locale.getDefault());
+            Date date = calendar.getTime();
+            return sdf.format(date);
+        }
+        return "error";
     }
 
 }

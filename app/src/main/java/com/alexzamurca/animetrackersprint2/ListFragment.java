@@ -432,7 +432,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onChangeNotificationTime(Series series)
     {
-        mNavController.navigate(R.id.action_change_notification_reminder);
+        ListFragmentDirections.ActionChangeNotificationReminder action = ListFragmentDirections.actionChangeNotificationReminder(series);
+        mNavController.navigate(action);
     }
 
     @Override
@@ -467,9 +468,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     }
 
     @Override
-    public void OnChangeAirDateClick()
+    public void OnChangeAirDateClick(Series series)
     {
-        mNavController.navigate(R.id.action_dialog_change_air_date);
+        ListFragmentDirections.ActionDialogChangeAirDate action = ListFragmentDirections.actionDialogChangeAirDate(series);
+        mNavController.navigate(action);
     }
 
     @Override

@@ -85,7 +85,8 @@ public class Construct
             json.put("description", unformattedJson.getString("description"));
 
             json.put("notifications_on", 1);
-            json.put("notification_change" , 0);
+            json.put("notification_change" , "");
+            json.put("air_date_change" , "");
 
         }
         catch(JSONException e)
@@ -110,7 +111,7 @@ public class Construct
         return json;
     }
 
-    public JSONObject constructFormattedUpdateNotificationChangeJSON(int notification_change)
+    public JSONObject constructFormattedUpdateNotificationChangeJSON(String notification_change)
     {
         JSONObject json = new JSONObject();
         try
@@ -120,6 +121,20 @@ public class Construct
         catch(JSONException e)
         {
             Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException");
+        }
+        return json;
+    }
+
+    public JSONObject constructFormattedUpdateAirDateChangeJSON(String air_date_change)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("air_date_change", air_date_change);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateAirDateChangeJSON: JSONException");
         }
         return json;
     }
