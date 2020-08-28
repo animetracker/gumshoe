@@ -32,9 +32,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.alexzamurca.animetrackersprint2.series.Database.Remove;
+import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationsOn;
+import com.alexzamurca.animetrackersprint2.series.add_series.AddRecyclerViewAdapter;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
@@ -48,14 +50,17 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener, AddRecyclerViewAdapter.AddedNewSeriesListener {
     private static final String TAG = "ListFragment";
     private FragmentActivity mContext;
 
     private ArrayList<Series> list = new ArrayList<>();
     private List<Series> oldList;
+    private String session;
+
     private SeriesRecyclerViewAdapter adapter;
     private TextView emptyListTV;
     private ImageView emptyListImage;
@@ -72,6 +77,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
+
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
+        session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "onViewCreated: session:" + session);
 
         Log.d(TAG, "onCreate: starting");
 
@@ -346,7 +355,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
     private void changeToSearchFragment()
     {
-        mNavController.navigate(R.id.action_adding_new_series);
+        ListFragmentDirections.ActionAddingNewSeries action = ListFragmentDirections.actionAddingNewSeries(this);
+        mNavController.navigate(action);
     }
 
     private void showSeriesInfoFragment(Series series)
@@ -482,6 +492,92 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         updateNotificationsOffAsync.execute();
     }
 
+    @Override
+    public void onSuccessfulAdd()
+    {
+        List<Series> currentList = adapter.getList();
+        for(int i = 0; i < currentList.size(); i++)
+        {
+            String air_date = currentList.get(i).getAir_date();
+            // If has an air date
+            if(!air_date.equals(""))
+            {
+                ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+                Calendar calendar = convertDateToCalendar.convert(air_date);
+
+                String air_date_change = currentList.get(i).getAir_date_change();
+                String notification_change = currentList.get(i).getNotification_change();
+
+                // If series has a set air date change
+                if(!air_date_change.equals(""))
+                {
+                    // get sign, hours, minutes from air_date change
+                    String[] signHoursMinutesArray  = air_date_change.split(":");
+                    Character sign = air_date_change.toCharArray()[0];
+                    int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+                    int minutes = Integer.parseInt(signHoursMinutesArray[1]);
+
+                    if(sign.equals('+'))
+                    {
+                        calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                        calendar.add(Calendar.MINUTE, +minutes);
+                    }
+                    else if(sign.equals('-'))
+                    {
+                        calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                        calendar.add(Calendar.MINUTE, -minutes);
+                    }
+                }
+                // If series has a set notification change
+                if(!notification_change.equals(""))
+                {
+                    String[] quantityMetricBAArray  = notification_change.split(" ");
+                    int quantity = Integer.parseInt(quantityMetricBAArray[0]);
+                    String metric = quantityMetricBAArray[1];
+                    String beforeAfter = quantityMetricBAArray[2];
+
+
+                    // Add minutes, hours, days
+                    if(beforeAfter.equals("before"))
+                    {
+                        switch (metric)
+                        {
+                            case "minutes":
+                                calendar.add(Calendar.MINUTE, -quantity);
+                                break;
+                            case "hours":
+                                calendar.add(Calendar.HOUR_OF_DAY, -quantity);
+                                break;
+                            case "days":
+                                calendar.add(Calendar.DAY_OF_MONTH, -quantity);
+                                break;
+                        }
+                    }
+                    else if(beforeAfter.equals("after"))
+                    {
+                        switch (metric)
+                        {
+                            case "minutes":
+                                calendar.add(Calendar.MINUTE, +quantity);
+                                break;
+                            case "hours":
+                                calendar.add(Calendar.HOUR_OF_DAY, +quantity);
+                                break;
+                            case "days":
+                                calendar.add(Calendar.DAY_OF_MONTH, +quantity);
+                                break;
+                        }
+                    }
+                }
+
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), currentList.get(i));
+                notificationAiringChannel.setNotification(calendar);
+
+                Log.d(TAG, "onSuccessfulAdd: set notification for \"" + currentList.get(i).getTitle() + "\"");
+            }
+        }
+    }
+
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
     public class MySQLConnection extends AsyncTask<Void, Void, Void>
     {
@@ -491,7 +587,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         @Override
         protected Void doInBackground(Void... voids)
         {
-            SelectTable selectTable = new SelectTable(0);
+            SelectTable selectTable = new SelectTable(session);
             tempList = selectTable.getSeriesList();
             wasRequestSuccessful = selectTable.getWasRequestSuccessful();
             printList(tempList);
@@ -560,7 +656,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         @Override
         protected Void doInBackground(Void... voids)
         {
-            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(0, selectedSeries.getAnilist_id(), 0);
+            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 0);
             isSuccessful = updateNotificationsOn.update() == 0;
             return null;
         }
@@ -595,7 +691,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         @Override
         protected Void doInBackground(Void... voids)
         {
-            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(0, selectedSeries.getAnilist_id(), 1);
+            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 1);
             isSuccessful = updateNotificationsOn.update() == 0;
             return null;
         }

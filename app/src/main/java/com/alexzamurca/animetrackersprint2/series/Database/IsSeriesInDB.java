@@ -1,18 +1,20 @@
 package com.alexzamurca.animetrackersprint2.series.Database;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 
 public class IsSeriesInDB
 {
-    private final int user_id;
     private final String series_name;
+    private final String session;
     private static final String TAG = "IsSeriesInDB";
 
-    public IsSeriesInDB(int user_id, String series_name)
+    public IsSeriesInDB(String session, String series_name)
     {
-        this.user_id = user_id;
+        this.session = session;
         this.series_name = filterName(series_name);
     }
 
@@ -24,7 +26,7 @@ public class IsSeriesInDB
 
     private String getTitleFromDB()
     {
-        GET get = new GET("http://192.168.0.15:2000/findTitle/" + user_id + "/" + series_name);
+        GET get = new GET("http://192.168.0.15:2000/series/findTitle/" + session + "/" + series_name);
         return get.sendRequest();
     }
 

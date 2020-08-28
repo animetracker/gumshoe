@@ -11,15 +11,15 @@ public class UpdateAirDateChange
 {
     private static final String TAG = "Insert";
 
-    String URL = "http://192.168.0.15:2000/updateAirDateChange/";
-    private final int user_id;
+    String URL = "http://192.168.0.15:2000/series/updateAirDateChange/";
+    private final String session;
     private final int anilist_id;
     private final String air_date_change;
     private JSONObject json;
 
-    public UpdateAirDateChange(int user_id, int anilist_id, String air_date_change)
+    public UpdateAirDateChange(String session, int anilist_id, String air_date_change)
     {
-        this.user_id = user_id;
+        this.session = session;
         this.anilist_id = anilist_id;
         this.air_date_change = air_date_change;
         constructURL();
@@ -28,13 +28,13 @@ public class UpdateAirDateChange
 
     private void constructURL()
     {
-        URL = URL + user_id + "/" + anilist_id;
+        URL = URL + session + "/" + anilist_id;
     }
 
     private void constructJSON()
     {
         Construct jsonConstructor = new Construct();
-        this.json = jsonConstructor.constructFormattedUpdateAirDateChangeJSON(air_date_change);
+        this.json = jsonConstructor.constructUpdateAirDateChangeJSON(air_date_change);
     }
 
     // 0 = successful new addition, 1: fail

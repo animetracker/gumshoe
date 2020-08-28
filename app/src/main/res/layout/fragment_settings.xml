@@ -103,9 +103,13 @@
         <Button
             android:id="@+id/settings_donate_button"
             android:layout_width="match_parent"
+            android:layout_marginHorizontal="10dp"
             android:layout_height="50dp"
             android:layout_below="@+id/settings_about_header"
             android:text="DONATE"
+            android:textSize="36sp"
+            android:textColor="#ffffff"
+            android:background="@drawable/blue_button"
             android:textStyle="bold"/>
 
 

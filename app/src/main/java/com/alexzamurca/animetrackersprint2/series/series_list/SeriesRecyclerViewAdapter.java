@@ -1,6 +1,7 @@
 package com.alexzamurca.animetrackersprint2.series.series_list;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -309,7 +310,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         @Override
         protected Void doInBackground(Void... voids)
         {
-            Remove remove = new Remove(0, selectedSeries.getAnilist_id());
+            SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+            String session = sharedPreferences.getString("session", "");
+            Remove remove = new Remove(session, selectedSeries.getAnilist_id());
             isSeriesRemoved = remove.remove();
             return null;
         }

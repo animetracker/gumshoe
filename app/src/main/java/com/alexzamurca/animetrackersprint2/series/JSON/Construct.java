@@ -12,14 +12,12 @@ public class Construct
 {
     private static final String TAG = "Construct";
 
-    public JSONObject constructFormattedInsertJSON(JSONObject unformattedJson, int user_id)
+    public JSONObject constructFormattedInsertJSON(JSONObject unformattedJson)
     {
         JSONObject json = new JSONObject();
         try
         {
             Log.d(TAG, "constructFormattedJSON: INSERTING \n\n\n");
-            json.put("user_id", user_id);
-            Log.d(TAG, "constructFormattedJSON: user_id: " + user_id);
             try
             {
                 String title = unformattedJson.getJSONObject("title").getString("english");
@@ -97,7 +95,7 @@ public class Construct
         return json;
     }
 
-    public JSONObject constructFormattedUpdateNotificationsOnJSON(int notifications_on)
+    public JSONObject constructUpdateNotificationsOnJSON(int notifications_on)
     {
         JSONObject json = new JSONObject();
         try
@@ -111,7 +109,7 @@ public class Construct
         return json;
     }
 
-    public JSONObject constructFormattedUpdateNotificationChangeJSON(String notification_change)
+    public JSONObject constructUpdateNotificationChangeJSON(String notification_change)
     {
         JSONObject json = new JSONObject();
         try
@@ -125,7 +123,7 @@ public class Construct
         return json;
     }
 
-    public JSONObject constructFormattedUpdateAirDateChangeJSON(String air_date_change)
+    public JSONObject constructUpdateAirDateChangeJSON(String air_date_change)
     {
         JSONObject json = new JSONObject();
         try
@@ -139,7 +137,7 @@ public class Construct
         return json;
     }
 
-    public JSONObject constructFormattedUpdateSeriesAiringJSON(int next_episode_number, String air_date, String status)
+    public JSONObject constructUpdateSeriesAiringJSON(int next_episode_number, String air_date, String status)
     {
         JSONObject json = new JSONObject();
         try
@@ -167,6 +165,29 @@ public class Construct
         catch(JSONException e)
         {
             Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, status");
+        }
+        return json;
+    }
+
+    public JSONObject constructLoginJSON(String email_address, String password)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("email", email_address);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructLoginJSON: JSONException error putting email");
+        }
+
+        try
+        {
+            json.put("password", password);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructLoginJSON: JSONException error putting password");
         }
         return json;
     }

@@ -1,6 +1,8 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -389,9 +391,13 @@ public class ChangeAirDateFragment extends Fragment
                 String sign;
                 if(isSignNegative) sign = "-";
                 else sign = "+";
-                change = sign + hours_to_change + minutes_to_change;
+                change = sign + hours_to_change + ":"  + minutes_to_change;
             }
-            UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(0, series.getAnilist_id(), change);
+
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
+            String session = sharedPreferences.getString("session", "");
+
+            UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(session, series.getAnilist_id(), change);
             isSuccessful = updateAirDateChange.update() == 0;
             return null;
         }

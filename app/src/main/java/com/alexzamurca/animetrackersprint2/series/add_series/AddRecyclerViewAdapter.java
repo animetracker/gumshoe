@@ -3,9 +3,9 @@ package com.alexzamurca.animetrackersprint2.series.add_series;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,20 +44,21 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     private Context context;
     private RowClickListener rowClickListener;
     private LoadedListener loadedListener;
+    private AddedNewSeriesListener addedNewSeriesListener;
     private TextView noSearchResultsTV;
     private View searchActivityView;
     public String title_content;
     private NavController navController;
 
-    public AddRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, LoadedListener loadedListener, TextView noSearchResultsTV, View searchActivityView, NavController navController)
-    {
+    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, LoadedListener loadedListener, AddedNewSeriesListener addedNewSeriesListener, TextView noSearchResultsTV, View searchActivityView, NavController navController) {
         this.list = list;
         this.context = context;
-        this.rowClickListener  = rowClickListener;
+        this.rowClickListener = rowClickListener;
+        this.loadedListener = loadedListener;
+        this.addedNewSeriesListener = addedNewSeriesListener;
         this.noSearchResultsTV = noSearchResultsTV;
         this.searchActivityView = searchActivityView;
         this.navController = navController;
-        this.loadedListener = loadedListener;
     }
 
     @NonNull
@@ -124,6 +126,11 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     {
         void onFinishedLoading();
     }
+    public interface AddedNewSeriesListener extends Serializable
+    {
+        void onSuccessfulAdd();
+    }
+
 
 
     @Override
@@ -212,12 +219,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                     Log.d(TAG, "ViewHolder: selected result is stored");
 
                     navController.navigate(R.id.action_selected_search_result);
-                    /*
-                    //Go series_row_background to previous fragment
-                    FragmentTransaction tr = fragmentManager.beginTransaction();
-                    tr.replace(R.id.fragment_container, new ListFragment());
-                    tr.commit();
-                     */
                 }
                 else
                 {
@@ -295,8 +296,10 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                //HARD CODED USER ID
-                Insert insert = new Insert(0, search.getSearchArray().getJSONObject(adapter_position));
+                SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+                String session = sharedPreferences.getString("session", "");
+
+                Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session);
                 Log.d(TAG, "doInBackground: search ARRAY: \n\n\n" + search.getSearchArray().getJSONObject(adapter_position).toString(4) + "\n\n\n");
                 request_success_rating = insert.insert();
             } catch (JSONException e) {
@@ -310,12 +313,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             if(request_success_rating == 0)
             {
                 Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_SHORT).show();
+                addedNewSeriesListener.onSuccessfulAdd();
             }
-            if(request_success_rating == 1)
+            else if(request_success_rating == 1)
             {
                 Toast.makeText(context, "\"" + title_content + "\" is already in your series list!", Toast.LENGTH_SHORT).show();
             }
-            if(request_success_rating == 2)
+            else if(request_success_rating == 2)
             {
                 Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_SHORT).show();
             }

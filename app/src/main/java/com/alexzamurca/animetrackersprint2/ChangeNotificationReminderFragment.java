@@ -1,5 +1,7 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,6 +29,7 @@ import androidx.navigation.Navigation;
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
+import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
@@ -97,7 +100,6 @@ public class ChangeNotificationReminderFragment extends Fragment
             int quantityValue = Integer.parseInt(quantityMetricBAArray[0]);
             String metricValue = quantityMetricBAArray[1];
             String before_after = quantityMetricBAArray[2];
-
 
             quantity = quantityValue;
             metric = metricValue;
@@ -294,6 +296,44 @@ public class ChangeNotificationReminderFragment extends Fragment
         newChangeTV = view.findViewById(R.id.change_notification_reminder_new_change);
     }
 
+    private String getChangedAirDate()
+    {
+        String air_date = series.getAir_date();
+        String air_date_change = series.getAir_date_change();
+        String newAirDate;
+        // Account for the fact that there may not be any change
+        if(!air_date_change.equals(""))
+        {
+            ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+            Calendar calendar = convertDateToCalendar.convert(air_date);
+
+            // get sign, hours, minutes from air_date change
+            String[] signHoursMinutesArray  = air_date_change.split(":");
+            Character sign = air_date_change.toCharArray()[0];
+            int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+            int minutes = Integer.parseInt(signHoursMinutesArray[1]);
+
+            if(sign.equals('+'))
+            {
+                calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                calendar.add(Calendar.MINUTE, +minutes);
+            }
+            else if(sign.equals('-'))
+            {
+                calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                calendar.add(Calendar.MINUTE, -minutes);
+            }
+
+            newAirDate = convertDateToCalendar.reverseConvert(calendar);
+        }
+        else
+        {
+            newAirDate = air_date;
+        }
+
+        return newAirDate;
+    }
+
     private void setupHiddenLayoutAndButtons(View view)
     {
         // Identify layout that we need to hide
@@ -340,7 +380,7 @@ public class ChangeNotificationReminderFragment extends Fragment
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         // Get date in calendar form (so we can change it)
-        Calendar calendar = convertDateToCalendar.convert(series.getAir_date());
+        Calendar calendar = convertDateToCalendar.convert(getChangedAirDate());
         // Add minutes, hours, days
         if(beforeAfter.equals("before"))
         {
@@ -398,7 +438,11 @@ public class ChangeNotificationReminderFragment extends Fragment
             {
                 change = quantity + " " + metric + " " + beforeAfter;
             }
-            UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(0, series.getAnilist_id(), change);
+
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
+            String session = sharedPreferences.getString("session", "");
+
+            UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(session, series.getAnilist_id(), change);
             isSuccessful = updateNotificationChange.update() == 0;
             return null;
         }

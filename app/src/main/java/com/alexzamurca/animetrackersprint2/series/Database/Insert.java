@@ -11,20 +11,26 @@ public class Insert
 {
     private static final String TAG = "Insert";
 
-    String URL = "http://192.168.0.15:2000/insert/";
-    private final int user_id;
+    String URL;
     private JSONObject json;
+    private String session;
 
-    public Insert(int user_id, JSONObject json)
+    public Insert(JSONObject json, String session)
     {
-        this.user_id = user_id;
+        this.session = session;
         constructFromUnformattedJSON(json);
+        constructURL();
     }
 
     private void constructFromUnformattedJSON(JSONObject json)
     {
         Construct jsonConstructor = new Construct();
-        this.json = jsonConstructor.constructFormattedInsertJSON(json, user_id);
+        this.json = jsonConstructor.constructFormattedInsertJSON(json);
+    }
+
+    private void constructURL()
+    {
+        URL = "http://192.168.0.15:2000/series/insert/" + session;
     }
 
     // 0 = successful new addition, 1 = already in list, 2: fail
@@ -32,7 +38,7 @@ public class Insert
         IsSeriesInDB isSeriesInDB;
         try
         {
-            isSeriesInDB = new IsSeriesInDB(user_id , json.getString("title"));
+            isSeriesInDB = new IsSeriesInDB(session ,json.getString("title"));
         }
         catch (JSONException e)
         {
@@ -53,6 +59,5 @@ public class Insert
             Log.d(TAG, "insert: Selected anime is already in your list!");
             return 1;
         }
-
     }
 }

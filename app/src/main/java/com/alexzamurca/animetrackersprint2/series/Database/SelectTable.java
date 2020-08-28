@@ -13,14 +13,14 @@ import java.util.ArrayList;
 public class SelectTable
 {
     private static final String TAG = "SelectTable";
-    String URL = "http://192.168.0.15:2000/list/";
+    String URL = "http://192.168.0.15:2000/series/list/";
 
-    private final int userId;
+    private final String session;
     private boolean wasRequestSuccessful;
 
-    public SelectTable(int userId)
+    public SelectTable(String session)
     {
-        this.userId = userId;
+        this.session = session;
     }
 
     public boolean getWasRequestSuccessful()
@@ -33,7 +33,7 @@ public class SelectTable
         ArrayList<Series> seriesList = new ArrayList<>();
 
         //GET request
-        GET get = new GET(URL + userId);
+        GET get = new GET(URL + session);
         JSONArray jsonResponse;
         try
         {

@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_series_list">
         <action
             android:id="@+id/action_adding_new_series"
-            app:destination="@id/searchFragment"
+            app:destination="@id/addFragment"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
@@ -60,7 +60,7 @@
         android:label="Report A Bug"
         tools:layout="@layout/fragment_report_bug"/>
     <fragment
-        android:id="@+id/searchFragment"
+        android:id="@+id/addFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.add_series.AddFragment"
         android:label="Add a new Series"
         tools:layout="@layout/fragment_search">
@@ -71,6 +71,10 @@
             app:popExitAnim="@anim/slide_out_left"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"/>
+
+        <argument
+            android:name="addedNewSeriesListener"
+            app:argType="com.alexzamurca.animetrackersprint2.series.add_series.AddRecyclerViewAdapter$AddedNewSeriesListener" />
     </fragment>
     <fragment
         android:id="@+id/seriesInfoFragment"

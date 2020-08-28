@@ -11,16 +11,16 @@ public class UpdateSeriesAiring
 {
     private static final String TAG = "Insert";
 
-    String URL = "http://192.168.0.15:2000/updateAiringSeries/";
-    private final int user_id;
+    String URL = "http://192.168.0.15:2000/series/updateAiringSeries/";
+    private final String session;
     private final int anilist_id;
     int next_episode_number;
     String air_date;
     String status;
     private JSONObject json;
 
-    public UpdateSeriesAiring(int user_id, int anilist_id, int next_episode_number, String air_date, String status) {
-        this.user_id = user_id;
+    public UpdateSeriesAiring(String session, int anilist_id, int next_episode_number, String air_date, String status) {
+        this.session = session;
         this.anilist_id = anilist_id;
         this.next_episode_number = next_episode_number;
         this.air_date = air_date;
@@ -32,13 +32,13 @@ public class UpdateSeriesAiring
 
     private void constructURL()
     {
-        URL = URL + user_id + "/" + anilist_id;
+        URL = URL + session + "/" + anilist_id;
     }
 
     private void constructJSON()
     {
         Construct jsonConstructor = new Construct();
-        this.json = jsonConstructor.constructFormattedUpdateSeriesAiringJSON(next_episode_number, air_date, status);
+        this.json = jsonConstructor.constructUpdateSeriesAiringJSON(next_episode_number, air_date, status);
     }
 
     // 0 = successful new addition, 1: fail

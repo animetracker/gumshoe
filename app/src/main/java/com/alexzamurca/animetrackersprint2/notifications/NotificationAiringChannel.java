@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.Calendar;
@@ -29,17 +28,15 @@ public class NotificationAiringChannel
     }
 
     // Will happen at login and at additions to list
-    public void setNotification()
+    public void setNotification(Calendar calendar)
     {
-        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Calendar calendarAirTime  = convertDateToCalendar.convert(series.getAir_date());
-        if(calendarAirTime != null)
+        if(calendar != null)
         {
-            startAlarm(calendarAirTime);
+            startAlarm(calendar);
         }
         else
         {
-            Log.d(TAG, "setNotification: couldn't convert anime string airing date to calendar date");
+            Log.d(TAG, "setNotification: calendar date is null");
         }
     }
 

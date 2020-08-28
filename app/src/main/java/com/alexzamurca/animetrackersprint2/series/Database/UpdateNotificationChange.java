@@ -11,15 +11,15 @@ public class UpdateNotificationChange
 {
     private static final String TAG = "Insert";
 
-    String URL = "http://192.168.0.15:2000/updateNotificationChange/";
-    private final int user_id;
+    String URL = "http://192.168.0.15:2000/series/updateNotificationChange/";
+    private final String session;
     private final int anilist_id;
     private final String notifications_change;
     private JSONObject json;
 
-    public UpdateNotificationChange(int user_id, int anilist_id, String notifications_change)
+    public UpdateNotificationChange(String session, int anilist_id, String notifications_change)
     {
-        this.user_id = user_id;
+        this.session = session;
         this.anilist_id = anilist_id;
         this.notifications_change = notifications_change;
         constructURL();
@@ -28,13 +28,13 @@ public class UpdateNotificationChange
 
     private void constructURL()
     {
-        URL = URL + user_id + "/" + anilist_id;
+        URL = URL + session + "/" + anilist_id;
     }
 
     private void constructJSON()
     {
         Construct jsonConstructor = new Construct();
-        this.json = jsonConstructor.constructFormattedUpdateNotificationChangeJSON(notifications_change);
+        this.json = jsonConstructor.constructUpdateNotificationChangeJSON(notifications_change);
     }
 
     // 0 = successful new addition, 1: fail

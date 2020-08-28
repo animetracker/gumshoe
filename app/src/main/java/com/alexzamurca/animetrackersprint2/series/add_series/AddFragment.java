@@ -24,6 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
@@ -36,6 +37,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
     private NavController navController;
+    private AddRecyclerViewAdapter.AddedNewSeriesListener addedNewSeriesListener;
 
     private ArrayList<SearchResult> list = new ArrayList<>();
     private AddRecyclerViewAdapter adapter;
@@ -68,6 +70,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         editText = view.findViewById(R.id.search_edit_text);
+        initListener();
         initImageBitmaps();
         initRecyclerView();
 
@@ -93,6 +96,13 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
             Toast.makeText(getContext(), "BugTest: go series_row_background clicked!", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initListener()
+    {
+        assert getArguments() != null;
+        AddFragmentArgs args = AddFragmentArgs.fromBundle(getArguments());
+        addedNewSeriesListener = args.getAddedNewSeriesListener();
     }
 
     private void searchProcess()
@@ -130,7 +140,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new AddRecyclerViewAdapter(getContext(), list, this, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
+        adapter = new AddRecyclerViewAdapter(list, getContext(), this, this, addedNewSeriesListener, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -147,13 +157,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     public void OnSuccessfulClick()
     {
         Toast.makeText(getContext(), "Search has refreshed", Toast.LENGTH_SHORT).show();
-        navController.navigate(R.id.searchFragment);
-        /*
-        FragmentTransaction tr = mContext.getSupportFragmentManager().beginTransaction();
-        tr.replace(R.id.fragment_container, new SearchFragment());
-        tr.commit();
-         */
-
+        navController.navigate(R.id.addFragment);
     }
 
     @Override
