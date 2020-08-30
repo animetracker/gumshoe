@@ -28,7 +28,7 @@ public class SliderAdapter extends PagerAdapter {
     };
 
     public String[] slide_text = {
-            "By pressing the blue plus button, you can see when YOUR favourite episodes release! You can easily add any airing anime to your own custom list to see when they’ll release their next episode!",
+            "By pressing the blue plus button, you can see when YOUR favourite episodes release! You can easily add any airing anime to your own custom list to see when they’ll release their next episode! You'll also get notifications for when your favourite animes next episode is airing.",
             "Once you press the plus button, you can search for any anime you want! You can add this anime to your list by clicking on it, or you can view additional information by pressing the arrow.",
             "Includes the thumbnail, next episode date and more! Your friend tell you about a “good” anime? Find out what it’s really about with a glance! You’ll even see ratings by critics and users so you can make the best choice!",
             "Once you have added your favourite animes to your list, you can do several actions with them. By pressing the first button, you can turn off notifications for that anime. The second button allows you to remove that anime from your list. The third button allows you to choose when you want to be notified for when the next episode is released. The last button allows you to tell us if the release date or time is incorrect.",
