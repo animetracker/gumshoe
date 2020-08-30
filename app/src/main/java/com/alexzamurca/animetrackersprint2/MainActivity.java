@@ -36,11 +36,12 @@ public class MainActivity extends AppCompatActivity
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
         sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
-        String session = sharedPreferences.getString("session", "");
-        if(session.equals(""))
+        boolean signedIn = sharedPreferences.getBoolean("signed_in", false);
+        if(!signedIn)
         {
-            new LoginAsync().execute();
+            login();
         }
+
     }
 
     @Override
@@ -48,6 +49,15 @@ public class MainActivity extends AppCompatActivity
     {
         navController.navigateUp();
         return super.onSupportNavigateUp();
+    }
+
+    private void login()
+    {
+        String session = sharedPreferences.getString("session", "");
+        if(session.equals(""))
+        {
+            new LoginAsync().execute();
+        }
     }
 
     private class LoginAsync extends AsyncTask<Void, Void, Void>
@@ -89,8 +99,11 @@ public class MainActivity extends AppCompatActivity
                         String session = response.getString("session");
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("session", session);
-                        editor.apply();
+
                         Log.d(TAG, "onPostExecute: changed session to new one from login");
+
+                        editor.putBoolean("signed_in", true);
+                        editor.apply();
                     }
                     catch (JSONException e)
                     {

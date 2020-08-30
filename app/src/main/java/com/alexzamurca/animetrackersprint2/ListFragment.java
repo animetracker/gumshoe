@@ -52,6 +52,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener, AddRecyclerViewAdapter.AddedNewSeriesListener {
     private static final String TAG = "ListFragment";
@@ -499,81 +500,88 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         for(int i = 0; i < currentList.size(); i++)
         {
             String air_date = currentList.get(i).getAir_date();
-            // If has an air date
-            if(!air_date.equals(""))
+            boolean notificationsOn = currentList.get(i).getNotifications_on()==1;
+            // If has an air date and notifications are not off
+            if(!air_date.equals("") && notificationsOn)
             {
                 ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
                 Calendar calendar = convertDateToCalendar.convert(air_date);
 
-                String air_date_change = currentList.get(i).getAir_date_change();
-                String notification_change = currentList.get(i).getNotification_change();
+                Calendar calendarNow = Calendar.getInstance(TimeZone.getDefault());
+                boolean airDatePassed = calendar.before(calendarNow);
 
-                // If series has a set air date change
-                if(!air_date_change.equals(""))
+                if(!airDatePassed)
                 {
-                    // get sign, hours, minutes from air_date change
-                    String[] signHoursMinutesArray  = air_date_change.split(":");
-                    Character sign = air_date_change.toCharArray()[0];
-                    int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
-                    int minutes = Integer.parseInt(signHoursMinutesArray[1]);
+                    String air_date_change = currentList.get(i).getAir_date_change();
+                    String notification_change = currentList.get(i).getNotification_change();
 
-                    if(sign.equals('+'))
+                    // If series has a set air date change
+                    if(!air_date_change.equals(""))
                     {
-                        calendar.add(Calendar.HOUR_OF_DAY, +hours);
-                        calendar.add(Calendar.MINUTE, +minutes);
-                    }
-                    else if(sign.equals('-'))
-                    {
-                        calendar.add(Calendar.HOUR_OF_DAY, -hours);
-                        calendar.add(Calendar.MINUTE, -minutes);
-                    }
-                }
-                // If series has a set notification change
-                if(!notification_change.equals(""))
-                {
-                    String[] quantityMetricBAArray  = notification_change.split(" ");
-                    int quantity = Integer.parseInt(quantityMetricBAArray[0]);
-                    String metric = quantityMetricBAArray[1];
-                    String beforeAfter = quantityMetricBAArray[2];
+                        // get sign, hours, minutes from air_date change
+                        String[] signHoursMinutesArray  = air_date_change.split(":");
+                        Character sign = air_date_change.toCharArray()[0];
+                        int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+                        int minutes = Integer.parseInt(signHoursMinutesArray[1]);
 
-
-                    // Add minutes, hours, days
-                    if(beforeAfter.equals("before"))
-                    {
-                        switch (metric)
+                        if(sign.equals('+'))
                         {
-                            case "minutes":
-                                calendar.add(Calendar.MINUTE, -quantity);
-                                break;
-                            case "hours":
-                                calendar.add(Calendar.HOUR_OF_DAY, -quantity);
-                                break;
-                            case "days":
-                                calendar.add(Calendar.DAY_OF_MONTH, -quantity);
-                                break;
+                            calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                            calendar.add(Calendar.MINUTE, +minutes);
+                        }
+                        else if(sign.equals('-'))
+                        {
+                            calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                            calendar.add(Calendar.MINUTE, -minutes);
                         }
                     }
-                    else if(beforeAfter.equals("after"))
+                    // If series has a set notification change
+                    if(!notification_change.equals(""))
                     {
-                        switch (metric)
+                        String[] quantityMetricBAArray  = notification_change.split(" ");
+                        int quantity = Integer.parseInt(quantityMetricBAArray[0]);
+                        String metric = quantityMetricBAArray[1];
+                        String beforeAfter = quantityMetricBAArray[2];
+
+
+                        // Add minutes, hours, days
+                        if(beforeAfter.equals("before"))
                         {
-                            case "minutes":
-                                calendar.add(Calendar.MINUTE, +quantity);
-                                break;
-                            case "hours":
-                                calendar.add(Calendar.HOUR_OF_DAY, +quantity);
-                                break;
-                            case "days":
-                                calendar.add(Calendar.DAY_OF_MONTH, +quantity);
-                                break;
+                            switch (metric)
+                            {
+                                case "minutes":
+                                    calendar.add(Calendar.MINUTE, -quantity);
+                                    break;
+                                case "hours":
+                                    calendar.add(Calendar.HOUR_OF_DAY, -quantity);
+                                    break;
+                                case "days":
+                                    calendar.add(Calendar.DAY_OF_MONTH, -quantity);
+                                    break;
+                            }
+                        }
+                        else if(beforeAfter.equals("after"))
+                        {
+                            switch (metric)
+                            {
+                                case "minutes":
+                                    calendar.add(Calendar.MINUTE, +quantity);
+                                    break;
+                                case "hours":
+                                    calendar.add(Calendar.HOUR_OF_DAY, +quantity);
+                                    break;
+                                case "days":
+                                    calendar.add(Calendar.DAY_OF_MONTH, +quantity);
+                                    break;
+                            }
                         }
                     }
+
+                    NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), currentList.get(i));
+                    notificationAiringChannel.setNotification(calendar);
+
+                    Log.d(TAG, "onSuccessfulAdd: set notification for \"" + currentList.get(i).getTitle() + "\"");
                 }
-
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), currentList.get(i));
-                notificationAiringChannel.setNotification(calendar);
-
-                Log.d(TAG, "onSuccessfulAdd: set notification for \"" + currentList.get(i).getTitle() + "\"");
             }
         }
     }

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.TimeZone;
 
 public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecyclerViewAdapter.ViewHolder> implements Filterable
 {
@@ -87,8 +88,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         showAirDate(holder, air_date, air_date_change);
         sortNotificationStateColours(holder, notifications_on, title);
         sortNotificationReminderAndErrorColours(holder, notification_change, air_date_change);
-
-
     }
 
     @Override
@@ -180,27 +179,31 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     private void showAirDate(SeriesRecyclerViewAdapter.ViewHolder holder, String air_date, String air_date_change)
     {
         String newAirDate;
-        // Account for the fact that there may not be any change
-        if(!air_date_change.equals(""))
+        if(!air_date.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
             Calendar calendar = convertDateToCalendar.convert(air_date);
+            calendar.setTimeZone(TimeZone.getDefault());
 
-            // get sign, hours, minutes from air_date change
-            String[] signHoursMinutesArray  = air_date_change.split(":");
-            Character sign = air_date_change.toCharArray()[0];
-            int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
-            int minutes = Integer.parseInt(signHoursMinutesArray[1]);
+            // Account for the fact that there may not be any change
+            if(!air_date_change.equals(""))
+            {
+                // get sign, hours, minutes from air_date change
+                String[] signHoursMinutesArray  = air_date_change.split(":");
+                Character sign = air_date_change.toCharArray()[0];
+                int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+                int minutes = Integer.parseInt(signHoursMinutesArray[1]);
 
-            if(sign.equals('+'))
-            {
-                calendar.add(Calendar.HOUR_OF_DAY, +hours);
-                calendar.add(Calendar.MINUTE, +minutes);
-            }
-            else if(sign.equals('-'))
-            {
-                calendar.add(Calendar.HOUR_OF_DAY, -hours);
-                calendar.add(Calendar.MINUTE, -minutes);
+                if(sign.equals('+'))
+                {
+                    calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                    calendar.add(Calendar.MINUTE, +minutes);
+                }
+                else if(sign.equals('-'))
+                {
+                    calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                    calendar.add(Calendar.MINUTE, -minutes);
+                }
             }
 
             newAirDate = convertDateToCalendar.reverseConvert(calendar);

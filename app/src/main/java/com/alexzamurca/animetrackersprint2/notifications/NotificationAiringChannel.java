@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
@@ -45,19 +46,24 @@ public class NotificationAiringChannel
         Log.d(TAG, "startAlarm: alarm started");
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, SeriesAiringNotificationReceiver.class);
+
         // Need to add extras to send Series object (used to construct the notification)
-        intent.putExtra("series", series);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 1, intent, 0);
+        Bundle args = new Bundle();
+        args.putSerializable("series", series);
+        intent.putExtra("args", args);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, series.getAnilist_id(), intent, 0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Log.d(TAG, "startAlarm: send series:" + series.getTitle());
     }
 
-    // Will happen at log out
+    // Will happen at log out and turning notifications off
     public void cancel()
     {
         Log.d(TAG, "startAlarm: alarm cancelled");
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, SeriesAiringNotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, series.getAnilist_id(), intent, 0);
         alarmManager.cancel(pendingIntent);
     }
 }

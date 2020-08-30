@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class ConvertDateToCalendar
 {
@@ -14,10 +15,11 @@ public class ConvertDateToCalendar
 
     public Calendar convert(String dateInFormat)
     {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         if(!dateInFormat.equals(""))
         {
-            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             try
             {
                 Date date = sdf.parse(dateInFormat);
