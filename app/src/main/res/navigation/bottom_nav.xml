@@ -111,6 +111,7 @@
         android:id="@+id/tutorialActivity"
         android:name="com.alexzamurca.animetrackersprint2.TutorialActivity"
         android:label="activity_tutorial"
-        tools:layout="@layout/activity_tutorial" />
+        tools:layout="@layout/activity_tutorial" >
+    </activity>
 
 </navigation>

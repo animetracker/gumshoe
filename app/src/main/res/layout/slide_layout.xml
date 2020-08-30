@@ -17,8 +17,8 @@
 
     <TextView
         android:id="@+id/tutorialText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_below="@+id/scImage"
         android:layout_marginTop="9dp"
         android:text="TextView"
