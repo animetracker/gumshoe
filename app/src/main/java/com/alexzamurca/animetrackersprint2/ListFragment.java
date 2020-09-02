@@ -2,7 +2,9 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +44,7 @@ import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
+import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -446,7 +449,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void OnReportBugButtonClick()
     {
-        mNavController.navigate(R.id.action_report_bug_dialog_button_clicked);
+        //mNavController.navigate(R.id.action_report_bug_dialog_button_clicked);
+        dialog_report_bug dialogReportBug = new dialog_report_bug();
+        dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
     }
 
     @Override

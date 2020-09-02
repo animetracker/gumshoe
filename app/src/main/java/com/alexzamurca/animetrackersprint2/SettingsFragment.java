@@ -26,8 +26,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+
+import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 
 import java.io.File;
 
@@ -36,13 +39,12 @@ public class SettingsFragment extends Fragment
     private static final String TAG = "SettingsFragment";
     private SwitchCompat darkModeSwitch;
     private NavController navController;
-
-    String message = "Test";
-    String number = "0123456789";
+    private FragmentActivity mContext;
 
     @Override
     public void onAttach(@NonNull Context context)
     {
+        mContext = (FragmentActivity)context;
         super.onAttach(context);
     }
 
@@ -57,10 +59,13 @@ public class SettingsFragment extends Fragment
 
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
+
         TextView reportBug = view.findViewById(R.id.settings_report_bug_header);
         reportBug.setOnClickListener(view1 ->
         {
-            navController.navigate(R.id.action_reporting_bug);
+           // navController.navigate(R.id.action_reporting_bug);
+            dialog_report_bug dialogReportBug = new dialog_report_bug();
+            dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
         });
 
         TextView aboutUs = view.findViewById(R.id.settings_about_header);
