@@ -87,6 +87,11 @@ public class SettingsFragment extends Fragment
             navController.navigate(R.id.action_change_time_zone);
         });
 
+        TextView logOutButton = view.findViewById(R.id.logoutText);
+        logOutButton.setOnClickListener(view14 -> {
+            openLogin();
+        });
+
         // This method is used to create the dark mode using the switch
         darkModeSwitch= view.findViewById(R.id.settings_dark_mode_switch);
         darkModeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) ->
@@ -180,6 +185,11 @@ public class SettingsFragment extends Fragment
             startActivity((Intent.createChooser(myIntent, "Share using")));
         }
         return true;
+    }
+
+    public void openLogin() {
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        startActivity(intent);
     }
 
 }

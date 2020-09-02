@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         else {
+            // add a check to see if logged in or not before opening main activity
             BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
             navController = Navigation.findNavController(this, R.id.fragment_container);
             NavigationUI.setupWithNavController(bottomNavigationView, navController);
