@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import net.sourceforge.htmlunit.corejs.javascript.tools.shell.Main;
+
 public class LoginActivity extends AppCompatActivity {
 
     EditText enterEmail;
@@ -36,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 checkData();
+                //check details before opening main activity via if statement
+                openMainActivity();
             }
         });
 
@@ -82,5 +86,10 @@ public class LoginActivity extends AppCompatActivity {
     boolean checkIfEmpty(EditText text) {
         CharSequence string = text.getText().toString();
         return TextUtils.isEmpty(string);
+    }
+
+    public void openMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
