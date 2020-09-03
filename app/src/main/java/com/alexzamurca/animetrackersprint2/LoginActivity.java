@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import net.sourceforge.htmlunit.corejs.javascript.tools.shell.Main;
 
 public class LoginActivity extends AppCompatActivity {
 

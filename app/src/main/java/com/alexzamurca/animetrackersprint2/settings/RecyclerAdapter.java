@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2.settings;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.AppVie
 
     String[] names = {};
     String[] contact = {};
+    Integer[] initials = {};
+    Integer[] roles = {};
 
     private LayoutInflater layoutInflater;
 
-    RecyclerAdapter(String[] _data, String[] _data2) {
+    RecyclerAdapter(String[] _data, String[] _data2, Integer[] _data3, Integer[] _data4) {
         names = _data;
         contact = _data2;
+        initials = _data3;
+        roles = _data4;
     }
 
     @NonNull
@@ -28,7 +33,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.AppVie
     public AppViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.settings_about_list_layout, parent, false);
-
 
         return new AppViewHolder(view);
     }
@@ -39,6 +43,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.AppVie
         holder.names.setText(name);
         String contacts = contact[position];
         holder.contact.setText(contacts);
+        int initial = initials[position];
+        holder.imgIcon.setImageResource(initial);
+        int role = roles[position];
+        holder.imgRole.setImageResource(role);
     }
 
     @Override
@@ -50,11 +58,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.AppVie
         ImageView imgIcon;
         TextView names;
         TextView contact;
+        ImageView imgRole;
         public AppViewHolder(@NonNull View itemView) {
             super(itemView);
             imgIcon = itemView.findViewById(R.id.imgIcon);
             names = itemView.findViewById(R.id.namestxt);
             contact = itemView.findViewById(R.id.contacttxt);
+            imgRole = itemView.findViewById(R.id.roleTag);
         }
     }
 }
