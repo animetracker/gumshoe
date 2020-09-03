@@ -2,16 +2,12 @@ package com.alexzamurca.animetrackersprint2.series.series_list;
 
 import java.io.Serializable;
 
+
 public class Series implements Serializable
 {
-    String title;
-    String cover_image;
-    String air_date;
-    String description;
-    int anilist_id;
-    int episode_number;
-    String notification_change;
-    String air_date_change;
+    String title, cover_image, air_date, description, notification_change, air_date_change;;
+    int anilist_id, episode_number;
+
     int notifications_on;
 
     public Series(String title, String cover_image, String air_date, String description, int anilist_id, int episode_number, String notification_change, String air_date_change, int notifications_on) {
@@ -61,5 +57,13 @@ public class Series implements Serializable
 
     public int getNotifications_on() {
         return notifications_on;
+    }
+
+    public void setAir_date_change(String air_date_change) {
+        this.air_date_change = air_date_change;
+    }
+
+    public void setEpisode_number(int episode_number) {
+        this.episode_number = episode_number;
     }
 }

@@ -26,7 +26,7 @@ public class App extends Application
                 (
                         SERIES_AIRING_REMINDER_ID,
                         "Series_Airing_Channel",
-                        NotificationManager.IMPORTANCE_DEFAULT
+                        NotificationManager.IMPORTANCE_HIGH
                 );
         seriesAiringReminderChannel.setDescription("Channel to notify about airing series releasing");
 
@@ -34,7 +34,7 @@ public class App extends Application
                 (
                         SETTINGS_ID,
                         "Settings_Channel",
-                        NotificationManager.IMPORTANCE_LOW
+                        NotificationManager.IMPORTANCE_HIGH
                 );
         settingsChannel.setDescription("Channel to notify about any settings issues");
 

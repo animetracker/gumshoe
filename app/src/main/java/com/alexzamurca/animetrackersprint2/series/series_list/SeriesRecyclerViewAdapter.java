@@ -263,11 +263,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             remove.setOnClickListener(v -> {
                 Log.d(TAG, "ViewHolder: remove clicked");
 
-                RemoveAsync removeAsync = new RemoveAsync();
-                removeAsync.setSelectedSeries(list.get(getAdapterPosition()));
-                removeAsync.execute();
-
-                refreshSeriesList();
+                removeSeries(list.get(getAdapterPosition()));
             });
 
             change_notification_time.setOnClickListener(v ->
@@ -283,6 +279,15 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                 onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
             });
         }
+    }
+
+    public void removeSeries(Series series)
+    {
+        RemoveAsync removeAsync = new RemoveAsync();
+        removeAsync.setSelectedSeries(series);
+        removeAsync.execute();
+
+        refreshSeriesList();
     }
 
     private void refreshSeriesList()

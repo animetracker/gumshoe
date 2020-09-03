@@ -34,8 +34,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
+import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateSeriesReceiver;
+import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationsOn;
+import com.alexzamurca.animetrackersprint2.series.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.add_series.AddRecyclerViewAdapter;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
@@ -54,7 +58,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener, AddRecyclerViewAdapter.AddedNewSeriesListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener, AddRecyclerViewAdapter.AddedNewSeriesListener, UpdateSeriesReceiver.OnAirDateListener {
     private static final String TAG = "ListFragment";
     private FragmentActivity mContext;
 
@@ -499,91 +503,125 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         List<Series> currentList = adapter.getList();
         for(int i = 0; i < currentList.size(); i++)
         {
-            String air_date = currentList.get(i).getAir_date();
-            boolean notificationsOn = currentList.get(i).getNotifications_on()==1;
-            // If has an air date and notifications are not off
-            if(!air_date.equals("") && notificationsOn)
+            adjustAndSetNotifications(currentList.get(i));
+        }
+    }
+
+    private void adjustAndSetNotifications(Series series)
+    {
+        String air_date = series.getAir_date();
+        boolean notificationsOn = series.getNotifications_on()==1;
+        // If has an air date and notifications are not off
+        if(!air_date.equals("") && notificationsOn)
+        {
+            ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+            Calendar calendar = convertDateToCalendar.convert(air_date);
+
+            Calendar calendarNow = Calendar.getInstance(TimeZone.getDefault());
+            boolean airDatePassed = calendar.before(calendarNow);
+
+            if(!airDatePassed)
             {
-                ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-                Calendar calendar = convertDateToCalendar.convert(air_date);
+                String air_date_change = series.getAir_date_change();
+                String notification_change = series.getNotification_change();
 
-                Calendar calendarNow = Calendar.getInstance(TimeZone.getDefault());
-                boolean airDatePassed = calendar.before(calendarNow);
-
-                if(!airDatePassed)
+                // If series has a set air date change
+                if(!air_date_change.equals(""))
                 {
-                    String air_date_change = currentList.get(i).getAir_date_change();
-                    String notification_change = currentList.get(i).getNotification_change();
+                    // get sign, hours, minutes from air_date change
+                    String[] signHoursMinutesArray  = air_date_change.split(":");
+                    Character sign = air_date_change.toCharArray()[0];
+                    int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+                    int minutes = Integer.parseInt(signHoursMinutesArray[1]);
 
-                    // If series has a set air date change
-                    if(!air_date_change.equals(""))
+                    if(sign.equals('+'))
                     {
-                        // get sign, hours, minutes from air_date change
-                        String[] signHoursMinutesArray  = air_date_change.split(":");
-                        Character sign = air_date_change.toCharArray()[0];
-                        int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
-                        int minutes = Integer.parseInt(signHoursMinutesArray[1]);
-
-                        if(sign.equals('+'))
-                        {
-                            calendar.add(Calendar.HOUR_OF_DAY, +hours);
-                            calendar.add(Calendar.MINUTE, +minutes);
-                        }
-                        else if(sign.equals('-'))
-                        {
-                            calendar.add(Calendar.HOUR_OF_DAY, -hours);
-                            calendar.add(Calendar.MINUTE, -minutes);
-                        }
+                        calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                        calendar.add(Calendar.MINUTE, +minutes);
                     }
-                    // If series has a set notification change
-                    if(!notification_change.equals(""))
+                    else if(sign.equals('-'))
                     {
-                        String[] quantityMetricBAArray  = notification_change.split(" ");
-                        int quantity = Integer.parseInt(quantityMetricBAArray[0]);
-                        String metric = quantityMetricBAArray[1];
-                        String beforeAfter = quantityMetricBAArray[2];
-
-
-                        // Add minutes, hours, days
-                        if(beforeAfter.equals("before"))
-                        {
-                            switch (metric)
-                            {
-                                case "minutes":
-                                    calendar.add(Calendar.MINUTE, -quantity);
-                                    break;
-                                case "hours":
-                                    calendar.add(Calendar.HOUR_OF_DAY, -quantity);
-                                    break;
-                                case "days":
-                                    calendar.add(Calendar.DAY_OF_MONTH, -quantity);
-                                    break;
-                            }
-                        }
-                        else if(beforeAfter.equals("after"))
-                        {
-                            switch (metric)
-                            {
-                                case "minutes":
-                                    calendar.add(Calendar.MINUTE, +quantity);
-                                    break;
-                                case "hours":
-                                    calendar.add(Calendar.HOUR_OF_DAY, +quantity);
-                                    break;
-                                case "days":
-                                    calendar.add(Calendar.DAY_OF_MONTH, +quantity);
-                                    break;
-                            }
-                        }
+                        calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                        calendar.add(Calendar.MINUTE, -minutes);
                     }
-
-                    NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), currentList.get(i));
-                    notificationAiringChannel.setNotification(calendar);
-
-                    Log.d(TAG, "onSuccessfulAdd: set notification for \"" + currentList.get(i).getTitle() + "\"");
                 }
+                // If series has a set notification change
+                if(!notification_change.equals(""))
+                {
+                    String[] quantityMetricBAArray  = notification_change.split(" ");
+                    int quantity = Integer.parseInt(quantityMetricBAArray[0]);
+                    String metric = quantityMetricBAArray[1];
+                    String beforeAfter = quantityMetricBAArray[2];
+
+
+                    // Add minutes, hours, days
+                    if(beforeAfter.equals("before"))
+                    {
+                        switch (metric)
+                        {
+                            case "minutes":
+                                calendar.add(Calendar.MINUTE, -quantity);
+                                break;
+                            case "hours":
+                                calendar.add(Calendar.HOUR_OF_DAY, -quantity);
+                                break;
+                            case "days":
+                                calendar.add(Calendar.DAY_OF_MONTH, -quantity);
+                                break;
+                        }
+                    }
+                    else if(beforeAfter.equals("after"))
+                    {
+                        switch (metric)
+                        {
+                            case "minutes":
+                                calendar.add(Calendar.MINUTE, +quantity);
+                                break;
+                            case "hours":
+                                calendar.add(Calendar.HOUR_OF_DAY, +quantity);
+                                break;
+                            case "days":
+                                calendar.add(Calendar.DAY_OF_MONTH, +quantity);
+                                break;
+                        }
+                    }
+                }
+
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), series, calendar);
+                notificationAiringChannel.setNotification(this);
+
+                Log.d(TAG, "onSuccessfulAdd: set notification for \"" + series.getTitle() + "\"");
             }
         }
+    }
+
+    @Override
+    public void onAfterAirDate(Series series)
+    {
+        GetSeriesInfo getSeriesInfo = new GetSeriesInfo(series.getAnilist_id());
+        String status = getSeriesInfo.getStatus();
+        if(status.equals("FINISHED") || status.equals("CANCELLED"))
+        {
+            adapter.removeSeries(series);
+
+            SeriesFinishedNotification seriesFinishedNotification = new SeriesFinishedNotification(getContext(), series, status);
+            seriesFinishedNotification.showNotification();
+        }
+        // not null
+        else if(!status.equals(""))
+        {
+            String air_date = getSeriesInfo.getAir_date();
+            int episode_number = getSeriesInfo.getEpisode_number();
+
+            updateAirDate(series, air_date, status, episode_number);
+        }
+    }
+
+    private void updateAirDate(Series series, String air_date, String status, int episode_number)
+    {
+        UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
+        airDateAsync.setVariables(series, air_date, status, episode_number);
+        airDateAsync.execute();
     }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
@@ -715,6 +753,50 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             else
             {
                 Toast.makeText(getContext(), "Failed to turn notifications on for \"" + title +"\", notifications are still off.", Toast.LENGTH_LONG).show();
+            }
+            mNavController.navigate(R.id.listFragment);
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
+    {
+        private Series series;
+        private String air_date, status;
+        private int episode_number;
+        private boolean isSuccessful;
+
+
+        public void setVariables(Series series, String air_date, String status, int episode_number)
+        {
+            this.series = series;
+            this.air_date = air_date;
+            this.status = status;
+            this.episode_number = episode_number;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status);
+            isSuccessful = updateSeriesAiring.update() == 0;
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            String title = series.getTitle();
+            if(isSuccessful)
+            {
+                Toast.makeText(getContext(), "\"" + title +"\" has been updated!", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onPostExecute: " + "\"" + title +"\" has been updated!");
+            }
+            else
+            {
+                Toast.makeText(getContext(), "\"" + title +"\" has failed to update!", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onPostExecute: " + "\"" + title +"\" has failed to update!");
             }
             mNavController.navigate(R.id.listFragment);
             super.onPostExecute(aVoid);

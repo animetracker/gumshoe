@@ -218,7 +218,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
                     Log.d(TAG, "ViewHolder: selected result is stored");
 
-                    navController.navigate(R.id.action_selected_search_result);
+
                 }
                 else
                 {
@@ -312,17 +312,19 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         protected void onPostExecute(Void aVoid) {
             if(request_success_rating == 0)
             {
-                Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_LONG).show();
                 addedNewSeriesListener.onSuccessfulAdd();
             }
             else if(request_success_rating == 1)
             {
-                Toast.makeText(context, "\"" + title_content + "\" is already in your series list!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + title_content + "\" is already in your series list!", Toast.LENGTH_LONG).show();
             }
             else if(request_success_rating == 2)
             {
-                Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_LONG).show();
             }
+
+            navController.navigate(R.id.action_selected_search_result);
             super.onPostExecute(aVoid);
         }
     }

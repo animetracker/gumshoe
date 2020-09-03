@@ -12,25 +12,32 @@ import org.json.JSONObject;
 public class GraphQLRequest
 {
     private static final String TAG = "GraphQLRequest";
-    private final String name_of_anime;
 
-    public GraphQLRequest(String name_of_anime)
-    {
-        this.name_of_anime = name_of_anime;
-    }
-
-    // New way - what will actually happen when you search in app
-    public JSONObject getJSONResponse() {
-        QueryForGraphQL queryBuilder = new QueryForGraphQL(name_of_anime);
-        POST post = new POST("https://graphql.anilist.co",queryBuilder.get());
+    public JSONObject getSearchJSONResponse(String name_of_anime) {
+        QueryForGraphQL queryBuilder = new QueryForGraphQL();
+        POST post = new POST("https://graphql.anilist.co",queryBuilder.getSearchQuery(name_of_anime));
         try
         {
             String response = post.sendRequest();
-            Log.println(Log.INFO,"graphQLRequest", response);
+            Log.d(TAG, "getSearchJSONResponse: response:" + response);
             return new JSONObject(response);
         }
         catch(JSONException e)
-        {Log.println(Log.ERROR,"graphQLRequest", "Got a JSON Exception");}
+        { Log.d(TAG, "getSearchJSONResponse: JSONException when trying to get Search response");}
+        return null;
+    }
+
+    public JSONObject getInfoJSONResponse(int anilist_id)
+    {
+        QueryForGraphQL queryBuilder = new QueryForGraphQL();
+        POST post = new POST("https://graphql.anilist.co",queryBuilder.getInfoQuery(anilist_id));
+        try
+        {
+            String response = post.sendRequest();
+            return new JSONObject(response);
+        }
+        catch(JSONException e)
+        {Log.d(TAG, "getInfoJSONResponse: JSONException when trying to get info response");}
         return null;
     }
 }

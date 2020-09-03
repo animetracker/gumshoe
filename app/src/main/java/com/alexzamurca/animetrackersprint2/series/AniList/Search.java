@@ -13,17 +13,15 @@ import java.util.List;
 
 public class Search
 {
-    private final String series_name;
     private JSONArray search_array;
 
     GraphQLRequest graphQL;
 
     public Search(String series_name)
     {
-        this.series_name = series_name;
-        graphQL = new GraphQLRequest(series_name);
+        graphQL = new GraphQLRequest();
         SortFiltering sf = new SortFiltering();
-        search_array = sf.filterJSON(graphQL.getJSONResponse());
+        search_array = sf.filterJSON(graphQL.getSearchJSONResponse(series_name));
     }
 
     public void printList(List<SearchResult> list)

@@ -13,8 +13,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
-import java.util.Objects;
-
 import static com.alexzamurca.animetrackersprint2.App.SERIES_AIRING_REMINDER_ID;
 
 // This class monitors what happens when the air date of a series is now
@@ -36,6 +34,9 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
         Bundle args = intent.getBundleExtra("args");
         if(args!=null)
         {
+            // getting set_new_notification boolean
+            boolean set_new_notification = args.getBoolean("set_new_notification");
+
             Log.d(TAG, "onReceive: bundle received");
             series = (Series) args.getSerializable("series");
             if(series!=null)
@@ -46,14 +47,25 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
                 Notification notification = constructNotification();
                 showNotification(notification);
 
-                // Then update series in recyclerView list and DB
+                UpdateSeriesReceiver.OnAirDateListener onAirDateListener = (UpdateSeriesReceiver.OnAirDateListener) args.getSerializable("onAirDateListener");
+                if (onAirDateListener != null)
+                {
+                    onAirDateListener.onAfterAirDate(series);
+
+                    // Setting new Notification
+                    if(set_new_notification)
+                    {
+                        setNewNotification(onAirDateListener, context, series);
+                    }
+                }
             }
-
         }
+    }
 
-        Log.d(TAG, "onReceive: received series:" + series.getTitle());
-
-
+    private void setNewNotification(UpdateSeriesReceiver.OnAirDateListener onAirDateListener, Context context, Series series)
+    {
+        SetNewNotification setNewNotification = new SetNewNotification(onAirDateListener, context, series);
+        setNewNotification.setNotification();
     }
 
     private Notification constructNotification()
@@ -87,10 +99,11 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
 
 
         return new  NotificationCompat.Builder(mContext, SERIES_AIRING_REMINDER_ID)
+                // SHOW PROFILE ICON
                 .setSmallIcon(R.drawable.ic_sun)
                 .setContentTitle(series.getTitle())
                 .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .build();
     }
