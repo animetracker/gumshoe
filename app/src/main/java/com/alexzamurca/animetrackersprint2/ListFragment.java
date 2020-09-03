@@ -36,8 +36,10 @@ import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
+import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.bumptech.glide.Glide;
@@ -46,7 +48,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener {
     private static final String TAG = "ListFragment";
     private FragmentActivity mContext;
 
@@ -405,6 +407,34 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         showSeriesInfoFragment(series);
     }
 
+    @Override
+    public void onNotificationsOff(Series series)
+    {
+        NotificationsOffDialog dialog = new NotificationsOffDialog();
+        // need to pass series
+        Bundle args = new Bundle();
+        args.putSerializable("series", series);
+        dialog.setArguments(args);
+        dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+    }
+
+    @Override
+    public void onChangeNotificationTime(Series series)
+    {
+        mNavController.navigate(R.id.action_change_notification_reminder);
+    }
+
+    @Override
+    public void onErrorWrongAirDate(Series series)
+    {
+        IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
+        Bundle args = new Bundle();
+        args.putSerializable("incorrectAirDateListener", ListFragment.this);
+        args.putSerializable("series", series);
+        dialog.setArguments(args);
+        dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
+    }
+
     public void printList(List<Series> list)
     {
         for(Series sr:list)
@@ -417,6 +447,18 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     public void OnReportBugButtonClick()
     {
         mNavController.navigate(R.id.action_report_bug_dialog_button_clicked);
+    }
+
+    @Override
+    public void OnChangeTimeZoneClick()
+    {
+        mNavController.navigate(R.id.action_dialog_change_time_zone);
+    }
+
+    @Override
+    public void OnChangeAirDateClick()
+    {
+        mNavController.navigate(R.id.action_dialog_change_air_date);
     }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
@@ -450,7 +492,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             // Empty List
             if(tempList.size() == 0)
             {
-                emptyListTV.setText(" Your Series List is empty!\nAdd any airing series series_row.xmlor\nseries soon to be aired\nby tapping the + button below.");
+                emptyListTV.setText(" Your Series List is empty!\nAdd any airing series or\nseries soon to be aired\nby tapping the + button below.");
                 emptyListLayout.setBackgroundResource(R.drawable.button);
                 emptyListImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
             }

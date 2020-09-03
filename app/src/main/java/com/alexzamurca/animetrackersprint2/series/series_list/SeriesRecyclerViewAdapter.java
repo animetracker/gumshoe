@@ -156,7 +156,8 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         TextView air_date;
         ImageView notifications_off;
         ImageView remove;
-        ImageView change_alert_delay;
+        ImageView change_notification_time;
+        ImageView error_wrong_air_date;
 
         public ViewHolder(View itemView)
         {
@@ -167,14 +168,19 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             air_date = itemView.findViewById(R.id.airDate_series);
             notifications_off = itemView.findViewById(R.id.notification_off_series);
             remove = itemView.findViewById(R.id.remove_series);
-            change_alert_delay = itemView.findViewById(R.id.change_alert_delay_series);
+            change_notification_time = itemView.findViewById(R.id.change_notification_reminder_series);
+            error_wrong_air_date = itemView.findViewById(R.id.error_wrong_air_date_series);
 
             itemView.setOnClickListener(v ->
                     onSeriesListener.onSeriesClick(list.get(getAdapterPosition()))
             );
 
             notifications_off.setOnClickListener(v ->
-                    Log.d(TAG, "ViewHolder: notifications_off clicked")
+                    {
+                        Log.d(TAG, "ViewHolder: notifications_off clicked");
+                        onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
+                    }
+
             );
 
             remove.setOnClickListener(v -> {
@@ -187,9 +193,18 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                 refreshSeriesList();
             });
 
-            change_alert_delay.setOnClickListener(v ->
-                    Log.d(TAG, "ViewHolder: change_alert_delay clicked")
+            change_notification_time.setOnClickListener(v ->
+                {
+                    Log.d(TAG, "ViewHolder: change_notification_time clicked");
+                    onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()));
+                }
             );
+
+            error_wrong_air_date.setOnClickListener(v ->
+            {
+                Log.d(TAG, "ViewHolder: error_wrong_air_date clicked");
+                onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
+            });
         }
     }
 
@@ -202,6 +217,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     public interface OnSeriesListener
     {
         void onSeriesClick(Series series);
+        void onNotificationsOff(Series series);
+        void onChangeNotificationTime(Series series);
+        void onErrorWrongAirDate(Series series);
     }
 
     private class RemoveAsync extends AsyncTask<Void, Void, Void>
