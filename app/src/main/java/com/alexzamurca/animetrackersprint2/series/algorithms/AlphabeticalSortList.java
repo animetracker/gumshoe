@@ -1,7 +1,5 @@
 package com.alexzamurca.animetrackersprint2.series.algorithms;
 
-import android.util.Log;
-
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.ArrayList;
@@ -11,7 +9,6 @@ import java.util.List;
 
 public class AlphabeticalSortList
 {
-    private static final String TAG = "AlphabeticalSortList";
 
     private List<Integer> unsortedIntegerList;
     private List<Series> unsortedSeriesList;
@@ -86,7 +83,6 @@ public class AlphabeticalSortList
         {
             if(Character.isLetter(character) || Character.isDigit(character))
             {
-                Log.d(TAG, "createRankedIntList: trying to get  '" + character+"'");
                 unsortedIntegerList.add(characterRankGuide.get(character));
             }
             else
@@ -143,21 +139,6 @@ public class AlphabeticalSortList
         return swap;
     }
 
-
-
-    private void printList()
-    {
-        Log.d(TAG, "printList: " + unsortedIntegerList.toString());
-        String irrelevant = "[";
-        for(Series s: unsortedSeriesList)
-        {
-            irrelevant += s.getTitle();
-            irrelevant += ",";
-        }
-        irrelevant += "]";
-        Log.d(TAG, "printList: " + irrelevant);
-    }
-
     private void sortList()
     {
         doneSorting = false;
@@ -181,9 +162,7 @@ public class AlphabeticalSortList
 
    public List<Series> sortAlphabetically()
    {
-       printList();
        sortList();
-       printList();
        return unsortedSeriesList;
    }
 
@@ -192,7 +171,6 @@ public class AlphabeticalSortList
        sortAlphabetically();
        List<Series> backup= unsortedSeriesList;
        Collections.reverse(unsortedSeriesList);
-       printList();
        List<Series> reverse= unsortedSeriesList;
        unsortedSeriesList = backup;
        return reverse;

@@ -47,24 +47,21 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
                 Notification notification = constructNotification();
                 showNotification(notification);
 
-                UpdateSeriesReceiver.OnAirDateListener onAirDateListener = (UpdateSeriesReceiver.OnAirDateListener) args.getSerializable("onAirDateListener");
-                if (onAirDateListener != null)
+                Log.d(TAG, "onReceive: setNewNotification:" +  set_new_notification);
+                // Setting new Notification
+                if(set_new_notification)
                 {
-                    onAirDateListener.onAfterAirDate(series);
 
-                    // Setting new Notification
-                    if(set_new_notification)
-                    {
-                        setNewNotification(onAirDateListener, context, series);
-                    }
+                    setNewNotification(context, series);
                 }
+
             }
         }
     }
 
-    private void setNewNotification(UpdateSeriesReceiver.OnAirDateListener onAirDateListener, Context context, Series series)
+    private void setNewNotification(Context context, Series series)
     {
-        SetNewNotification setNewNotification = new SetNewNotification(onAirDateListener, context, series);
+        SetNewNotification setNewNotification = new SetNewNotification(context, series);
         setNewNotification.setNotification();
     }
 

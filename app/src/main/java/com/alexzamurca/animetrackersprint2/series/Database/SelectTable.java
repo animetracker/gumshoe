@@ -38,7 +38,6 @@ public class SelectTable
         try
         {
             jsonResponse = new JSONArray(get.sendRequest());
-            Log.d(TAG, "getSeriesList: jsonresponse: \n" + jsonResponse.toString(4) + "\n\n\n");
         }
         catch(JSONException e)
         {
@@ -74,10 +73,6 @@ public class SelectTable
 
             try {
                 air_date = jsonResponse.getJSONObject(i).getString("air_date");
-                if(air_date.equals(""))
-                {
-                    air_date = "Unknown Date";
-                }
             } catch (JSONException e) {
                 Log.d(TAG, "getTitles: JSONException when trying to get air_date");
             }

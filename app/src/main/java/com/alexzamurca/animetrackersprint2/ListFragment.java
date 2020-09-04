@@ -34,12 +34,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
-import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
-import com.alexzamurca.animetrackersprint2.notifications.UpdateSeriesReceiver;
-import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationsOn;
-import com.alexzamurca.animetrackersprint2.series.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.add_series.AddRecyclerViewAdapter;
 import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
@@ -58,7 +54,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener, AddRecyclerViewAdapter.AddedNewSeriesListener, UpdateSeriesReceiver.OnAirDateListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener, AddRecyclerViewAdapter.AddedNewSeriesListener {
     private static final String TAG = "ListFragment";
     private FragmentActivity mContext;
 
@@ -85,9 +81,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
-        Log.d(TAG, "onViewCreated: session:" + session);
-
-        Log.d(TAG, "onCreate: starting");
 
         Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
         setHasOptionsMenu(true);
@@ -104,16 +97,12 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
         checkConnectionAndInitList();
 
-        initImageBitmaps();
-
         FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
         // Search button
         addButton.setOnClickListener(v ->
-        {
-            Log.d(TAG, "onClick: Clicked add_button");
 
-            changeToSearchFragment();
-        });
+            changeToSearchFragment()
+        );
         return mView;
     }
 
@@ -144,10 +133,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             {
                 if(list.size()!=0)
                 {
-                    Log.d(TAG, "onMenuItemActionExpand: expanded");
                     oldList.clear();
                     oldList.addAll(adapter.getList());
-                    printList(oldList);
                     return true;
                 }
                 else
@@ -160,13 +147,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item)
             {
-
-                Log.d(TAG, "onMenuItemActionCollapse: collapsed");
                 if(list.size()!=0)
                 {
                     adapter.restoreFromList(oldList);
-                    printList(oldList);
-                    printList(adapter.getList());
                     return true;
                 }
                 return false;
@@ -272,8 +255,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             case 0:
                 Log.d(TAG, "setupDropDownOnClick: sort A-Z clicked");
                 List<Series> sortedList = alphabeticalSortList.sortAlphabetically();
-                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                printList(sortedList);
                 adapter.restoreFromList(sortedList);
                 return;
 
@@ -281,8 +262,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             case 1:
                 Log.d(TAG, "setupDropDownOnClick: sort Z-A clicked");
                 sortedList = alphabeticalSortList.sortReverseAlphabetically();
-                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                printList(sortedList);
                 adapter.restoreFromList(sortedList);
                 return;
 
@@ -300,8 +279,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             case 4:
                 Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
                 sortedList = dateSortSeriesList.sortMostRecent();
-                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                printList(sortedList);
                 adapter.restoreFromList(sortedList);
                 return;
 
@@ -309,8 +286,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             case 5:
                 Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
                 sortedList = dateSortSeriesList.sortLeastRecent();
-                Log.d(TAG, "setupDropDownOnClick: printing sortedList");
-                printList(sortedList);
                 adapter.restoreFromList(sortedList);
                 return;
 
@@ -333,8 +308,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             @Override
             public boolean onQueryTextSubmit(String query)
             {
-                Log.d(TAG, "onQueryTextSubmit: submitted");
-
                 adapter.getFilter().filter(query);
 
                 // Hide keyboard
@@ -349,7 +322,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             {
                 if(!newText.isEmpty())
                 {
-                    Log.d(TAG, "onQueryTextChange: checking \"" + newText + "\"");
                     //adapter.restoreFromList(oldList);
                     //adapter.getFilter().filter(newText);
                 }
@@ -382,14 +354,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         dialog.show(mContext.getSupportFragmentManager(), "NoConnectionDialog");
     }
 
-    private void initImageBitmaps()
-    {
-        Log.d(TAG, "initImageBitmaps: preparing bitmaps");
-    }
-
     private void initRecyclerView()
     {
-        Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = requireView().findViewById(R.id.series_recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -397,8 +363,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
     private void initList()
     {
-        Log.d(TAG, "initList: db connection");
-
         // Show loading - (credit: http://www.lowgif.com/view.html)
         Glide.with(requireContext())
                 .load(R.drawable.loading)
@@ -420,7 +384,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onSeriesClick(Series series)
     {
-        Log.d(TAG, "onSeriesClick: clicked:" + series.getTitle());
         showSeriesInfoFragment(series);
     }
 
@@ -503,6 +466,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         List<Series> currentList = adapter.getList();
         for(int i = 0; i < currentList.size(); i++)
         {
+            Log.d(TAG, "onSuccessfulAdd: adjusting and setting notifications for \"" + currentList.get(i).getTitle() + "\"");
             adjustAndSetNotifications(currentList.get(i));
         }
     }
@@ -510,6 +474,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private void adjustAndSetNotifications(Series series)
     {
         String air_date = series.getAir_date();
+        Log.d(TAG, "adjustAndSetNotifications: air date " + air_date);
         boolean notificationsOn = series.getNotifications_on()==1;
         // If has an air date and notifications are not off
         if(!air_date.equals("") && notificationsOn)
@@ -588,41 +553,14 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 }
 
                 NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), series, calendar);
-                notificationAiringChannel.setNotification(this);
+                notificationAiringChannel.setNotification();
 
                 Log.d(TAG, "onSuccessfulAdd: set notification for \"" + series.getTitle() + "\"");
             }
         }
     }
 
-    @Override
-    public void onAfterAirDate(Series series)
-    {
-        GetSeriesInfo getSeriesInfo = new GetSeriesInfo(series.getAnilist_id());
-        String status = getSeriesInfo.getStatus();
-        if(status.equals("FINISHED") || status.equals("CANCELLED"))
-        {
-            adapter.removeSeries(series);
 
-            SeriesFinishedNotification seriesFinishedNotification = new SeriesFinishedNotification(getContext(), series, status);
-            seriesFinishedNotification.showNotification();
-        }
-        // not null
-        else if(!status.equals(""))
-        {
-            String air_date = getSeriesInfo.getAir_date();
-            int episode_number = getSeriesInfo.getEpisode_number();
-
-            updateAirDate(series, air_date, status, episode_number);
-        }
-    }
-
-    private void updateAirDate(Series series, String air_date, String status, int episode_number)
-    {
-        UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
-        airDateAsync.setVariables(series, air_date, status, episode_number);
-        airDateAsync.execute();
-    }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
     public class MySQLConnection extends AsyncTask<Void, Void, Void>
@@ -636,8 +574,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             SelectTable selectTable = new SelectTable(session);
             tempList = selectTable.getSeriesList();
             wasRequestSuccessful = selectTable.getWasRequestSuccessful();
-            printList(tempList);
-            Log.d(TAG, "doInBackground: Successful?:" + wasRequestSuccessful);
 
             return null;
         }
@@ -759,48 +695,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         }
     }
 
-    private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
-    {
-        private Series series;
-        private String air_date, status;
-        private int episode_number;
-        private boolean isSuccessful;
 
-
-        public void setVariables(Series series, String air_date, String status, int episode_number)
-        {
-            this.series = series;
-            this.air_date = air_date;
-            this.status = status;
-            this.episode_number = episode_number;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status);
-            isSuccessful = updateSeriesAiring.update() == 0;
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            String title = series.getTitle();
-            if(isSuccessful)
-            {
-                Toast.makeText(getContext(), "\"" + title +"\" has been updated!", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onPostExecute: " + "\"" + title +"\" has been updated!");
-            }
-            else
-            {
-                Toast.makeText(getContext(), "\"" + title +"\" has failed to update!", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onPostExecute: " + "\"" + title +"\" has failed to update!");
-            }
-            mNavController.navigate(R.id.listFragment);
-            super.onPostExecute(aVoid);
-        }
-    }
 
 }

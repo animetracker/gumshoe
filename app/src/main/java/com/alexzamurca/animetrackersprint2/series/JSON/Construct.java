@@ -17,7 +17,6 @@ public class Construct
         JSONObject json = new JSONObject();
         try
         {
-            Log.d(TAG, "constructFormattedJSON: INSERTING \n\n\n");
             try
             {
                 String title = unformattedJson.getJSONObject("title").getString("english");
@@ -26,16 +25,13 @@ public class Construct
                     title =  unformattedJson.getJSONObject("title").getString("romaji");
                 }
                 json.put("title", title);
-                Log.d(TAG, "constructFormattedJSON: title: " + title);
             }
             catch(JSONException e)
             {
                 json.put("title", unformattedJson.getJSONObject("title").getString("romaji"));
-                Log.d(TAG, "constructFormattedJSON: title: " + unformattedJson.getJSONObject("title").getString("romaji"));
             }
 
             json.put("anilist_id", unformattedJson.getInt("id"));
-            Log.d(TAG, "constructFormattedJSON: anilist_id:" + unformattedJson.getInt("id"));
 
             try
             {
@@ -59,7 +55,6 @@ public class Construct
                     Log.d(TAG, "constructFormattedJSON: NumberFormatException when trying to convert string to number");
                 }
                 json.put("next_episode_number", episode_number);
-                Log.d(TAG, "constructFormattedJSON: Couldn't get episode number through usual route so we try the hacky way instead");
             }
 
             json.put("status", unformattedJson.getString("status"));
@@ -79,7 +74,6 @@ public class Construct
             json.put("cover_image", unformattedJson.getJSONObject("coverImage").getString("large"));
 
 
-            Log.d(TAG, "constructFormattedJSON: description" + unformattedJson.getString("description"));
             json.put("description", unformattedJson.getString("description"));
 
             json.put("notifications_on", 1);

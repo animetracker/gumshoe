@@ -44,9 +44,9 @@ public class NotificationAiringChannel
     private void constructUpdateCalendar()
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Calendar calendar = convertDateToCalendar.convert(series.getAir_date());
-        calendar.add(Calendar.MINUTE, 30);
-        this.airDateCalendar = calendar;
+        airDateCalendar = convertDateToCalendar.convert(series.getAir_date());
+        //airDateCalendar.add(Calendar.MINUTE, 30);
+        airDateCalendar.add(Calendar.SECOND, 1);
     }
 
     private void compareCalendars()
@@ -66,15 +66,16 @@ public class NotificationAiringChannel
             airDateFirst = false;
             calendarsEqual = false;
         }
+        Log.d(TAG, "compareCalendars: variables set; airDateFirst: " + airDateFirst + " , calendarsEqual: " + calendarsEqual);
     }
 
     // Will happen at login and at additions to list
-    public void setNotification(UpdateSeriesReceiver.OnAirDateListener onAirDateListener)
+    public void setNotification()
     {
         if(airDateAfterChangesCalendar != null)
         {
-            startNotificationAlarm(onAirDateListener);
-            setUpdateAlarm(onAirDateListener);
+            setUpdateAlarm();
+            startNotificationAlarm();
         }
         else
         {
@@ -82,25 +83,25 @@ public class NotificationAiringChannel
         }
     }
 
-    private void startNotificationAlarm(UpdateSeriesReceiver.OnAirDateListener onAirDateListener)
+    private void startNotificationAlarm()
     {
-        Log.d(TAG, "startAlarm: alarm started");
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, SeriesAiringNotificationReceiver.class);
 
         // Need to add extras to send Series object (used to construct the notification)
         Bundle args = new Bundle();
         args.putSerializable("series", series);
-        args.putSerializable("onAirDateListener", onAirDateListener);
         args.putBoolean("set_new_notification", (airDateFirst&&!calendarsEqual)||(!airDateFirst&&calendarsEqual) );
         intent.putExtra("args", args);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, series.getAnilist_id(), intent, 0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateAfterChangesCalendar.getTimeInMillis(), pendingIntent);
-        Log.d(TAG, "startAlarm: send series:" + series.getTitle());
+
+        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+        Log.d(TAG, "startNotificationAlarm: set notification alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateAfterChangesCalendar));
     }
 
-    private void setUpdateAlarm(UpdateSeriesReceiver.OnAirDateListener onAirDateListener)
+    private void setUpdateAlarm()
     {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, UpdateSeriesReceiver.class);
@@ -108,12 +109,14 @@ public class NotificationAiringChannel
         // Need to add extras to send Series object (used to construct the notification)
         Bundle args = new Bundle();
         args.putSerializable("series", series);
-        args.putSerializable("onAirDateListener", onAirDateListener);
         args.putBoolean("set_new_notification", (!airDateFirst && !calendarsEqual));
         intent.putExtra("args", args);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, -series.getAnilist_id(), intent, 0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateCalendar.getTimeInMillis(), pendingIntent);
+
+        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+        Log.d(TAG, "startNotificationAlarm: set update DB alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateCalendar));
     }
 
     // Will happen at log out, turning notifications off or changing air_date_change and notification_change

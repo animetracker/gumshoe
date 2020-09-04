@@ -10,32 +10,45 @@ import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 public class SetNewNotification
 {
     private static final String TAG = "SetNewNotification";
 
-    private UpdateSeriesReceiver.OnAirDateListener onAirDateListener;
     private Context context;
     private Series series;
+    private Series newSeries;
     private Calendar airDateAfterChangesCalendar = null;
 
     private List<Series> list;
 
-    public SetNewNotification(UpdateSeriesReceiver.OnAirDateListener onAirDateListener, Context context, Series series)
+    public SetNewNotification(Context context, Series series)
     {
-        this.onAirDateListener = onAirDateListener;
         this.context = context;
         this.series = series;
     }
 
     private void constructCalendar()
     {
-        Series newSeries = findSeriesInList(series);
-        if(newSeries!=null)
+        Series tempSeries = findSeriesInList(series);
+        if(tempSeries!=null)
         {
-          airDateAfterChangesCalendar = adjustAirDate(newSeries);
+            Log.d(TAG, "constructCalendar: found series " + series.getTitle() + " in series list");
+            newSeries = tempSeries;
+            Calendar tempCalendar =  adjustAirDate(newSeries);
+            if(tempCalendar!= null)
+            {
+                Log.d(TAG, "constructCalendar: airDateAfterChangesCalendar is not null");
+                airDateAfterChangesCalendar = tempCalendar;
+            }
+            else
+            {
+                Log.d(TAG, "constructCalendar: airDateAfterChangesCalendar is null");
+            }
+        }
+        else
+        {
+            Log.d(TAG, "constructCalendar: haven't found series " + series.getTitle() + " in series list");
         }
     }
 
@@ -71,79 +84,75 @@ public class SetNewNotification
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
             Calendar calendar = convertDateToCalendar.convert(air_date);
+            Log.d(TAG, "adjustAirDate: calendar before changes for " + series.getTitle() + " is " + convertDateToCalendar.reverseConvert(calendar));
 
-            Calendar calendarNow = Calendar.getInstance(TimeZone.getDefault());
-            boolean airDatePassed = calendar.before(calendarNow);
+            String air_date_change = series.getAir_date_change();
+            String notification_change = series.getNotification_change();
 
-            if(!airDatePassed)
+            // If series has a set air date change
+            if(!air_date_change.equals(""))
             {
-                String air_date_change = series.getAir_date_change();
-                String notification_change = series.getNotification_change();
+                // get sign, hours, minutes from air_date change
+                String[] signHoursMinutesArray  = air_date_change.split(":");
+                Character sign = air_date_change.toCharArray()[0];
+                int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+                int minutes = Integer.parseInt(signHoursMinutesArray[1]);
 
-                // If series has a set air date change
-                if(!air_date_change.equals(""))
+                if(sign.equals('+'))
                 {
-                    // get sign, hours, minutes from air_date change
-                    String[] signHoursMinutesArray  = air_date_change.split(":");
-                    Character sign = air_date_change.toCharArray()[0];
-                    int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
-                    int minutes = Integer.parseInt(signHoursMinutesArray[1]);
-
-                    if(sign.equals('+'))
-                    {
-                        calendar.add(Calendar.HOUR_OF_DAY, +hours);
-                        calendar.add(Calendar.MINUTE, +minutes);
-                    }
-                    else if(sign.equals('-'))
-                    {
-                        calendar.add(Calendar.HOUR_OF_DAY, -hours);
-                        calendar.add(Calendar.MINUTE, -minutes);
-                    }
+                    calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                    calendar.add(Calendar.MINUTE, +minutes);
                 }
-                // If series has a set notification change
-                if(!notification_change.equals(""))
+                else if(sign.equals('-'))
                 {
-                    String[] quantityMetricBAArray  = notification_change.split(" ");
-                    int quantity = Integer.parseInt(quantityMetricBAArray[0]);
-                    String metric = quantityMetricBAArray[1];
-                    String beforeAfter = quantityMetricBAArray[2];
-
-
-                    // Add minutes, hours, days
-                    if(beforeAfter.equals("before"))
-                    {
-                        switch (metric)
-                        {
-                            case "minutes":
-                                calendar.add(Calendar.MINUTE, -quantity);
-                                break;
-                            case "hours":
-                                calendar.add(Calendar.HOUR_OF_DAY, -quantity);
-                                break;
-                            case "days":
-                                calendar.add(Calendar.DAY_OF_MONTH, -quantity);
-                                break;
-                        }
-                    }
-                    else if(beforeAfter.equals("after"))
-                    {
-                        switch (metric)
-                        {
-                            case "minutes":
-                                calendar.add(Calendar.MINUTE, +quantity);
-                                break;
-                            case "hours":
-                                calendar.add(Calendar.HOUR_OF_DAY, +quantity);
-                                break;
-                            case "days":
-                                calendar.add(Calendar.DAY_OF_MONTH, +quantity);
-                                break;
-                        }
-                    }
+                    calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                    calendar.add(Calendar.MINUTE, -minutes);
                 }
-
-                return calendar;
             }
+            // If series has a set notification change
+            if(!notification_change.equals(""))
+            {
+                String[] quantityMetricBAArray  = notification_change.split(" ");
+                int quantity = Integer.parseInt(quantityMetricBAArray[0]);
+                String metric = quantityMetricBAArray[1];
+                String beforeAfter = quantityMetricBAArray[2];
+
+
+                // Add minutes, hours, days
+                if(beforeAfter.equals("before"))
+                {
+                    switch (metric)
+                    {
+                        case "minutes":
+                            calendar.add(Calendar.MINUTE, -quantity);
+                            break;
+                        case "hours":
+                            calendar.add(Calendar.HOUR_OF_DAY, -quantity);
+                            break;
+                        case "days":
+                            calendar.add(Calendar.DAY_OF_MONTH, -quantity);
+                            break;
+                    }
+                }
+                else if(beforeAfter.equals("after"))
+                {
+                    switch (metric)
+                    {
+                        case "minutes":
+                            calendar.add(Calendar.MINUTE, +quantity);
+                            break;
+                        case "hours":
+                            calendar.add(Calendar.HOUR_OF_DAY, +quantity);
+                            break;
+                        case "days":
+                            calendar.add(Calendar.DAY_OF_MONTH, +quantity);
+                            break;
+                    }
+                }
+            }
+            Log.d(TAG, "adjustAirDate: calendar after changes for " + series.getTitle() + " is " + convertDateToCalendar.reverseConvert(calendar));
+            return calendar;
+
         }
         return null;
     }
@@ -158,6 +167,15 @@ public class SetNewNotification
 
             SelectTable selectTable = new SelectTable(session);
             list = selectTable.getSeriesList();
+            
+            if(list != null)
+            {
+                Log.d(TAG, "doInBackground: got table from db and not null");
+            }
+            else
+            {
+                Log.d(TAG, "doInBackground: got table from db and is null");
+            }
 
             return null;
         }
@@ -168,8 +186,13 @@ public class SetNewNotification
             constructCalendar();
             if(airDateAfterChangesCalendar != null)
             {
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context, series, airDateAfterChangesCalendar);
-                notificationAiringChannel.setNotification(onAirDateListener);
+                if(newSeries!=null)
+                {
+                    Log.d(TAG, "onPostExecute: calendar, listener and newSeries are not null, so setting new notification for \"" + newSeries.getTitle() + "\"");
+                    NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context, newSeries, airDateAfterChangesCalendar);
+                    notificationAiringChannel.setNotification();
+                }
+
                 Log.d(TAG, "onPostExecute: New notification set");
             }
             else

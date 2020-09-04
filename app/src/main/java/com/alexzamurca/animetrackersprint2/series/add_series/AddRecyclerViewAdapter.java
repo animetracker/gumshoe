@@ -36,7 +36,7 @@ import java.util.List;
 
 public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerViewAdapter.ViewHolder>
 {
-    private static final String TAG = "RecyclerViewAdapter";
+    private static final String TAG = "AddRecyclerViewAdapter";
 
     private Search search;
     private List<SearchResult> list;
@@ -215,10 +215,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 if (isConnectedToInternet)
                 {
                     insert(getAdapterPosition());
-
                     Log.d(TAG, "ViewHolder: selected result is stored");
-
-
                 }
                 else
                 {
@@ -260,7 +257,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             search = new Search(series_name);
             search.printList(list);
             list = search.getSearchResults();
-            Log.d(TAG, "doInBackground: Changed List");
             search.printList(list);
             noSearchResultsTV.setText("");
             return null;
@@ -271,7 +267,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         {
             loadedListener.onFinishedLoading();
             notifyDataSetChanged();
-            Log.d("OnPostExecute", "Data set is changed");
             if(list.size() == 0)
             {
                 noSearchResultsTV.setText("No search results for\"" + series_name + "\"");
@@ -300,7 +295,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 String session = sharedPreferences.getString("session", "");
 
                 Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session);
-                Log.d(TAG, "doInBackground: search ARRAY: \n\n\n" + search.getSearchArray().getJSONObject(adapter_position).toString(4) + "\n\n\n");
                 request_success_rating = insert.insert();
             } catch (JSONException e) {
                 Log.d(TAG, "DatabaseInsert: doInBackground: JSONException");

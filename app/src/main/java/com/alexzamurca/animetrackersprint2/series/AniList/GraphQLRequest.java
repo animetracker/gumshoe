@@ -30,7 +30,7 @@ public class GraphQLRequest
     public JSONObject getInfoJSONResponse(int anilist_id)
     {
         QueryForGraphQL queryBuilder = new QueryForGraphQL();
-        POST post = new POST("https://graphql.anilist.co",queryBuilder.getInfoQuery(anilist_id));
+        POST post = new POST("https://graphql.anilist.co", queryBuilder.getInfoQuery(anilist_id));
         try
         {
             String response = post.sendRequest();

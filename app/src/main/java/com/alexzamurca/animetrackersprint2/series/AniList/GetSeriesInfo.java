@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertMillisToDate;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class GetSeriesInfo
 {
@@ -16,7 +16,7 @@ public class GetSeriesInfo
     private String air_date = "";
     private String status = "";
 
-    private JSONArray response;
+    private JSONObject response;
 
     public GetSeriesInfo(int anilist_id)
     {
@@ -28,8 +28,7 @@ public class GetSeriesInfo
         GraphQLRequest graphQLRequest = new GraphQLRequest();
         try
         {
-            response = new JSONArray(graphQLRequest.getInfoJSONResponse(anilist_id));
-            Log.d(TAG, "sendRequest: response" + response.toString(4));
+            response = graphQLRequest.getInfoJSONResponse(anilist_id).getJSONObject("data").getJSONObject("Media");
         }
         catch(JSONException e)
         {
@@ -39,14 +38,15 @@ public class GetSeriesInfo
         // Getting episode number
         try
         {
-            episode_number =  response.getJSONObject(0).getJSONObject("nextAiringEpisode").getInt("episode");
+            episode_number =  response.getJSONObject("nextAiringEpisode").getInt("episode");
         }
         catch(JSONException e)
         {
             String current_episode;
+
             try
             {
-                current_episode = response.getJSONObject(0).getJSONArray("streamingEpisodes").getJSONObject(0).getString("title");
+                current_episode = response.getJSONArray("streamingEpisodes").getJSONObject(0).getString("title");
                 episode_number  = Integer.parseInt(current_episode.substring(current_episode.indexOf(" ")+1, current_episode.indexOf("-")-1)) + 1;
             }
             catch(JSONException j)
@@ -57,12 +57,14 @@ public class GetSeriesInfo
             {
                 Log.d(TAG, "sendRequest: NumberFormatException when trying to convert string to number");
             }
+
+
         }
 
         // Getting air date
         try
         {
-            ConvertMillisToDate convertMillisToDate = new ConvertMillisToDate(response.getJSONObject(0).getJSONObject("nextAiringEpisode").getInt("airingAt"));
+            ConvertMillisToDate convertMillisToDate = new ConvertMillisToDate(response.getJSONObject("nextAiringEpisode").getInt("airingAt"));
             air_date = convertMillisToDate.getDate();
         }
         catch(JSONException j)
@@ -73,12 +75,14 @@ public class GetSeriesInfo
         // Getting status
         try
         {
-            status = response.getJSONObject(0).getString("status");
+            status = response.getString("status");
         }
         catch(JSONException e)
         {
             Log.d(TAG, "sendRequest: JSONException when trying to get status");
         }
+
+
     }
 
     public String getAir_date()
