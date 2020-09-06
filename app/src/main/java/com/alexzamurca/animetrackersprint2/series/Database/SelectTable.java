@@ -37,7 +37,9 @@ public class SelectTable
         JSONArray jsonResponse;
         try
         {
-            jsonResponse = new JSONArray(get.sendRequest());
+            String s = get.sendRequest();
+            Log.d(TAG, "getSeriesList: " + s);
+            jsonResponse = new JSONArray(s);
         }
         catch(JSONException e)
         {

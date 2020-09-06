@@ -12,16 +12,6 @@
         android:checkable="true"/>
 
     <item
-        android:id="@+id/sort_favourite_down"
-        android:title="@string/favourite_up"
-        android:checkable="true"/>
-
-    <item
-        android:id="@+id/sort_favourite_up"
-        android:title="@string/favourite_down"
-        android:checkable="true"/>
-
-    <item
         android:id="@+id/sort_latest_release"
         android:title="@string/air_date_up"
         android:checkable="true"/>

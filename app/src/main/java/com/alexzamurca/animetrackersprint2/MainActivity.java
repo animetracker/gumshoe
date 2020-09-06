@@ -35,7 +35,14 @@ public class MainActivity extends AppCompatActivity
         navController = Navigation.findNavController(this, R.id.fragment_container);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
+
+
         sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("session", "dqtKgJ7ZGdldORYBet_VWhAElZjDzyGW01P79ybo_jiApSRDNJepUH9iuuJPkbHr");
+        editor.apply();
+
         boolean signedIn = sharedPreferences.getBoolean("signed_in", false);
         if(!signedIn)
         {
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         String session = response.getString("session");
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("session", session);
+                        editor.putString("session", "dqtKgJ7ZGdldORYBet_VWhAElZjDzyGW01P79ybo_jiApSRDNJepUH9iuuJPkbHr");
 
                         Log.d(TAG, "onPostExecute: changed session to new one from login");
 

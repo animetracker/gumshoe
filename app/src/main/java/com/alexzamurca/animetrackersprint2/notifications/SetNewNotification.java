@@ -83,7 +83,7 @@ public class SetNewNotification
         if(!air_date.equals("") && notificationsOn)
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.convert(air_date);
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(air_date);
             Log.d(TAG, "adjustAirDate: calendar before changes for " + series.getTitle() + " is " + convertDateToCalendar.reverseConvert(calendar));
 
             String air_date_change = series.getAir_date_change();

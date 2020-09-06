@@ -9,9 +9,9 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:icon="@mipmap/gumshoe27_circle"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/gumshoe27_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
@@ -24,8 +24,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".notifications.SeriesAiringNotificationReceiver"/>
-        <receiver android:name=".notifications.UpdateSeriesReceiver"/>
+        <receiver android:name=".notifications.SeriesAiringNotificationReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".notifications.UpdateSeriesReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

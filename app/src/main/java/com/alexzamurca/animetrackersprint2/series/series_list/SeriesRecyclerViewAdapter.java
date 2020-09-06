@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.series.series_list;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.ListFragment;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.bumptech.glide.Glide;
@@ -29,6 +31,7 @@ import java.util.TimeZone;
 
 public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecyclerViewAdapter.ViewHolder> implements Filterable
 {
+    private static final String TAG = "SeriesRecyclerViewAdapter";
 
     private List<Series> list;
     private Context context;
@@ -177,7 +180,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         if(!air_date.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.convert(air_date);
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(air_date);
             if(calendar != null)
             {
                 calendar.setTimeZone(TimeZone.getDefault());
@@ -244,13 +247,19 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             error_wrong_air_date = itemView.findViewById(R.id.error_wrong_air_date_series);
 
             itemView.setOnClickListener(v ->
-                    onSeriesListener.onSeriesClick(list.get(getAdapterPosition()))
+                    {
+                        ListFragment.isAppRunning = true;
+                        Log.d(TAG, "ViewHolder: onSeriesClick");
+                        onSeriesListener.onSeriesClick(list.get(getAdapterPosition()));
+                    }
             );
 
             notifications_off.setOnClickListener(v ->
                     {
+                        ListFragment.isAppRunning = true;
                         if(notifications_off.getTag()=="notifications_off")
                         {
+                            Log.d(TAG, "ViewHolder: onNotificationsOn");
                             onSeriesListener.onNotificationsOn(list.get(getAdapterPosition()));
                         }
                         else if(notifications_off.getTag()=="notifications_on")
@@ -258,22 +267,29 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                             onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
                         }
                     }
-
             );
 
             remove.setOnClickListener(v ->
-
-                removeSeries(list.get(getAdapterPosition()))
+                    {
+                        ListFragment.isAppRunning = true;
+                        removeSeries(list.get(getAdapterPosition()));
+                    }
             );
 
             change_notification_time.setOnClickListener(v ->
-
-                    onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()))
-
+                    {
+                        ListFragment.isAppRunning = true;
+                        Log.d(TAG, "ViewHolder: onChangeNotificationTime");
+                        onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()));
+                    }
             );
 
             error_wrong_air_date.setOnClickListener(v ->
-                onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()))
+                    {
+                        ListFragment.isAppRunning = true;
+                        Log.d(TAG, "ViewHolder: onErrorWrongAirDate");
+                        onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
+                    }
             );
         }
     }

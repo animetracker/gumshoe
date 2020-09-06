@@ -61,6 +61,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     private ArrayList<Series> list = new ArrayList<>();
     private List<Series> oldList;
     private String session;
+    public static boolean isAppRunning = true;
 
     private SeriesRecyclerViewAdapter adapter;
     private TextView emptyListTV;
@@ -78,6 +79,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
+        isAppRunning = true;
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
@@ -100,10 +102,50 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
         // Search button
         addButton.setOnClickListener(v ->
-
             changeToSearchFragment()
         );
+
+        isAppRunning = true;
         return mView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        isAppRunning = true;
+        Log.d(TAG, "onStart: isAppRunning is set to true");
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        isAppRunning = false;
+        Log.d(TAG, "onStop: isAppRunning is set to false");
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        isAppRunning = true;
+        Log.d(TAG, "onResume: isAppRunning is set to true");
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+        isAppRunning = false;
+        Log.d(TAG, "onPause: isAppRunning is set to false");
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        isAppRunning = false;
+        Log.d(TAG, "onDestroy: isAppRunning is set to false");
     }
 
     @Override
@@ -206,7 +248,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
             checkSelectionUncheckRest(item, popup.getMenu());
 
-            sortListAccordingToSelection(itemIndex);
+            if(isAppRunning)
+            {
+                sortListAccordingToSelection(itemIndex);
+            }
 
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -242,6 +287,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
     private void sortListAccordingToSelection(int selection)
     {
+        isAppRunning = true;
         List<Series> listFromAdapter = adapter.getList();
         AlphabeticalSortList alphabeticalSortList = new AlphabeticalSortList(listFromAdapter);
         DateSortSeriesList dateSortSeriesList = new DateSortSeriesList(listFromAdapter);
@@ -265,37 +311,27 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
                 adapter.restoreFromList(sortedList);
                 return;
 
-            //Most Favourite
-            case 2:
-                Log.d(TAG, "setupDropDownOnClick: sort Most Favourite clicked");
-                break;
-
-            // Least Favourite
-            case 3:
-                Log.d(TAG, "setupDropDownOnClick: sort Least Favourite clicked");
-                return;
-
             // Latest
-            case 4:
+            case 2:
                 Log.d(TAG, "setupDropDownOnClick: sort Latest clicked");
                 sortedList = dateSortSeriesList.sortMostRecent();
                 adapter.restoreFromList(sortedList);
                 return;
 
             // Oldest
-            case 5:
+            case 3:
                 Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
                 sortedList = dateSortSeriesList.sortLeastRecent();
                 adapter.restoreFromList(sortedList);
                 return;
 
                 // Add Date up
-            case 6:
+            case 4:
                 Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
                 return;
 
             // Add Date down
-            case 7:
+            case 5:
                 Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
         }
     }
@@ -332,8 +368,12 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
     private void changeToSearchFragment()
     {
-        ListFragmentDirections.ActionAddingNewSeries action = ListFragmentDirections.actionAddingNewSeries(this);
-        mNavController.navigate(action);
+        if(isAppRunning)
+        {
+            Log.d(TAG, "changeToSearchFragment: about to use addNewSeriesListener");
+            ListFragmentDirections.ActionAddingNewSeries action = ListFragmentDirections.actionAddingNewSeries(this);
+            mNavController.navigate(action);
+        }
     }
 
     private void showSeriesInfoFragment(Series series)
@@ -347,11 +387,16 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
     public void newDialogInstance()
     {
-        NoConnectionDialog dialog = new NoConnectionDialog();
-        Bundle args = new Bundle();
-        args.putSerializable("data", this);
-        dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "NoConnectionDialog");
+        if(isAppRunning)
+        {
+            NoConnectionDialog dialog = new NoConnectionDialog();
+            Bundle args = new Bundle();
+            // Making sure we do not get an IOException
+            Log.d(TAG, "newDialogInstance: about to add NoConnectionDialog.TryAgainListener");
+            args.putSerializable("data", this);
+            dialog.setArguments(args);
+            dialog.show(mContext.getSupportFragmentManager(), "NoConnectionDialog");
+        }
     }
 
     private void initRecyclerView()
@@ -390,13 +435,17 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onNotificationsOff(Series series)
     {
-        NotificationsOffDialog dialog = new NotificationsOffDialog();
-        // need to pass series
-        Bundle args = new Bundle();
-        args.putSerializable("series", series);
-        args.putSerializable("onResponseListener",this);
-        dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+        if(isAppRunning)
+        {
+            NotificationsOffDialog dialog = new NotificationsOffDialog();
+            // need to pass series
+            Bundle args = new Bundle();
+            args.putSerializable("series", series);
+            Log.d(TAG, "onNotificationsOff: about to add onResponseListener");
+            args.putSerializable("onResponseListener",this);
+            dialog.setArguments(args);
+            dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+        }
     }
 
     @Override
@@ -417,12 +466,16 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onErrorWrongAirDate(Series series)
     {
-        IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
-        Bundle args = new Bundle();
-        args.putSerializable("incorrectAirDateListener", ListFragment.this);
-        args.putSerializable("series", series);
-        dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
+        if(isAppRunning)
+        {
+            IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
+            Bundle args = new Bundle();
+            Log.d(TAG, "onErrorWrongAirDate: about to add incorrect air date listener");
+            args.putSerializable("incorrectAirDateListener", ListFragment.this);
+            args.putSerializable("series", series);
+            dialog.setArguments(args);
+            dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
+        }
     }
 
     public void printList(List<Series> list)
@@ -480,7 +533,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         if(!air_date.equals("") && notificationsOn)
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.convert(air_date);
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(air_date);
 
             Calendar calendarNow = Calendar.getInstance(TimeZone.getDefault());
             boolean airDatePassed = calendar.before(calendarNow);
@@ -604,7 +657,9 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             // Database connection dialog
             if(wasRequestSuccessful)
             {
+
                 adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, Navigation.findNavController(mView));
+
                 initRecyclerView();
 
                 // Get sort state from SharedPreferences
@@ -614,11 +669,15 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             }
             else
             {
-                NoDatabaseDialog dialog = new NoDatabaseDialog();
-                Bundle args = new Bundle();
-                args.putSerializable("reportBugListener", ListFragment.this);
-                dialog.setArguments(args);
-                dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
+                if(isAppRunning)
+                {
+                    NoDatabaseDialog dialog = new NoDatabaseDialog();
+                    Bundle args = new Bundle();
+                    Log.d(TAG, "onPostExecute: about to add report bug listener");
+                    args.putSerializable("reportBugListener", ListFragment.this);
+                    dialog.setArguments(args);
+                    dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
+                }
             }
 
             super.onPostExecute(aVoid);

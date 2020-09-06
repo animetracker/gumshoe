@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GumShoe</string>
+    <string name="app_name">Gumshoe</string>
     <string name="series_list">Series List</string>
     <string name="list">List</string>
     <string name="profile">Profile</string>
@@ -50,9 +50,6 @@
     <string name="alphabetical">Alphabetical</string>
     <string name="alphabetical_up">Alphabetical ↑</string>
     <string name="alphabetical_down">Alphabetical ↓</string>
-    <string name="favourite_up">Favourite ↑</string>
-    <string name="favourite_down">Favourite ↓</string>
-    <string name="favourite">Favourite</string>
     <string name="turn_notifications_off">Turn Notifications Off</string>
     <string name="expand_or_collapse">Expand or Collapse</string>
     <string name="show">show</string>

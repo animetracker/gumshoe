@@ -343,7 +343,7 @@ public class ChangeAirDateFragment extends Fragment
     private void updateNewTimeTV()
     {
         // Form string
-        Calendar newCalendar = convertDateToCalendar.convert(series.getAir_date());
+        Calendar newCalendar = convertDateToCalendar.timeZoneConvert(series.getAir_date());
         // Add hours, minutes
         if(isSignNegative)
         {

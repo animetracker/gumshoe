@@ -13,9 +13,32 @@ public class ConvertDateToCalendar
 {
     private static final String TAG = "ConvertDateToCalendar";
 
-    public Calendar convert(String dateInFormat)
+    public Calendar timeZoneConvert(String dateInFormat)
     {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        if(!dateInFormat.equals(""))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            try
+            {
+                Date date = sdf.parse(dateInFormat);
+                assert date != null;
+                calendar.setTime(date);
+                return calendar;
+            }
+            catch(ParseException e)
+            {
+                Log.d(TAG, "getDate: ParseException when converting Date type to Calendar type");
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public Calendar noTimeZoneConvert(String dateInFormat)
+    {
+        Calendar calendar = Calendar.getInstance();
         if(!dateInFormat.equals(""))
         {
             SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm");
