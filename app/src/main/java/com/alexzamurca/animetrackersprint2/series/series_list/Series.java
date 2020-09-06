@@ -5,25 +5,20 @@ import java.io.Serializable;
 
 public class Series implements Serializable
 {
-    String title, cover_image, air_date, description, notification_change, air_date_change;;
-    int anilist_id, episode_number;
+    String title, cover_image, air_date, description, status, notification_change, air_date_change;;
+    int anilist_id, next_episode_number, notifications_on;
 
-    int notifications_on;
-
-    public Series(String title, String cover_image, String air_date, String description, int anilist_id, int episode_number, String notification_change, String air_date_change, int notifications_on) {
+    public Series(String title, String cover_image, String air_date, String description, String status, String notification_change, String air_date_change, int anilist_id, int next_episode_number, int notifications_on) {
         this.title = title;
         this.cover_image = cover_image;
         this.air_date = air_date;
         this.description = description;
-        this.anilist_id = anilist_id;
-        this.episode_number = episode_number;
+        this.status = status;
         this.notification_change = notification_change;
         this.air_date_change = air_date_change;
+        this.anilist_id = anilist_id;
+        this.next_episode_number = next_episode_number;
         this.notifications_on = notifications_on;
-    }
-
-    public int getEpisode_number() {
-        return episode_number;
     }
 
     public String getTitle() {
@@ -42,12 +37,11 @@ public class Series implements Serializable
         return description;
     }
 
-    public int getAnilist_id() {
-        return anilist_id;
+    public String getStatus() {
+        return status;
     }
 
-    public String getNotification_change()
-    {
+    public String getNotification_change() {
         return notification_change;
     }
 
@@ -55,15 +49,15 @@ public class Series implements Serializable
         return air_date_change;
     }
 
+    public int getAnilist_id() {
+        return anilist_id;
+    }
+
+    public int getNext_episode_number() {
+        return next_episode_number;
+    }
+
     public int getNotifications_on() {
         return notifications_on;
-    }
-
-    public void setAir_date_change(String air_date_change) {
-        this.air_date_change = air_date_change;
-    }
-
-    public void setEpisode_number(int episode_number) {
-        this.episode_number = episode_number;
     }
 }

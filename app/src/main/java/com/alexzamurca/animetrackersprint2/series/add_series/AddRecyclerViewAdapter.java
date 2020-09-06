@@ -25,12 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.series.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,18 +46,16 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     private Context context;
     private RowClickListener rowClickListener;
     private LoadedListener loadedListener;
-    private AddedNewSeriesListener addedNewSeriesListener;
     private TextView noSearchResultsTV;
     private View searchActivityView;
     public String title_content;
     private NavController navController;
 
-    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, LoadedListener loadedListener, AddedNewSeriesListener addedNewSeriesListener, TextView noSearchResultsTV, View searchActivityView, NavController navController) {
+    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, LoadedListener loadedListener, TextView noSearchResultsTV, View searchActivityView, NavController navController) {
         this.list = list;
         this.context = context;
         this.rowClickListener = rowClickListener;
         this.loadedListener = loadedListener;
-        this.addedNewSeriesListener = addedNewSeriesListener;
         this.noSearchResultsTV = noSearchResultsTV;
         this.searchActivityView = searchActivityView;
         this.navController = navController;
@@ -120,15 +120,12 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public interface RowClickListener
     {
         void onFailedClick();
+        void onSuccessfulClick(Series series);
     }
 
     public interface LoadedListener
     {
         void onFinishedLoading();
-    }
-    public interface AddedNewSeriesListener extends Serializable
-    {
-        void onSuccessfulAdd();
     }
 
 
@@ -307,7 +304,17 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             if(request_success_rating == 0)
             {
                 Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_LONG).show();
-                addedNewSeriesListener.onSuccessfulAdd();
+                try
+                {
+                    JSONObject json = search.getSearchArray().getJSONObject(adapter_position);
+                    SearchResponseToString searchResponseToString = new SearchResponseToString();
+                    rowClickListener.onSuccessfulClick(searchResponseToString.getSeries(json));
+                }
+                catch(JSONException e)
+                {
+                    Log.d(TAG, "onPostExecute: JSONException when trying to call RowOnClickListener.onSuccessfulClick interface - error getting series from search array");
+                }
+
             }
             else if(request_success_rating == 1)
             {

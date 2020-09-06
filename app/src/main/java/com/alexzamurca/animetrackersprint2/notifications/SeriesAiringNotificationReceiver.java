@@ -73,7 +73,7 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
         if(series.getNotification_change().equals(""))
         {
             text = "Episode " +
-                    series.getEpisode_number() +
+                    series.getNext_episode_number() +
                     // Need a class to convert alert change to string if before ("is going to air in {time}"), if no change ("has just been released"), if after ("has released {time} ago")
                     " has just been released";
         }
@@ -82,7 +82,7 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
             // Get text before "before"
             String beforeText = series.getNotification_change().split(" before")[0];
             text = "Episode " +
-                    series.getEpisode_number() +
+                    series.getNext_episode_number() +
                     " will be released in " + beforeText;
         }
         else if(series.getNotification_change().contains("after"))
@@ -90,7 +90,7 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
             // Get text before "after"
             String afterText = series.getNotification_change().split(" after")[0];
             text = "Episode " +
-                    series.getEpisode_number() +
+                    series.getNext_episode_number() +
                     " was released " + afterText + " ago!";
         }
 

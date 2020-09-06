@@ -28,16 +28,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddFragment extends Fragment implements NoConnectionDialog.TryAgainListener, AddRecyclerViewAdapter.RowClickListener, AddRecyclerViewAdapter.LoadedListener {
 
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
     private NavController navController;
-    private AddRecyclerViewAdapter.AddedNewSeriesListener addedNewSeriesListener;
 
     private ArrayList<SearchResult> list = new ArrayList<>();
     private AddRecyclerViewAdapter adapter;
@@ -56,7 +57,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         Toolbar toolbar = globalView.findViewById(R.id.add_series_toolbar_object);
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        Objects.requireNonNull(activity.getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loadingTV = globalView.findViewById(R.id.search_loading_text);
@@ -70,7 +71,6 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         editText = view.findViewById(R.id.search_edit_text);
-        initListener();
         initImageBitmaps();
         initRecyclerView();
 
@@ -79,7 +79,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
             if (actionId == EditorInfo.IME_ACTION_SEARCH)
             {
                 // Show loading - (credit: http://www.lowgif.com/view.html)
-                Glide.with(getContext())
+                Glide.with(requireContext())
                         .load(R.drawable.loading)
                         .into(loadingImage);
                 loadingTV.setText("Loading...");
@@ -96,13 +96,6 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
             Toast.makeText(getContext(), "BugTest: go series_row_background clicked!", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initListener()
-    {
-        assert getArguments() != null;
-        AddFragmentArgs args = AddFragmentArgs.fromBundle(getArguments());
-        addedNewSeriesListener = args.getAddedNewSeriesListener();
     }
 
     private void searchProcess()
@@ -140,10 +133,10 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new AddRecyclerViewAdapter(list, getContext(), this, this, addedNewSeriesListener, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
+        adapter = new AddRecyclerViewAdapter(list, getContext(), this, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     }
 
     @Override
@@ -167,11 +160,17 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     }
 
     @Override
+    public void onSuccessfulClick(Series series)
+    {
+        navController.navigate(R.id.listFragment);
+    }
+
+    @Override
     public void onFinishedLoading()
     {
         Log.d(TAG, "onFinishedLoading: hiding loading");
         // Hide loading
-        Glide.with(getContext()).clear(loadingImage);
+        Glide.with(requireContext()).clear(loadingImage);
         loadingTV.setText("");
     }
 }

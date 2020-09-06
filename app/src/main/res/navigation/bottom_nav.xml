@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_change_notification_reminder"
             app:destination="@id/changeNotificationReminderFragment" />
+        <argument
+            android:name="Series"
+            app:argType="com.alexzamurca.animetrackersprint2.series.series_list.Series" />
     </fragment>
 
     <fragment
@@ -71,10 +74,6 @@
             app:popExitAnim="@anim/slide_out_left"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"/>
-
-        <argument
-            android:name="addedNewSeriesListener"
-            app:argType="com.alexzamurca.animetrackersprint2.series.add_series.AddRecyclerViewAdapter$AddedNewSeriesListener" />
     </fragment>
     <fragment
         android:id="@+id/seriesInfoFragment"

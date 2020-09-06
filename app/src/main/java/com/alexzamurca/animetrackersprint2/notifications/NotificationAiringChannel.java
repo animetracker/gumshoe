@@ -21,7 +21,7 @@ public class NotificationAiringChannel
     private Series series;
 
     // We need context to access Alarm manager (used to set and cancel alarms)
-    private Context mContext;
+    private transient Context mContext;
 
     // Storing the calendar for the air date and the air date after changes
     private Calendar airDateCalendar;
@@ -95,8 +95,8 @@ public class NotificationAiringChannel
         args.putBoolean("set_new_notification", (airDateFirst&&!calendarsEqual)||(!airDateFirst&&calendarsEqual) );
         intent.putExtra("args", args);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, series.getAnilist_id(), intent, 0);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateAfterChangesCalendar.getTimeInMillis(), pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, series.getAnilist_id(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, airDateAfterChangesCalendar.getTimeInMillis(), pendingIntent);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         Log.d(TAG, "startNotificationAlarm: set notification alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateAfterChangesCalendar));
@@ -113,8 +113,8 @@ public class NotificationAiringChannel
         args.putBoolean("set_new_notification", (!airDateFirst && !calendarsEqual));
         intent.putExtra("args", args);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, -series.getAnilist_id(), intent, 0);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateCalendar.getTimeInMillis(), pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, -series.getAnilist_id(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, airDateCalendar.getTimeInMillis(), pendingIntent);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         Log.d(TAG, "startNotificationAlarm: set update DB alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateCalendar));

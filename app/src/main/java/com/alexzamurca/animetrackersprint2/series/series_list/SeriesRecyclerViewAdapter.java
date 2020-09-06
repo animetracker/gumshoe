@@ -23,20 +23,20 @@ import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
-import java.util.TimeZone;
 
 public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecyclerViewAdapter.ViewHolder> implements Filterable
 {
     private static final String TAG = "SeriesRecyclerViewAdapter";
 
     private List<Series> list;
-    private Context context;
+    private transient Context context;
     private OnSeriesListener onSeriesListener;
-    private NavController navController;
+    private transient NavController navController;
 
     public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, NavController navController)
     {
@@ -60,7 +60,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
         final String title = list.get(position).getTitle();
         String next_episode = "Episode:\n";
-        int next_episode_number = list.get(position).getEpisode_number();
+        int next_episode_number = list.get(position).getNext_episode_number();
         if(next_episode_number < 0)
         {
             next_episode += "N/A";
@@ -183,7 +183,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             Calendar calendar = convertDateToCalendar.timeZoneConvert(air_date);
             if(calendar != null)
             {
-                calendar.setTimeZone(TimeZone.getDefault());
 
                 // Account for the fact that there may not be any change
                 if(!air_date_change.equals(""))
@@ -248,15 +247,14 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
             itemView.setOnClickListener(v ->
                     {
-                        ListFragment.isAppRunning = true;
                         Log.d(TAG, "ViewHolder: onSeriesClick");
                         onSeriesListener.onSeriesClick(list.get(getAdapterPosition()));
                     }
+
             );
 
             notifications_off.setOnClickListener(v ->
                     {
-                        ListFragment.isAppRunning = true;
                         if(notifications_off.getTag()=="notifications_off")
                         {
                             Log.d(TAG, "ViewHolder: onNotificationsOn");
@@ -271,14 +269,12 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
             remove.setOnClickListener(v ->
                     {
-                        ListFragment.isAppRunning = true;
                         removeSeries(list.get(getAdapterPosition()));
                     }
             );
 
             change_notification_time.setOnClickListener(v ->
                     {
-                        ListFragment.isAppRunning = true;
                         Log.d(TAG, "ViewHolder: onChangeNotificationTime");
                         onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()));
                     }
@@ -286,7 +282,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
             error_wrong_air_date.setOnClickListener(v ->
                     {
-                        ListFragment.isAppRunning = true;
                         Log.d(TAG, "ViewHolder: onErrorWrongAirDate");
                         onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
                     }
@@ -309,7 +304,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     }
 
 
-    public interface OnSeriesListener
+    public interface OnSeriesListener extends Serializable
     {
         void onSeriesClick(Series series);
         void onNotificationsOff(Series series);

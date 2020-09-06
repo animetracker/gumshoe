@@ -55,6 +55,7 @@ public class SelectTable
             String air_date ="";
             String cover_image = "";
             String description = "";
+            String status = "";
             int anilist_id = -1;
             int notifications_on = 1;
             String notification_change = "";
@@ -95,6 +96,12 @@ public class SelectTable
             }
 
             try {
+                status = jsonResponse.getJSONObject(i).getString("status");
+            } catch (JSONException e) {
+                Log.d(TAG, "getTitles: JSONException when trying to get status");
+            }
+
+            try {
                 anilist_id = jsonResponse.getJSONObject(i).getInt("anilist_id");
             } catch (JSONException e) {
                 Log.d(TAG, "getTitles: JSONException when trying to get anilist_id");
@@ -118,7 +125,7 @@ public class SelectTable
                 Log.d(TAG, "getTitles: JSONException when trying to get notifications_on");
             }
 
-            seriesList.add(new Series(title, cover_image, air_date, description, anilist_id , next_episode_number , notification_change, air_date_change ,notifications_on));
+            seriesList.add(new Series(title, cover_image, air_date, description, status, notification_change, air_date_change, anilist_id , next_episode_number  ,notifications_on));
         }
         wasRequestSuccessful = true;
         return seriesList;
