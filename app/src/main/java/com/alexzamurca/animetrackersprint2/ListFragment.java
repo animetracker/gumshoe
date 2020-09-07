@@ -32,12 +32,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationsOn;
-import com.alexzamurca.animetrackersprint2.series.algorithms.AlphabeticalSortList;
-import com.alexzamurca.animetrackersprint2.series.algorithms.DateSortSeriesList;
+import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
+import com.alexzamurca.animetrackersprint2.algorithms.AlphabeticalSortList;
+import com.alexzamurca.animetrackersprint2.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
@@ -51,9 +52,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener {
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
     private static final String TAG = "ListFragment";
     private transient FragmentActivity mContext;
 
@@ -422,7 +422,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
         Bundle args = new Bundle();
         Log.d(TAG, "onErrorWrongAirDate: about to add incorrect air date listener");
-        //args.putSerializable("incorrectAirDateListener", ListFragment.this);
+        args.putSerializable("incorrectAirDateListener", ListFragment.this);
         args.putSerializable("series", series);
         dialog.setArguments(args);
         dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
@@ -477,92 +477,19 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     {
         String air_date = series.getAir_date();
         Log.d(TAG, "adjustAndSetNotifications: air date " + air_date);
-        boolean notificationsOn = series.getNotifications_on()==1;
-        // If has an air date and notifications are not off
-        if(!air_date.equals("") && notificationsOn)
+
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
+        Calendar calendar = adjustAirDate.getCalendar();
+
+        // If calendar returned it means all is good and notifications can be set
+        if(calendar!=null)
         {
-            ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(air_date);
-
-            Calendar calendarNow = Calendar.getInstance(TimeZone.getDefault());
-            boolean airDatePassed = calendar.before(calendarNow);
-
-            if(!airDatePassed)
-            {
-                String air_date_change = series.getAir_date_change();
-                String notification_change = series.getNotification_change();
-
-                // If series has a set air date change
-                if(!air_date_change.equals(""))
-                {
-                    // get sign, hours, minutes from air_date change
-                    String[] signHoursMinutesArray  = air_date_change.split(":");
-                    Character sign = air_date_change.toCharArray()[0];
-                    int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
-                    int minutes = Integer.parseInt(signHoursMinutesArray[1]);
-
-                    if(sign.equals('+'))
-                    {
-                        calendar.add(Calendar.HOUR_OF_DAY, +hours);
-                        calendar.add(Calendar.MINUTE, +minutes);
-                    }
-                    else if(sign.equals('-'))
-                    {
-                        calendar.add(Calendar.HOUR_OF_DAY, -hours);
-                        calendar.add(Calendar.MINUTE, -minutes);
-                    }
-                }
-                // If series has a set notification change
-                if(!notification_change.equals(""))
-                {
-                    String[] quantityMetricBAArray  = notification_change.split(" ");
-                    int quantity = Integer.parseInt(quantityMetricBAArray[0]);
-                    String metric = quantityMetricBAArray[1];
-                    String beforeAfter = quantityMetricBAArray[2];
-
-
-                    // Add minutes, hours, days
-                    if(beforeAfter.equals("before"))
-                    {
-                        switch (metric)
-                        {
-                            case "minutes":
-                                calendar.add(Calendar.MINUTE, -quantity);
-                                break;
-                            case "hours":
-                                calendar.add(Calendar.HOUR_OF_DAY, -quantity);
-                                break;
-                            case "days":
-                                calendar.add(Calendar.DAY_OF_MONTH, -quantity);
-                                break;
-                        }
-                    }
-                    else if(beforeAfter.equals("after"))
-                    {
-                        switch (metric)
-                        {
-                            case "minutes":
-                                calendar.add(Calendar.MINUTE, +quantity);
-                                break;
-                            case "hours":
-                                calendar.add(Calendar.HOUR_OF_DAY, +quantity);
-                                break;
-                            case "days":
-                                calendar.add(Calendar.DAY_OF_MONTH, +quantity);
-                                break;
-                        }
-                    }
-                }
-
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), series, calendar);
-                notificationAiringChannel.setNotification();
-
-                Log.d(TAG, "onSuccessfulAdd: set notification for \"" + series.getTitle() + "\"");
-            }
+            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
+            notificationAiringChannel.setNotification(series, calendar);
         }
+
+        Log.d(TAG, "onSuccessfulAdd: set notification for \"" + series.getTitle() + "\"");
     }
-
-
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
     public class MySQLConnection extends AsyncTask<Void, Void, Void>
@@ -660,6 +587,10 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             {
                 Toast.makeText(getContext(), "Failed to turn notifications off for \"" + title +"\", notifications are still on.", Toast.LENGTH_LONG).show();
             }
+
+            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
+            notificationAiringChannel.cancel(selectedSeries);
+
             mNavController.navigate(R.id.listFragment);
             super.onPostExecute(aVoid);
         }
@@ -695,6 +626,16 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             {
                 Toast.makeText(getContext(), "Failed to turn notifications on for \"" + title +"\", notifications are still off.", Toast.LENGTH_LONG).show();
             }
+
+            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries);
+            Calendar calendar = adjustAirDate.getCalendar();
+
+            if(calendar!=null)
+            {
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
+                notificationAiringChannel.setNotification(selectedSeries, calendar);
+            }
+
             mNavController.navigate(R.id.listFragment);
             super.onPostExecute(aVoid);
         }

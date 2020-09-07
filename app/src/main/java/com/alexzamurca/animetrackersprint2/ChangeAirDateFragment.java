@@ -30,6 +30,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateAirDateChange;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
@@ -199,8 +200,22 @@ public class ChangeAirDateFragment extends Fragment
         saveButton = view.findViewById(R.id.change_air_date_save_button);
         saveButton.setVisibility(View.GONE);
         saveButton.setOnClickListener(v ->
-            updateAirDateDB()
+            {
+                if(hasAirDateChangeChanged())
+                {
+                    updateAirDateDB();
+                    ResetAlarmForSeries resetAlarmForSeries = new ResetAlarmForSeries(getContext());
+                    resetAlarmForSeries.reset(series);
+                }
+            }
         );
+    }
+
+    private boolean hasAirDateChangeChanged()
+    {
+        String oldAirDateChange = series.getAir_date_change();
+        String newAirDateChange = getFormattedChange();
+        return !oldAirDateChange.equals(newAirDateChange);
     }
 
     private void openURL(String URL)
@@ -377,6 +392,14 @@ public class ChangeAirDateFragment extends Fragment
         updateAirDateAsync.execute();
     }
 
+    private String getFormattedChange()
+    {
+        String sign;
+        if(isSignNegative) sign = "-";
+        else sign = "+";
+        return sign + hours_to_change + ":"  + minutes_to_change;
+    }
+
     private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
     {
         private boolean isSuccessful;
@@ -388,10 +411,7 @@ public class ChangeAirDateFragment extends Fragment
             if(hours_to_change==0 && minutes_to_change==0) change = "";
             else
             {
-                String sign;
-                if(isSignNegative) sign = "-";
-                else sign = "+";
-                change = sign + hours_to_change + ":"  + minutes_to_change;
+                change = getFormattedChange();
             }
 
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);

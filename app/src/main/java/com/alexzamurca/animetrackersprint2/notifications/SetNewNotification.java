@@ -189,8 +189,8 @@ public class SetNewNotification
                 if(newSeries!=null)
                 {
                     Log.d(TAG, "onPostExecute: calendar, listener and newSeries are not null, so setting new notification for \"" + newSeries.getTitle() + "\"");
-                    NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context, newSeries, airDateAfterChangesCalendar);
-                    notificationAiringChannel.setNotification();
+                    NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+                    notificationAiringChannel.setNotification(newSeries, airDateAfterChangesCalendar);
                 }
 
                 Log.d(TAG, "onPostExecute: New notification set");

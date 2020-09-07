@@ -27,6 +27,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
@@ -265,8 +266,22 @@ public class ChangeNotificationReminderFragment extends Fragment
         saveButton = view.findViewById(R.id.change_notification_reminder_save_button);
         saveButton.setVisibility(View.GONE);
         saveButton.setOnClickListener(v ->
-            updateNotificationChangeDB()
+            {
+                if(hasNotificationReminderChanged())
+                {
+                    updateNotificationChangeDB();
+                    ResetAlarmForSeries resetAlarmForSeries = new ResetAlarmForSeries(getContext());
+                    resetAlarmForSeries.reset(series);
+                }
+            }
         );
+    }
+
+    private boolean hasNotificationReminderChanged()
+    {
+        String oldNotificationChange = series.getNotification_change();
+        String newNotificationChange = quantity + " " + metric + " " + beforeAfter;
+        return !oldNotificationChange.equals(newNotificationChange);
     }
 
     private void setupTextViews(View view)

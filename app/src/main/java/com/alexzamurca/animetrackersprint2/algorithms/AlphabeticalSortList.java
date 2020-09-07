@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.algorithms;
+package com.alexzamurca.animetrackersprint2.algorithms;
 
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 

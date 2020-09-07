@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.series.algorithms.UpdateSeries;
+import com.alexzamurca.animetrackersprint2.algorithms.UpdateSeries;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 // This class monitors what happens when the air date of a series is now

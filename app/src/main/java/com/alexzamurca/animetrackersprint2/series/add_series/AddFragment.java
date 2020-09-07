@@ -27,12 +27,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
+import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 
 public class AddFragment extends Fragment implements NoConnectionDialog.TryAgainListener, AddRecyclerViewAdapter.RowClickListener, AddRecyclerViewAdapter.LoadedListener {
@@ -163,8 +165,14 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     @Override
     public void onSuccessfulClick(Series series)
     {
-        //NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), series, calendar);
-        //notificationAiringChannel.setNotification();
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
+        Calendar calendar = adjustAirDate.getCalendar();
+        if(calendar!=null)
+        {
+            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
+            notificationAiringChannel.setNotification(series, calendar);
+        }
+
         navController.navigate(R.id.listFragment);
     }
 

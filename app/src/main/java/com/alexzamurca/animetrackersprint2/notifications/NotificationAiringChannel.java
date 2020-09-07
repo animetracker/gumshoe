@@ -17,8 +17,6 @@ import java.util.Calendar;
 public class NotificationAiringChannel
 {
     private static final String TAG = "NotificationAiringChannel";
-    // We need the series info to send it to the receiver
-    private Series series;
 
     // We need context to access Alarm manager (used to set and cancel alarms)
     private transient Context mContext;
@@ -32,16 +30,12 @@ public class NotificationAiringChannel
     // Variable storing if airDate is the same as airDateAfterChanges
     private boolean calendarsEqual;
 
-    public NotificationAiringChannel(Context context, Series series, Calendar airDateAfterChangesCalendar)
+    public NotificationAiringChannel(Context context)
     {
         mContext = context;
-        this.series = series;
-        constructUpdateCalendar();
-        this.airDateAfterChangesCalendar = airDateAfterChangesCalendar;
-        compareCalendars();
     }
 
-    private void constructUpdateCalendar()
+    private void constructUpdateCalendar(Series series)
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         airDateCalendar = convertDateToCalendar.noTimeZoneConvert(series.getAir_date());
@@ -71,12 +65,16 @@ public class NotificationAiringChannel
     }
 
     // Will happen at login and at additions to list
-    public void setNotification()
+    public void setNotification(Series series, Calendar airDateAfterChangesCalendar)
     {
+        constructUpdateCalendar(series);
+        this.airDateAfterChangesCalendar = airDateAfterChangesCalendar;
+        compareCalendars();
+
         if(airDateAfterChangesCalendar != null)
         {
-            setUpdateAlarm();
-            startNotificationAlarm();
+            setUpdateAlarm(series);
+            startNotificationAlarm(series);
         }
         else
         {
@@ -84,7 +82,7 @@ public class NotificationAiringChannel
         }
     }
 
-    private void startNotificationAlarm()
+    private void startNotificationAlarm(Series series)
     {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, SeriesAiringNotificationReceiver.class);
@@ -102,7 +100,7 @@ public class NotificationAiringChannel
         Log.d(TAG, "startNotificationAlarm: set notification alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateAfterChangesCalendar));
     }
 
-    private void setUpdateAlarm()
+    private void setUpdateAlarm(Series series)
     {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, UpdateSeriesReceiver.class);
@@ -121,7 +119,7 @@ public class NotificationAiringChannel
     }
 
     // Will happen at log out, turning notifications off or changing air_date_change and notification_change
-    public void cancel()
+    public void cancel(Series series)
     {
         Log.d(TAG, "startAlarm: alarms cancelled");
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);

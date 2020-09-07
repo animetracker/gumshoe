@@ -246,45 +246,44 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             error_wrong_air_date = itemView.findViewById(R.id.error_wrong_air_date_series);
 
             itemView.setOnClickListener(v ->
-                    {
-                        Log.d(TAG, "ViewHolder: onSeriesClick");
-                        onSeriesListener.onSeriesClick(list.get(getAdapterPosition()));
-                    }
-
+                {
+                    Log.d(TAG, "ViewHolder: onSeriesClick");
+                    onSeriesListener.onSeriesClick(list.get(getAdapterPosition()));
+                }
             );
 
             notifications_off.setOnClickListener(v ->
+                {
+                    if(notifications_off.getTag()=="notifications_off")
                     {
-                        if(notifications_off.getTag()=="notifications_off")
-                        {
-                            Log.d(TAG, "ViewHolder: onNotificationsOn");
-                            onSeriesListener.onNotificationsOn(list.get(getAdapterPosition()));
-                        }
-                        else if(notifications_off.getTag()=="notifications_on")
-                        {
-                            onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
-                        }
+                        Log.d(TAG, "ViewHolder: onNotificationsOn");
+                        onSeriesListener.onNotificationsOn(list.get(getAdapterPosition()));
                     }
+                    else if(notifications_off.getTag()=="notifications_on")
+                    {
+                        onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
+                    }
+                }
             );
 
             remove.setOnClickListener(v ->
-                    {
-                        removeSeries(list.get(getAdapterPosition()));
-                    }
+                {
+                    removeSeries(list.get(getAdapterPosition()));
+                }
             );
 
             change_notification_time.setOnClickListener(v ->
-                    {
-                        Log.d(TAG, "ViewHolder: onChangeNotificationTime");
-                        onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()));
-                    }
+                {
+                    Log.d(TAG, "ViewHolder: onChangeNotificationTime");
+                    onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()));
+                }
             );
 
             error_wrong_air_date.setOnClickListener(v ->
-                    {
-                        Log.d(TAG, "ViewHolder: onErrorWrongAirDate");
-                        onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
-                    }
+                {
+                    Log.d(TAG, "ViewHolder: onErrorWrongAirDate");
+                    onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
+                }
             );
         }
     }
