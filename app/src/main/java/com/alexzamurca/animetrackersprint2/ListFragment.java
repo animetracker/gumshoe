@@ -79,7 +79,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
-        recyclerViewListener = (SeriesRecyclerViewAdapter.OnSeriesListener) this;
+        recyclerViewListener = this;
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
@@ -607,7 +607,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             if(wasRequestSuccessful)
             {
 
-                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, Navigation.findNavController(mView));
+                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mNavController);
 
                 initRecyclerView();
 

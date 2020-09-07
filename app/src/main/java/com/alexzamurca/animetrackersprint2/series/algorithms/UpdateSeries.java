@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
+import com.alexzamurca.animetrackersprint2.notifications.SetNewNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
@@ -18,6 +19,7 @@ public class UpdateSeries
     private final Series series;
     private Context mContext;
     private String session;
+    private boolean set_new_notification;
 
     public UpdateSeries(Series series, Context mContext)
     {
@@ -68,11 +70,18 @@ public class UpdateSeries
         airDateAsync.execute();
     }
 
-    public void setSeriesInfo()
+    public void setSeriesInfo(boolean set_new_notification)
     {
         Log.d(TAG, "getSeriesInfoMethod: initialising getSeriesInfoAsync");
         GetSeriesInfoAsync getSeriesInfoAsync = new GetSeriesInfoAsync();
+        this.set_new_notification = set_new_notification;
         getSeriesInfoAsync.execute();
+    }
+
+    private void setNewNotification()
+    {
+        SetNewNotification setNewNotification = new SetNewNotification(mContext, series);
+        setNewNotification.setNotification();
     }
 
     private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
@@ -114,6 +123,12 @@ public class UpdateSeries
             {
                 Toast.makeText(mContext, "\"" + title +"\" has failed to update!", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onPostExecute: " + "\"" + title +"\" has failed to update!");
+            }
+            
+            if(set_new_notification)
+            {
+                Log.d(TAG, "onPostExecute: updating finished and setting new notification");
+                setNewNotification();
             }
             super.onPostExecute(aVoid);
         }

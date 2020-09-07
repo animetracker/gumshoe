@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
@@ -162,6 +163,8 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     @Override
     public void onSuccessfulClick(Series series)
     {
+        //NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext(), series, calendar);
+        //notificationAiringChannel.setNotification();
         navController.navigate(R.id.listFragment);
     }
 

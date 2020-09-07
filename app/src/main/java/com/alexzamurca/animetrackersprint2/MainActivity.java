@@ -13,7 +13,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.series.Database.Login;
-import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationChange;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
@@ -34,8 +33,6 @@ public class MainActivity extends AppCompatActivity
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         navController = Navigation.findNavController(this, R.id.fragment_container);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
-
 
         sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
 
