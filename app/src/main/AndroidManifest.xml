@@ -24,6 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".TutorialActivity"></activity>
         <receiver android:name=".notifications.SeriesAiringNotificationReceiver"/>
         <receiver android:name=".notifications.UpdateSeriesReceiver"/>
 
