@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
         firstTime = sharedPreferences.getBoolean("firstTime", true);
 
+        
+
         if(firstTime) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             firstTime = false;
