@@ -317,14 +317,8 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             }
 
             @Override
-            public boolean onQueryTextChange(String newText)
-            {
-                if(!newText.isEmpty())
-                {
-                    //adapter.restoreFromList(oldList);
-                    //adapter.getFilter().filter(newText);
-                }
-                return true;
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
     }
@@ -435,14 +429,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         args.putSerializable("series", series);
         dialog.setArguments(args);
         dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
-    }
-
-    public void printList(List<Series> list)
-    {
-        for(Series sr:list)
-        {
-            Log.d(TAG, "||" + sr.getCover_image() + "|" + sr.getTitle() + "|" + sr.getAir_date() + "|" + sr.getNext_episode_number() + "||");
-        }
     }
 
     @Override

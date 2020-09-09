@@ -1,9 +1,9 @@
 package com.alexzamurca.animetrackersprint2.algorithms;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 
@@ -45,6 +45,7 @@ public class SessionCheck
         // makes sure you cant press back to get to the list screen
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+        ((Activity)context).finish();
     }
 
     public void check()

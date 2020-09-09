@@ -100,10 +100,12 @@ public class LoginActivity extends AppCompatActivity
         return TextUtils.isEmpty(string);
     }
 
-    private void openMainActivity() {
+    private void openMainActivity()
+    {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        LoginActivity.this.finish();
     }
 
     private void login()
