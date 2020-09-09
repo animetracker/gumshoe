@@ -2,9 +2,7 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +32,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationsOn;
@@ -415,8 +412,17 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void onChangeNotificationTime(Series series)
     {
-        ListFragmentDirections.ActionChangeNotificationReminder action = ListFragmentDirections.actionChangeNotificationReminder(series);
-        mNavController.navigate(action);
+        // If series has an air date
+        if(!series.getAir_date().equals(""))
+        {
+            ListFragmentDirections.ActionChangeNotificationReminder action = ListFragmentDirections.actionChangeNotificationReminder(series);
+            mNavController.navigate(action);
+        }
+        else
+        {
+            Toast.makeText(getContext(), "You cannot change notification reminder time for series with unknown air date!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
@@ -442,7 +448,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void OnReportBugButtonClick()
     {
-        //mNavController.navigate(R.id.action_report_bug_dialog_button_clicked);
         dialog_report_bug dialogReportBug = new dialog_report_bug();
         dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
     }
@@ -456,8 +461,16 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     @Override
     public void OnChangeAirDateClick(Series series)
     {
-        ListFragmentDirections.ActionDialogChangeAirDate action = ListFragmentDirections.actionDialogChangeAirDate(series);
-        mNavController.navigate(action);
+        // If series has an air date
+        if(!series.getAir_date().equals(""))
+        {
+            ListFragmentDirections.ActionDialogChangeAirDate action = ListFragmentDirections.actionDialogChangeAirDate(series);
+            mNavController.navigate(action);
+        }
+        else
+        {
+            Toast.makeText(getContext(), "You cannot change the air date for series with unknown air date!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

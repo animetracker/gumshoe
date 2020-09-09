@@ -396,6 +396,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         // Get date in calendar form (so we can change it)
         Calendar calendar = convertDateToCalendar.timeZoneConvert(getChangedAirDate());
+
         // Add minutes, hours, days
         if(beforeAfter.equals("before"))
         {
@@ -432,6 +433,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         String newDate = convertDateToCalendar.reverseConvert(calendar);
         String notificationChange = quantity + " " + metric + " " + beforeAfter + "\nMeaning you will be notified on: " + newDate;
         newChangeTV.setText(notificationChange);
+
     }
 
     private void updateNotificationChangeDB()
