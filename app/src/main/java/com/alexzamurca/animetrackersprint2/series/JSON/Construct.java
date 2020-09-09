@@ -185,4 +185,38 @@ public class Construct
         }
         return json;
     }
+
+    public JSONObject constructRegisterJSON(String username, String email_address, String password)
+    {
+        JSONObject json = new JSONObject();
+
+        try
+        {
+            json.put("username", username);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructRegisterJSON: JSONException error putting username");
+        }
+
+
+        try
+        {
+            json.put("email", email_address);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructRegisterJSON: JSONException error putting email");
+        }
+
+        try
+        {
+            json.put("password", password);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructRegisterJSON: JSONException error putting password");
+        }
+        return json;
+    }
 }

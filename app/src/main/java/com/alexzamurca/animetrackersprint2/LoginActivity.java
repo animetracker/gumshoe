@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity
                         editor.putBoolean("logged_in", true);
                         editor.apply();
 
-                        Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Welcome !", Toast.LENGTH_LONG).show();
 
                         openMainActivity();
                     }

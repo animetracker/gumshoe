@@ -2,8 +2,10 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -14,9 +16,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alexzamurca.animetrackersprint2.series.Database.Register;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity
+{
+    private static final String TAG = "RegisterActivity";
+
 
     EditText username;
     EditText email;
@@ -42,8 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                 hideKeyboard();
                 if(checkData())
                 {
-                    // send request that goes to login activity on post execute
-
+                    register();
                 }
             }
         );
@@ -128,13 +137,54 @@ public class RegisterActivity extends AppCompatActivity {
         if (!hasLowerCase) {
             return false;
         }
-        if (!hasNumber) {
-            return false;
-        }
-        return true;
+        return hasNumber;
     }
-    public void openLoginActivity() {
+
+    private void openLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    private void register()
+    {
+        RegisterAsync registerAsync = new RegisterAsync();
+        registerAsync.execute();
+    }
+
+    private class RegisterAsync extends AsyncTask<Void, Void, Void>
+    {
+        private boolean isSuccessful;
+        private JSONObject response = null;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Register register = new Register();
+            String responseString = register.register(username.getText().toString(), email.getText().toString(), password.getText().toString());
+            Log.d(TAG, "doInBackground: reponse from login:" + responseString);
+            try {
+                response = new JSONObject(responseString);
+                isSuccessful = !response.getBoolean("error");
+                Log.d(TAG, "doInBackground: successful?:" + isSuccessful);
+            } catch (JSONException e) {
+                Log.d(TAG, "register: error trying to get response");
+                isSuccessful = false;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (isSuccessful) {
+                Log.d(TAG, "onPostExecute: isSuccessful");
+                if (response != null) {
+                    Toast.makeText(RegisterActivity.this, "User:" + username.getText().toString() + "is now registered and can login!", Toast.LENGTH_LONG).show();
+                    openLoginActivity();
+                }
+            } else {
+                Toast.makeText(RegisterActivity.this, "Failed to login in.", Toast.LENGTH_LONG).show();
+            }
+            super.onPostExecute(aVoid);
+        }
+
     }
 }
