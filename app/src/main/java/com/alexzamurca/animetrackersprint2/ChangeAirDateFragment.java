@@ -417,7 +417,7 @@ public class ChangeAirDateFragment extends Fragment
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
             String session = sharedPreferences.getString("session", "");
 
-            UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(session, series.getAnilist_id(), change);
+            UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(session, series.getAnilist_id(), change, getContext());
             isSuccessful = updateAirDateChange.update() == 0;
             return null;
         }

@@ -1,6 +1,8 @@
 package com.alexzamurca.animetrackersprint2.series.Database;
+import android.content.Context;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.POST;
 import com.alexzamurca.animetrackersprint2.series.JSON.Construct;
 
@@ -14,10 +16,11 @@ public class Insert
     String URL;
     private JSONObject json;
     private String session;
+    private Context context;
 
-    public Insert(JSONObject json, String session)
-    {
+    public Insert(JSONObject json, String session, Context context) {
         this.session = session;
+        this.context = context;
         constructFromUnformattedJSON(json);
         constructURL();
     }
@@ -38,7 +41,7 @@ public class Insert
         IsSeriesInDB isSeriesInDB;
         try
         {
-            isSeriesInDB = new IsSeriesInDB(session ,json.getString("title"));
+            isSeriesInDB = new IsSeriesInDB(session ,json.getString("title"), context);
         }
         catch (JSONException e)
         {
@@ -50,6 +53,10 @@ public class Insert
         {
             POST request = new POST(URL, json);
             String response = request.sendRequest();
+
+            SessionCheck sessionCheck = new SessionCheck(response, context);
+            sessionCheck.check();
+
             if(response.equals("Connection Error"))return 2;
             Log.d(TAG, "insert: Selected anime is now in your list!");
             return 0;

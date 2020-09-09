@@ -1,7 +1,9 @@
 package com.alexzamurca.animetrackersprint2.series.Database;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
@@ -16,11 +18,12 @@ public class SelectTable
     String URL = "http://192.168.0.15:2000/series/list/";
 
     private final String session;
+    private Context context;
     private boolean wasRequestSuccessful;
 
-    public SelectTable(String session)
-    {
+    public SelectTable(String session, Context context) {
         this.session = session;
+        this.context = context;
     }
 
     public boolean getWasRequestSuccessful()
@@ -37,9 +40,13 @@ public class SelectTable
         JSONArray jsonResponse;
         try
         {
-            String s = get.sendRequest();
-            Log.d(TAG, "getSeriesList: " + s);
-            jsonResponse = new JSONArray(s);
+            String response = get.sendRequest();
+
+            SessionCheck sessionCheck = new SessionCheck(response, context);
+            sessionCheck.check();
+
+            Log.d(TAG, "getSeriesList: " + response);
+            jsonResponse = new JSONArray(response);
         }
         catch(JSONException e)
         {

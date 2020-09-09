@@ -1,7 +1,9 @@
 package com.alexzamurca.animetrackersprint2.series.Database;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.POST;
 import com.alexzamurca.animetrackersprint2.series.JSON.Construct;
 
@@ -15,13 +17,15 @@ public class UpdateNotificationsOn
     private final String session;
     private final int anilist_id;
     private final int notifications_on;
+    private Context context;
     private JSONObject json;
 
-    public UpdateNotificationsOn(String session, int anilist_id, int notifications_on)
+    public UpdateNotificationsOn(String session, int anilist_id, int notifications_on, Context context)
     {
         this.session = session;
         this.anilist_id = anilist_id;
         this.notifications_on = notifications_on;
+        this.context = context;
         constructURL();
         constructJSON();
     }
@@ -42,6 +46,10 @@ public class UpdateNotificationsOn
     {
         POST request = new POST(URL, json);
         String response = request.sendRequest();
+
+        SessionCheck sessionCheck = new SessionCheck(response, context);
+        sessionCheck.check();
+
         if(response.equals("Connection Error"))return 1;
         Log.d(TAG, "insert: updated notifications_on");
         return 0;

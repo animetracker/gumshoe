@@ -1,10 +1,12 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,53 +30,73 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        password2 = (EditText) findViewById(R.id.password2);
-        email = (EditText) findViewById(R.id.email);
-        signUpButton = (Button) findViewById(R.id.signUpButton);
-        loginText = (TextView) findViewById(R.id.loginText);
+        username = findViewById(R.id.username);
+        password =  findViewById(R.id.password);
+        password2 =  findViewById(R.id.password2);
+        email = findViewById(R.id.email);
+        signUpButton = findViewById(R.id.signUpButton);
+        loginText = findViewById(R.id.loginText);
 
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkData();
-            }
-        });
+        signUpButton.setOnClickListener(view ->
+            {
+                hideKeyboard();
+                if(checkData())
+                {
+                    // send request that goes to login activity on post execute
 
-        loginText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openLoginActivity();
+                }
             }
-        });
+        );
+
+        loginText.setOnClickListener(view -> openLoginActivity());
     }
 
-    private void checkData() {
+    private void hideKeyboard()
+    {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private boolean checkData() {
+        boolean isDataFine = true;
+
         if (checkIfEmpty(username)) {
             Toast t = Toast.makeText(this, "Please enter a username.", Toast.LENGTH_SHORT);
             t.show();
+            isDataFine = false;
         }
         if (!checkIfValidEmail(email)) {
             email.setError("Please enter a valid email.");
+            isDataFine = false;
         }
         if (checkIfEmpty(password)) {
             Toast t = Toast.makeText(this, "Please enter a password.", Toast.LENGTH_SHORT);
             t.show();
+            isDataFine = false;
         }
         if (checkIfEmpty(password2)) {
             Toast t = Toast.makeText(this, "Please enter a password.", Toast.LENGTH_SHORT);
             t.show();
+            isDataFine = false;
         }
         if(!checkIfMatch(password, password2)) {
             password.setError("Passwords do not match.");
+            isDataFine = false;
         }
         if(getLength(username) > 16) {
             username.setError("Username too long. Maximum character limit of 16.");
+            isDataFine = false;
         }
         if(!checkIfStrong(password)) {
             password.setError("Password not strong enough. Must contain a number, lowercase and capital letter.");
+            isDataFine = false;
         }
+        return isDataFine;
     }
 
     boolean checkIfEmpty(EditText text) {

@@ -3,9 +3,6 @@ package com.alexzamurca.animetrackersprint2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,11 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,9 +25,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
-
-import java.io.File;
-
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
@@ -83,14 +74,14 @@ public class SettingsFragment extends Fragment
 
         Button changeTimeZone = view.findViewById(R.id.settings_change_time_zone_button);
         changeTimeZone.setOnClickListener(view1 ->
-        {
-            navController.navigate(R.id.action_change_time_zone);
-        });
+
+            navController.navigate(R.id.action_change_time_zone)
+        );
 
         TextView logOutButton = view.findViewById(R.id.logoutText);
-        logOutButton.setOnClickListener(view14 -> {
-            openLogin();
-        });
+        logOutButton.setOnClickListener(view14 ->
+            openLogin()
+        );
 
         // This method is used to create the dark mode using the switch
         darkModeSwitch= view.findViewById(R.id.settings_dark_mode_switch);
@@ -118,35 +109,6 @@ public class SettingsFragment extends Fragment
 
             }
             editor.apply();
-        });
-
-
-        Spinner alertDelaySpinner = view.findViewById(R.id.settings_alert_delay_spinner);
-
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        // By default no delay
-        int alertDelayOptionIndex = sharedPreferences.getInt("global_alert_delay_option_index", 6);
-        alertDelaySpinner.setSelection(alertDelayOptionIndex);
-
-        alertDelaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                String selectionString = parent.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: selected:" + selectionString);
-
-                // Set index preference
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("global_alert_delay_option_index", position);
-                editor.apply();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
         });
 
         return view;
@@ -187,7 +149,14 @@ public class SettingsFragment extends Fragment
         return true;
     }
 
-    public void openLogin() {
+    public void openLogin()
+    {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("logged_in", false);
+        editor.apply();
+
         Intent intent = new Intent(mContext, LoginActivity.class);
         startActivity(intent);
     }

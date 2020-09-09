@@ -58,7 +58,7 @@ public class SetAlarmsForList
         {
             SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
             String session = sharedPreferences.getString("session", "");
-            SelectTable selectTable = new SelectTable(session);
+            SelectTable selectTable = new SelectTable(session, context);
             list = selectTable.getSeriesList();
             wasRequestSuccessful = selectTable.getWasRequestSuccessful();
 

@@ -105,11 +105,19 @@
             android:name="series"
             app:argType="com.alexzamurca.animetrackersprint2.series.series_list.Series" />
     </fragment>
+
     <fragment
         android:id="@+id/changeNotificationReminderFragment"
         android:name="com.alexzamurca.animetrackersprint2.ChangeNotificationReminderFragment"
         android:label="ChangeNotificationReminderFragment"
-        tools:layout="@layout/fragment_change_notification_reminder"/>
+        tools:layout="@layout/fragment_change_notification_reminder">
+
+        <argument
+            android:name="series"
+            app:argType="com.alexzamurca.animetrackersprint2.series.series_list.Series" />
+
+    </fragment>
+
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.alexzamurca.animetrackersprint2.settings.AboutFragment"
@@ -121,12 +129,6 @@
         android:label="activity_tutorial"
         tools:layout="@layout/activity_tutorial" >
     </activity>
-        tools:layout="@layout/fragment_change_notification_reminder">
 
-        <argument
-            android:name="series"
-            app:argType="com.alexzamurca.animetrackersprint2.series.series_list.Series" />
-
-    </fragment>
 
 </navigation>

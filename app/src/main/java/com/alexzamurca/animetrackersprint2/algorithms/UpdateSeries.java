@@ -103,7 +103,7 @@ public class UpdateSeries
         @Override
         protected Void doInBackground(Void... voids)
         {
-            UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status);
+            UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status, mContext);
             isSuccessful = updateSeriesAiring.update() == 0;
 
             Log.d(TAG, "doInBackground: series:" + series.getTitle() + "was update request successful?:" + isSuccessful);

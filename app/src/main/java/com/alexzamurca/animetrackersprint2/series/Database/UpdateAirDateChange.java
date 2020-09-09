@@ -1,7 +1,9 @@
 package com.alexzamurca.animetrackersprint2.series.Database;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.POST;
 import com.alexzamurca.animetrackersprint2.series.JSON.Construct;
 
@@ -16,12 +18,14 @@ public class UpdateAirDateChange
     private final int anilist_id;
     private final String air_date_change;
     private JSONObject json;
+    private Context context;
 
-    public UpdateAirDateChange(String session, int anilist_id, String air_date_change)
+    public UpdateAirDateChange(String session, int anilist_id, String air_date_change, Context context)
     {
         this.session = session;
         this.anilist_id = anilist_id;
         this.air_date_change = air_date_change;
+        this.context = context;
         constructURL();
         constructJSON();
     }
@@ -42,6 +46,10 @@ public class UpdateAirDateChange
     {
         POST request = new POST(URL, json);
         String response = request.sendRequest();
+
+        SessionCheck sessionCheck = new SessionCheck(response, context);
+        sessionCheck.check();
+
         if(response.equals("Connection Error"))return 1;
         Log.d(TAG, "insert: updated air_date_change");
         return 0;

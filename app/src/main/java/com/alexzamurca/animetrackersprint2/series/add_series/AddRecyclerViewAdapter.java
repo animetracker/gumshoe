@@ -291,7 +291,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
                 String session = sharedPreferences.getString("session", "");
 
-                Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session);
+                Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session, context);
                 request_success_rating = insert.insert();
             } catch (JSONException e) {
                 Log.d(TAG, "DatabaseInsert: doInBackground: JSONException");

@@ -51,7 +51,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
             android:id="@+id/wrong_air_date_change_time_zone_button"
-            android:text="@string/check_time_zone"
+            android:text="@string/change_time_zone"
             android:textSize="17sp"
             android:textColor="#ffffff"
             android:background="@drawable/blue_button"

@@ -457,7 +457,7 @@ public class ChangeNotificationReminderFragment extends Fragment
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
             String session = sharedPreferences.getString("session", "");
 
-            UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(session, series.getAnilist_id(), change);
+            UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(session, series.getAnilist_id(), change, getContext());
             isSuccessful = updateNotificationChange.update() == 0;
             return null;
         }

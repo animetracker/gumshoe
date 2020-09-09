@@ -100,8 +100,7 @@
     <string name="hours">Hours:</string>
     <string name="minutes">Minutes:</string>
     <string name="meaning_the_new_time_in_your_region_is">Meaning the time when you entered this screen is:</string>
-    <string name="tap_the_save_icon_on_the_bottom_right_if_the_new_time_is_correct">Tap the save icon on the bottom right if the new time is correct</string>
-    <string name="tap_the_save_icon_on_the_bottom_right_if_the_new_change_is_correct">Tap the save icon on the bottom right if the new change is correct</string>
+    <string name="save_suggestion">Tap the save icon on the bottom right to save changes. If the button is missing, it means there is some error with your inputs.</string>
 
     <string name="change_air_date_question">Is our air date above the same as the air date provided by the external sources?</string>
     <string name="wrong_air_date_explanation">We unfortunately rely on an API to tell us when a series airs. When the API is wrong only your feedback and changes can help. Please check your series’ air data using either one of the below release calendars and fill in the changes you want to apply to the current air date, if it is incorrect.</string>
@@ -134,4 +133,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+    <string name="minutes_error_warning">Minutes cannot be set to more than 60, use hours instead!</string>
+    <string name="hours_error_warning">Hours cannot be set to more than 23, use days instead!</string>
+    <string name="days_error_warning">Days cannot be set to more than 6!</string>
 </resources>

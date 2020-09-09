@@ -505,7 +505,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         @Override
         protected Void doInBackground(Void... voids)
         {
-            SelectTable selectTable = new SelectTable(session);
+            SelectTable selectTable = new SelectTable(session, getContext());
             tempList = selectTable.getSeriesList();
             wasRequestSuccessful = selectTable.getWasRequestSuccessful();
 
@@ -575,7 +575,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         @Override
         protected Void doInBackground(Void... voids)
         {
-            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 0);
+            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 0, getContext());
             isSuccessful = updateNotificationsOn.update() == 0;
             return null;
         }
@@ -614,7 +614,7 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
         @Override
         protected Void doInBackground(Void... voids)
         {
-            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 1);
+            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 1, getContext());
             isSuccessful = updateNotificationsOn.update() == 0;
             return null;
         }
