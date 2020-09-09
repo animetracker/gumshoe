@@ -1,18 +1,18 @@
-package com.alexzamurca.animetrackersprint2;
+package com.alexzamurca.animetrackersprint2.tutorial;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.alexzamurca.animetrackersprint2.MainActivity;
+import com.alexzamurca.animetrackersprint2.R;
+
 public class TutorialActivity extends AppCompatActivity {
 
     private ViewPager mSlideViewPager;
-
-    private SliderAdapter sliderAdapter;
 
     int currentPosition;
 
@@ -21,9 +21,9 @@ public class TutorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
 
-        mSlideViewPager = (ViewPager) findViewById(R.id.slideViewPager);
+        mSlideViewPager = findViewById(R.id.slideViewPager);
 
-        sliderAdapter = new SliderAdapter(this);
+        SliderAdapter sliderAdapter = new SliderAdapter(this);
 
         mSlideViewPager.setAdapter(sliderAdapter);
 
@@ -59,6 +59,7 @@ public class TutorialActivity extends AppCompatActivity {
 
     public void openMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

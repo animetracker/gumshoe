@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2;
+package com.alexzamurca.animetrackersprint2.login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.Database.Register;
 
 import org.json.JSONException;
@@ -141,7 +142,9 @@ public class RegisterActivity extends AppCompatActivity
     }
 
     private void openLoginActivity() {
+        Log.d(TAG, "openLoginActivity: opening LoginActivity from Register Activity");
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

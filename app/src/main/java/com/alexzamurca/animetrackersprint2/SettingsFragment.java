@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 public class SettingsFragment extends Fragment
 {
@@ -157,7 +158,9 @@ public class SettingsFragment extends Fragment
         editor.putBoolean("logged_in", false);
         editor.apply();
 
+        Log.d(TAG, "openLogin: opening LoginActivity from SettingsFragment - logout button pressed");
         Intent intent = new Intent(mContext, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

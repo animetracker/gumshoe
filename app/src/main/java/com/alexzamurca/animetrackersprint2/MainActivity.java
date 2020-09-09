@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
+import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
@@ -82,8 +84,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void openLoginActivity() {
+    private void openLoginActivity()
+    {
+        Log.d(TAG, "openLoginActivity: started login activity from MainActivity");
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

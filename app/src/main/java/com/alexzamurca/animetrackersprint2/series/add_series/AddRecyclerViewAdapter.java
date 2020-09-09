@@ -325,7 +325,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_LONG).show();
             }
 
-            navController.navigate(R.id.action_selected_search_result);
+            navController.navigate(R.id.listFragment);
             super.onPostExecute(aVoid);
         }
     }

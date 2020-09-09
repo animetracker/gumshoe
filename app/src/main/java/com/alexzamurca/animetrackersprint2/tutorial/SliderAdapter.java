@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2;
+package com.alexzamurca.animetrackersprint2.tutorial;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
+import com.alexzamurca.animetrackersprint2.R;
 
 public class SliderAdapter extends PagerAdapter {
 

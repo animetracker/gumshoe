@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.alexzamurca.animetrackersprint2.LoginActivity;
-import com.alexzamurca.animetrackersprint2.MainActivity;
+import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,30 +24,26 @@ public class SessionCheck
 
     private boolean hasSessionExpired()
     {
-        boolean hasSessionExpired;
-        if(responseString.equals(""))
+        // try get a JSON
+        try
         {
-            hasSessionExpired = true;
+            JSONObject response = new JSONObject(responseString);
+            Log.d(TAG, "hasSessionExpired: response:" + response.toString(4));
+            return response.getBoolean("error");
         }
-        else
+        catch(JSONException e)
         {
-            // try get a JSON
-            try
-            {
-                JSONObject response = new JSONObject(responseString);
-                hasSessionExpired = response.getBoolean("error");
-            }
-            catch(JSONException e)
-            {
-                Log.d(TAG, "doInBackground: trying to get response from get request to check session has not returned a json with error (JSONException)");
-                hasSessionExpired = false;
-            }
+            Log.d(TAG, "hasSessionExpired: trying to get response from get request to check session has not returned a json with error (JSONException)");
+            return false;
         }
-        return hasSessionExpired;
+
     }
 
     private void openLoginActivity() {
+        Log.d(TAG, "openLoginActivity: opening LoginActivity from SessionCheck because the session check failed");
         Intent intent = new Intent(context, LoginActivity.class);
+        // makes sure you cant press back to get to the list screen
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -57,7 +52,7 @@ public class SessionCheck
         if(hasSessionExpired())
         {
             Log.d(TAG, "check: failed session check");
-            Toast.makeText(context, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
             openLoginActivity();
         }
     }

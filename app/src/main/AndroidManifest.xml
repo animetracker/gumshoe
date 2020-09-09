@@ -25,10 +25,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".ForgotPasswordActivity"></activity>
-        <activity android:name=".TutorialActivity"></activity>
+        <activity android:name=".login.LoginActivity"></activity>
+        <activity android:name=".login.RegisterActivity"></activity>
+        <activity android:name=".tutorial.TutorialActivity"></activity>
         <receiver android:name=".notifications.SeriesAiringNotificationReceiver"/>
         <receiver android:name=".notifications.UpdateSeriesReceiver"/>
 
