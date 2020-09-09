@@ -73,8 +73,12 @@ public class ChangeTimeZoneFragment extends Fragment
         // Set toolbar and add home (back button)
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
-        Objects.requireNonNull(activity.getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(activity.getSupportActionBar()!=null)
+        {
+            activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
 
         // Set text views and button
         newTimeTV = view.findViewById(R.id.change_time_zone_time_new_time);
