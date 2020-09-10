@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.algorithms;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
@@ -13,6 +14,8 @@ import java.util.List;
 
 public class CancelAllAlarms
 {
+    private static final String TAG = "CancelAllAlarms";
+    
     private Context context;
 
     public CancelAllAlarms(Context context) {
@@ -36,6 +39,7 @@ public class CancelAllAlarms
         for(int i = 0; i < currentList.size(); i++)
         {
             notificationAiringChannel.cancel(currentList.get(i));
+            Log.d(TAG, "cancelAllAlarms: cancelled alarm for " + currentList.get(i).getTitle());
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
@@ -55,6 +56,9 @@ public class RemoveSeries
             else
             {
                 Toast.makeText(context, "Failed to remove \"" + title +"\", it is still in your series list.", Toast.LENGTH_SHORT).show();
+                // Cancel alarm
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+                notificationAiringChannel.cancel(selectedSeries);
             }
             super.onPostExecute(aVoid);
         }

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.ListFragment;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.Remove;
 import com.bumptech.glide.Glide;
 
@@ -327,7 +328,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         {
             SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
             String session = sharedPreferences.getString("session", "");
-            Remove remove = new Remove(session, selectedSeries.getAnilist_id());
+            Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
             isSeriesRemoved = remove.remove();
             return null;
         }
@@ -339,6 +340,10 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             if(isSeriesRemoved)
             {
                 Toast.makeText(context, "\"" + title +"\" is no longer in your series list.", Toast.LENGTH_SHORT).show();
+
+                // Cancel alarm
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+                notificationAiringChannel.cancel(selectedSeries);
             }
             else
             {

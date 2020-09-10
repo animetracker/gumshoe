@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.algorithms;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
@@ -14,6 +15,8 @@ import java.util.List;
 
 public class SetAlarmsForList
 {
+    private static final String TAG = "SetAlarmsForList";
+
     private Context context;
 
     public SetAlarmsForList(Context context) {
@@ -43,6 +46,7 @@ public class SetAlarmsForList
 
             if(calendar!=null)
             {
+                Log.d(TAG, "setAllAlarms: set notification for " + selectedSeries.getAir_date());
                 notificationAiringChannel.setNotification(selectedSeries, calendar);
             }
         }
