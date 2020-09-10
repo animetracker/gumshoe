@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity
         else
         {
             checkLoggedInState();
+            checkIfComingFromLogin();
         }
 
     }
@@ -91,6 +93,16 @@ public class MainActivity extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         MainActivity.this.finish();
+    }
+
+    private void checkIfComingFromLogin()
+    {
+        boolean comingFromLogin = getIntent().getBooleanExtra("coming_from_login", false);
+        if(comingFromLogin)
+        {
+            SetAlarmsForList setAlarmsForList = new SetAlarmsForList(this);
+            setAlarmsForList.run();
+        }
     }
 
     private void checkIfSessionExpired()

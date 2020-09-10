@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity
             if(checkData())
             {
                 login();
+                setUpDatabaseCheckAlarm();
             }
         });
 
@@ -105,6 +106,7 @@ public class LoginActivity extends AppCompatActivity
     private void openMainActivity()
     {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("coming_from_login", true);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         LoginActivity.this.finish();
@@ -118,6 +120,11 @@ public class LoginActivity extends AppCompatActivity
         {
             Toast.makeText(this, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setUpDatabaseCheckAlarm()
+    {
+
     }
 
     private void login()
