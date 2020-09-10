@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.series.Database.Login;
 
 import org.json.JSONException;
@@ -124,7 +125,8 @@ public class LoginActivity extends AppCompatActivity
 
     private void setUpDatabaseCheckAlarm()
     {
-
+        UpdatingDBChannel updatingDBChannel = new UpdatingDBChannel(this);
+        updatingDBChannel.setNotification();
     }
 
     private void login()

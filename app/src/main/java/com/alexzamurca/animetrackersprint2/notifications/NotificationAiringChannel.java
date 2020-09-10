@@ -115,13 +115,12 @@ public class NotificationAiringChannel
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateCalendar.getTimeInMillis(), pendingIntent);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Log.d(TAG, "startNotificationAlarm: set update DB alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateCalendar));
+        Log.d(TAG, "startNotificationAlarm: set update series in DB alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateCalendar));
     }
 
     // Will happen at log out, turning notifications off or changing air_date_change and notification_change
     public void cancel(Series series)
     {
-        Log.d(TAG, "startAlarm: alarms cancelled");
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(mContext, SeriesAiringNotificationReceiver.class);
@@ -131,5 +130,7 @@ public class NotificationAiringChannel
         Intent finishedIntent = new Intent(mContext, UpdateSeriesReceiver.class);
         PendingIntent finishedPendingIntent = PendingIntent.getBroadcast(mContext, -series.getAnilist_id(), finishedIntent, 0);
         alarmManager.cancel(finishedPendingIntent);
+
+        Log.d(TAG, "cancel: cancelled alarm for: " + series.getTitle());
     }
 }

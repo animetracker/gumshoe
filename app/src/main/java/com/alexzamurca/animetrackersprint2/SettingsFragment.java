@@ -26,6 +26,7 @@ import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
+import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 public class SettingsFragment extends Fragment
 {
@@ -159,14 +160,24 @@ public class SettingsFragment extends Fragment
         editor.putBoolean("logged_in", false);
         editor.apply();
 
+        // Cancel series alarms
         CancelAllAlarms cancelAllAlarms = new CancelAllAlarms(getContext());
         cancelAllAlarms.run();
+
+        // Cancel update DB alarm
+        cancelDatabaseCheckAlarm();
 
         Log.d(TAG, "openLogin: opening LoginActivity from SettingsFragment - logout button pressed");
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         requireActivity().finish();
+    }
+
+    private void cancelDatabaseCheckAlarm()
+    {
+        UpdatingDBChannel updatingDBChannel = new UpdatingDBChannel(getContext());
+        updatingDBChannel.cancel();
     }
 
 }
