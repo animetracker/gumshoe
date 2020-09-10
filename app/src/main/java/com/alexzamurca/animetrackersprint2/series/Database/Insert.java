@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2.series.Database;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;

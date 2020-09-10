@@ -39,7 +39,7 @@ public class RemoveSeries
         {
             SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
             String session = sharedPreferences.getString("session", "");
-            Remove remove = new Remove(session, selectedSeries.getAnilist_id());
+            Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
             isSeriesRemoved = remove.remove();
             return null;
         }

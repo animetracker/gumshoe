@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.algorithms;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
@@ -50,10 +51,19 @@ public class SessionCheck
 
     public void check()
     {
-        if(hasSessionExpired())
+        boolean hasSessionExpired = hasSessionExpired();
+        if(hasSessionExpired)
         {
             Log.d(TAG, "check: failed session check");
-            //Toast.makeText(context, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
+
+            SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putBoolean("logged_in", false);
+            editor.putString("session", "");
+            editor.putBoolean("has_session_expired", true);
+            editor.apply();
+
             openLoginActivity();
         }
     }

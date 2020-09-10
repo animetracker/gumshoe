@@ -35,7 +35,7 @@
                 android:layout_height="50dp"
                 android:id="@+id/settings_dark_mode_header"
                 android:text="@string/dark_mode"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:layout_below="@id/settings_title"
                 android:gravity="center_vertical"/>
@@ -56,7 +56,7 @@
                 android:layout_below="@+id/settings_dark_mode_header"
                 android:text="@string/time_zone"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <Button
@@ -90,7 +90,7 @@
                 android:layout_height="50dp"
                 android:layout_below="@+id/settings_general_header"
                 android:text="@string/report_bug"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"/>
             <TextView
@@ -99,7 +99,7 @@
                 android:layout_height="50dp"
                 android:layout_below="@+id/settings_report_bug_header"
                 android:text="@string/about"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"/>
 
@@ -109,16 +109,17 @@
                 android:layout_below="@+id/settings_about_header"
                 android:id="@+id/settings_tutorial_header"
                 android:text="Tutorial"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"/>
 
             <TextView
                 android:id="@+id/accountTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_below="@id/settings_tutorial_header"
                 android:text="Account"
+                android:gravity="center_vertical"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold"
                 android:textSize="20sp"
@@ -130,7 +131,7 @@
                 android:layout_below="@+id/accountTitle"
                 android:id="@+id/logoutText"
                 android:text="Logout"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"/>
 

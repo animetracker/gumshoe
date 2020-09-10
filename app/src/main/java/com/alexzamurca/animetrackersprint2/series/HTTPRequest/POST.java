@@ -21,6 +21,7 @@ public class POST
 {
     private final String url;
     private JSONObject json_to_send;
+    private String response;
 
     private static final String TAG = "POST";
 
@@ -46,11 +47,28 @@ public class POST
             urlConnection.setDoOutput(true);
 
             urlConnection.connect();
+
+            InputStream is;
+            if (urlConnection.getResponseCode() == 200)
+            {
+                is = urlConnection.getInputStream();
+            }
+            else
+            {
+                is = urlConnection.getErrorStream();
+            }
+            response = getStringFromInputStream(is);
+
             return urlConnection.getResponseCode()==200;
         }
         catch(Exception e)
         {Log.e("CATCH", e.toString());}
         return false;
+    }
+
+    public String getResponse()
+    {
+        return response;
     }
 
     public String sendRequest()
