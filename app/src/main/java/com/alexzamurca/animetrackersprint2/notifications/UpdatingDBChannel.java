@@ -33,7 +33,7 @@ public class UpdatingDBChannel
     private void startAlarm()
     {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(mContext, SeriesAiringNotificationReceiver.class);
+        Intent intent = new Intent(mContext, UpdateDBReceiver.class);
 
         Calendar calendar = setUpCalendar();
 

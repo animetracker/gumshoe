@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2.series.AniList;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.series.JSON.SortFiltering;
@@ -17,9 +18,9 @@ public class Search
 
     GraphQLRequest graphQL;
 
-    public Search(String series_name)
+    public Search(String series_name, Context context)
     {
-        graphQL = new GraphQLRequest();
+        graphQL = new GraphQLRequest(context);
         SortFiltering sf = new SortFiltering();
         search_array = sf.filterJSON(graphQL.getSearchJSONResponse(series_name));
     }

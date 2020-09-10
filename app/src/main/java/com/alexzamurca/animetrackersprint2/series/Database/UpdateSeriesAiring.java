@@ -48,7 +48,7 @@ public class UpdateSeriesAiring
     // 0 = successful new addition, 1: fail
     public int update()
     {
-        POST request = new POST(URL, json);
+        POST request = new POST(URL, context, json);
         String response = request.sendRequest();
 
         SessionCheck sessionCheck = new SessionCheck(response, context);

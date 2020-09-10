@@ -1,6 +1,12 @@
 package com.alexzamurca.animetrackersprint2.series.HTTPRequest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
+
+import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
 
 import org.json.JSONObject;
 
@@ -20,20 +26,21 @@ import java.nio.charset.StandardCharsets;
 public class POST
 {
     private final String url;
+    private final Context context;
     private JSONObject json_to_send;
     private String response;
 
     private static final String TAG = "POST";
 
-    public POST(String url, JSONObject json_to_send)
-    {
+    public POST(String url, Context context) {
         this.url = url;
-        this.json_to_send = json_to_send;
+        this.context = context;
     }
 
-    public POST(String url)
-    {
+    public POST(String url, Context context, JSONObject json_to_send) {
         this.url = url;
+        this.context = context;
+        this.json_to_send = json_to_send;
     }
 
     public boolean sendSimpleRequest()
@@ -62,7 +69,10 @@ public class POST
             return urlConnection.getResponseCode()==200;
         }
         catch(Exception e)
-        {Log.e("CATCH", e.toString());}
+        {
+            Log.e("CATCH", e.toString());
+            connectionError();
+        }
         return false;
     }
 
@@ -106,12 +116,11 @@ public class POST
             }
             return getStringFromInputStream(is);
         }
-        catch(ConnectException c)
-        {
-            return "Connection Error";
-        }
         catch(Exception e)
-        {Log.e("CATCH", e.toString());}
+        {
+            Log.e("CATCH", e.toString());
+            connectionError();
+        }
         return "Response returned nothing";
     }
 
@@ -144,6 +153,18 @@ public class POST
             Log.d(TAG, "getStringFromInputStream: NullPointerException");
         }
         return response.toString();
+    }
+
+    private void connectionError()
+    {
+        NoDatabaseDialog dialog = new NoDatabaseDialog();
+        dialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoDatabaseDialog");
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("db_connect_problem", true);
+        editor.apply();
     }
 
 }

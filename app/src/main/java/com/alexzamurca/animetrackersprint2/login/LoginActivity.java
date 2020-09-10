@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids)
         {
-            Login login = new Login();
+            Login login = new Login(LoginActivity.this);
             String responseString = login.login(enterEmail.getText().toString(), enterPassword.getText().toString());
             Log.d(TAG, "doInBackground: reponse from login:"+ responseString);
             try

@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
             SharedPreferences sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
             String session = sharedPreferences.getString("session", "");
 
-            GET get = new GET(URL + session + "/" + "gumshoethisisasessiontest");
+            GET get = new GET(URL + session + "/" + "gumshoethisisasessiontest", MainActivity.this);
             String responseString = get.sendRequest();
             // Means session is fine
             if(responseString.equals(""))
@@ -150,10 +150,15 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            if(hasSessionExpired)
+            SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
+            boolean connection_error = sharedPreferences.getBoolean("db_connect_problem", false);
+            if(!connection_error)
             {
-                Toast.makeText(MainActivity.this, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
-                openLoginActivity();
+                if(hasSessionExpired)
+                {
+                    Toast.makeText(MainActivity.this, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
+                    openLoginActivity();
+                }
             }
 
             super.onPostExecute(aVoid);

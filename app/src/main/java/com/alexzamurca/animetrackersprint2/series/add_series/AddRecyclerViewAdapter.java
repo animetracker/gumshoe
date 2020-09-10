@@ -251,7 +251,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     {
         @Override
         protected Void doInBackground(Void... voids) {
-            search = new Search(series_name);
+            search = new Search(series_name, context);
             search.printList(list);
             list = search.getSearchResults();
             search.printList(list);

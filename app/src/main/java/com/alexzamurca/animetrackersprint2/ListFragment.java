@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, NoDatabaseDialog.ReportBugListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
+public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
     private static final String TAG = "ListFragment";
     private transient FragmentActivity mContext;
 
@@ -432,13 +432,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
     }
 
     @Override
-    public void OnReportBugButtonClick()
-    {
-        dialog_report_bug dialogReportBug = new dialog_report_bug();
-        dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
-    }
-
-    @Override
     public void OnChangeTimeZoneClick()
     {
         mNavController.navigate(R.id.action_dialog_change_time_zone);
@@ -550,10 +543,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
             else
             {
                 NoDatabaseDialog dialog = new NoDatabaseDialog();
-                Bundle args = new Bundle();
-                Log.d(TAG, "onPostExecute: about to add report bug listener");
-                //args.putSerializable("reportBugListener", ListFragment.this);
-                dialog.setArguments(args);
                 dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
             }
 

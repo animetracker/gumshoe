@@ -36,7 +36,7 @@ public class SelectTable
         ArrayList<Series> seriesList = new ArrayList<>();
 
         //GET request
-        GET get = new GET(URL + session);
+        GET get = new GET(URL + session, context);
         JSONArray jsonResponse;
         try
         {

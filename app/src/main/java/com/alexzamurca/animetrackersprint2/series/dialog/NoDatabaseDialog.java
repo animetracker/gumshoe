@@ -1,5 +1,7 @@
 package com.alexzamurca.animetrackersprint2.series.dialog;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.alexzamurca.animetrackersprint2.R;
-
-import java.io.Serializable;
+import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 
 public class NoDatabaseDialog extends DialogFragment
 {
@@ -22,31 +23,24 @@ public class NoDatabaseDialog extends DialogFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_database_error, container, false);
-        setCancelable(false);
-
-        ReportBugListener reportBugListener = (ReportBugListener)getArguments().getSerializable("reportBugListener");
 
         Button reportBugButton = view.findViewById(R.id.report_bug_button);
         reportBugButton.setOnClickListener(v ->
-        {
-            reportBugListener.OnReportBugButtonClick();
-            dismiss();
-        });
+                {
+                    dialog_report_bug dialogReportBug = new dialog_report_bug();
+                    dialogReportBug.show(requireActivity().getSupportFragmentManager(), "dialog_report_button");
+                    //openDiscord();
+                }
+
+        );
 
         ImageButton closeButton = view.findViewById(R.id.close_image_button);
         closeButton.setOnClickListener(v -> dismiss());
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-    }
-
-    public interface ReportBugListener extends Serializable
-    {
-        void OnReportBugButtonClick();
+    public void openDiscord() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/s2C8eJ2"));
+        startActivity(intent);
     }
 }

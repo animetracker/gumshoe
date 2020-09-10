@@ -141,7 +141,7 @@ public class UpdateSeries
         @Override
         protected Void doInBackground(Void... voids)
         {
-            getSeriesInfo = new GetSeriesInfo(series.getAnilist_id());
+            getSeriesInfo = new GetSeriesInfo(series.getAnilist_id(), mContext);
 
             getSeriesInfo.sendRequest();
 

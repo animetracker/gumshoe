@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2.series.AniList;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertMillisToDate;
@@ -12,20 +13,22 @@ public class GetSeriesInfo
     private static final String TAG = "GetSeriesInfo";
 
     private int anilist_id;
+    private Context context;
+
     private int episode_number = -1;
     private String air_date = "";
     private String status = "";
 
     private JSONObject response;
 
-    public GetSeriesInfo(int anilist_id)
-    {
+    public GetSeriesInfo(int anilist_id, Context context) {
         this.anilist_id = anilist_id;
+        this.context = context;
     }
 
     public void sendRequest()
     {
-        GraphQLRequest graphQLRequest = new GraphQLRequest();
+        GraphQLRequest graphQLRequest = new GraphQLRequest(context);
         try
         {
             response = graphQLRequest.getInfoJSONResponse(anilist_id).getJSONObject("data").getJSONObject("Media");

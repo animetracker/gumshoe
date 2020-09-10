@@ -26,7 +26,7 @@ public class Remove
 
     public boolean remove()
     {
-        POST request = new POST(URL);
+        POST request = new POST(URL, context);
         boolean isRequest200 = request.sendSimpleRequest();
 
         String response = request.getResponse();

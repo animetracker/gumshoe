@@ -52,7 +52,7 @@ public class Insert
 
         if(!isSeriesInDB.isSeriesInDB())
         {
-            POST request = new POST(URL, json);
+            POST request = new POST(URL, context, json);
             String response = request.sendRequest();
 
             SessionCheck sessionCheck = new SessionCheck(response, context);

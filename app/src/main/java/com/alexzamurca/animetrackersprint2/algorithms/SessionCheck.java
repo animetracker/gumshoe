@@ -41,18 +41,23 @@ public class SessionCheck
     }
 
     private void openLoginActivity() {
-        Log.d(TAG, "openLoginActivity: opening LoginActivity from SessionCheck because the session check failed");
-        Intent intent = new Intent(context, LoginActivity.class);
-        // makes sure you cant press back to get to the list screen
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        ((Activity)context).finish();
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+        boolean connection_error = sharedPreferences.getBoolean("db_connect_problem", false);
+        if(!connection_error)
+        {
+            Log.d(TAG, "openLoginActivity: opening LoginActivity from SessionCheck because the session check failed");
+            Intent intent = new Intent(context, LoginActivity.class);
+            // makes sure you cant press back to get to the list screen
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            ((Activity)context).finish();
+        }
     }
 
     public void check()
     {
-        boolean hasSessionExpired = hasSessionExpired();
-        if(hasSessionExpired)
+        if(hasSessionExpired())
         {
             Log.d(TAG, "check: failed session check");
 

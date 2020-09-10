@@ -28,7 +28,7 @@ public class IsSeriesInDB
 
     private String getTitleFromDB()
     {
-        GET get = new GET("http://192.168.0.15:2000/series/findTitle/" + session + "/" + series_name);
+        GET get = new GET("http://192.168.0.15:2000/series/findTitle/" + session + "/" + series_name, context);
         return get.sendRequest();
     }
 

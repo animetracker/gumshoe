@@ -162,7 +162,7 @@ public class RegisterActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Register register = new Register();
+            Register register = new Register(RegisterActivity.this);
             String responseString = register.register(username.getText().toString(), email.getText().toString(), password.getText().toString());
             Log.d(TAG, "doInBackground: reponse from login:" + responseString);
             try {
