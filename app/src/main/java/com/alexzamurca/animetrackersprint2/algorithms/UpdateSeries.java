@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.SetNewNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
@@ -44,6 +45,9 @@ public class UpdateSeries
             SeriesFinishedNotification seriesFinishedNotification = new SeriesFinishedNotification(mContext, series, status);
             seriesFinishedNotification.showNotification();
             Log.d(TAG, "update: set notification that " + series.getTitle() + " is now " + status);
+
+            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(mContext);
+            notificationAiringChannel.cancel(series);
         }
         // not null
         else if(!status.equals(""))
@@ -156,4 +160,6 @@ public class UpdateSeries
             super.onPostExecute(aVoid);
         }
     }
+
+
 }

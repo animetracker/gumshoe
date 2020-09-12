@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class AddFragment extends Fragment implements NoConnectionDialog.TryAgainListener, AddRecyclerViewAdapter.RowClickListener, AddRecyclerViewAdapter.LoadedListener {
+public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.RowClickListener, AddRecyclerViewAdapter.LoadedListener {
 
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
@@ -125,9 +125,6 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     public void newInstance()
     {
         NoConnectionDialog dialog = new NoConnectionDialog();
-        Bundle args = new Bundle();
-        args.putSerializable("data", this);
-        dialog.setArguments(args);
         dialog.show(mContext.getSupportFragmentManager(), "NoCustomDialog");
     }
 
@@ -151,13 +148,6 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     {
         mContext = (FragmentActivity)context;
         super.onAttach(context);
-    }
-
-    @Override
-    public void OnSuccessfulClick()
-    {
-        Toast.makeText(getContext(), "Search has refreshed", Toast.LENGTH_SHORT).show();
-        navController.navigate(R.id.addFragment);
     }
 
     @Override

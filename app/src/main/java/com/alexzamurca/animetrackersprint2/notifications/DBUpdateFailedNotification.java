@@ -9,48 +9,36 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.alexzamurca.animetrackersprint2.R;
-import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import static com.alexzamurca.animetrackersprint2.App.SERIES_AIRING_REMINDER_ID;
 
-public class SeriesFinishedNotification
+public class DBUpdateFailedNotification
 {
-    private static final String TAG = "SeriesFinishedNotification";
+    private static final String TAG = "DBUpdateFailedNotification";
 
     private Context mContext;
     private NotificationManagerCompat notificationManagerCompat;
-    private Series series;
-    private String newStatus;
 
-    public SeriesFinishedNotification(Context context, Series series, String newStatus)
+    public DBUpdateFailedNotification(Context context)
     {
         mContext = context;
         notificationManagerCompat = NotificationManagerCompat.from(context);
-        this.series = series;
-        this.newStatus = newStatus;
     }
 
     private Notification constructNotification()
     {
         Log.d(TAG, "constructNotification: constructing");
         // format: One Piece Episode 997 is airing in 30 min
-        String text="Series has now been removed from your list!";
-        if(newStatus.equals("FINISHED"))
-        {
-            text = "Series has now been removed from your list as it has finished!";
-        }
-        else if(newStatus.equals("CANCELLED"))
-        {
-            text = "Series has now been removed from your list as it has been cancelled!";
-        }
+        String title="Failed to update your list";
+        String text = "Please report this issue using Discord, otherwise you may encounter further issues!";
 
         return new  NotificationCompat.Builder(mContext, SERIES_AIRING_REMINDER_ID)
                 .setSmallIcon(R.drawable.ic_gumshoe_notification_fill_icon)
-                .setColor(ContextCompat.getColor(mContext, R.color.pleasantBlue))
-                .setContentTitle(series.getTitle())
+                .setColor(ContextCompat.getColor(mContext, R.color.pleasantRed))
+                .setContentTitle(title)
                 .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setCategory(NotificationCompat.CATEGORY_ERROR)
                 .build();
     }
 
@@ -58,6 +46,6 @@ public class SeriesFinishedNotification
     {
         Notification notification = constructNotification();
         Log.d(TAG, "showNotification: showing notification");
-        notificationManagerCompat.notify(-series.getAnilist_id(), notification);
+        notificationManagerCompat.notify(0, notification);
     }
 }

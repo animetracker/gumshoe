@@ -138,6 +138,7 @@ public class LoginActivity extends AppCompatActivity
     private class LoginAsync extends AsyncTask<Void, Void, Void>
     {
         private boolean isSuccessful;
+        private boolean incorrectLogin;
         private JSONObject response = null;
 
         @Override
@@ -149,13 +150,14 @@ public class LoginActivity extends AppCompatActivity
             try
             {
                 response = new JSONObject(responseString);
-                isSuccessful = !response.getBoolean("error");
-                Log.d(TAG, "doInBackground: successful?:" + isSuccessful);
+                incorrectLogin = response.getBoolean("error");
+                isSuccessful = true;
             }
             catch (JSONException e)
             {
                 Log.d(TAG, "login: error trying to get response");
                 isSuccessful = false;
+                incorrectLogin = true;
             }
             return null;
         }
@@ -163,7 +165,7 @@ public class LoginActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            if(isSuccessful)
+            if(isSuccessful && !incorrectLogin)
             {
                 Log.d(TAG, "onPostExecute: isSuccessful");
                 if(response!=null)
@@ -191,10 +193,15 @@ public class LoginActivity extends AppCompatActivity
                     }
                 }
             }
+            else if(isSuccessful && incorrectLogin)
+            {
+                Toast.makeText(LoginActivity.this, "Incorrect login! Check your password and email are correct.", Toast.LENGTH_LONG).show();
+            }
             else
             {
                 Toast.makeText(LoginActivity.this, "Failed to login in.", Toast.LENGTH_LONG).show();
             }
+
             super.onPostExecute(aVoid);
         }
     }

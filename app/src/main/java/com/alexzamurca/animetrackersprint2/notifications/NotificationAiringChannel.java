@@ -35,10 +35,10 @@ public class NotificationAiringChannel
         mContext = context;
     }
 
-    private void constructUpdateCalendar(Series series)
+    private void constructUpdateCalendar(String air_date)
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        airDateCalendar = convertDateToCalendar.noTimeZoneConvert(series.getAir_date());
+        airDateCalendar = convertDateToCalendar.noTimeZoneConvert(air_date);
         //airDateCalendar = convertDateToCalendar.noTimeZoneConvert(series.getAir_date());
         //airDateCalendar.add(Calendar.MINUTE, 30);
         airDateCalendar.add(Calendar.SECOND, 1);
@@ -67,7 +67,7 @@ public class NotificationAiringChannel
     // Will happen at login and at additions to list
     public void setNotification(Series series, Calendar airDateAfterChangesCalendar)
     {
-        constructUpdateCalendar(series);
+        constructUpdateCalendar(series.getAir_date());
         this.airDateAfterChangesCalendar = airDateAfterChangesCalendar;
         compareCalendars();
 

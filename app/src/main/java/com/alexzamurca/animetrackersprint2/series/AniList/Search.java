@@ -32,6 +32,7 @@ public class Search
             Log.d("printList", "||" + sr.getImage_directory() + "|" + sr.getTitle() + "|" + sr.getStatus() + "|" + sr.getIsAdult() + "|" + sr.getStart_date() + "|"+ sr.getActive_users() + "|"+ sr.getRating() + "|"+ sr.getSynonyms().toString() + "|"+ sr.getTrailer_URL() + "|"+ sr.getDescription()  + "||");
         }
     }
+
     public JSONArray getSearchArray()
     {
         return search_array;

@@ -25,7 +25,6 @@ public class NoConnectionDialog extends DialogFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        TryAgainListener tryAgainListener = (TryAgainListener) getArguments().getSerializable("data");
 
         View view = inflater.inflate(R.layout.dialog_no_connection, container, false);
 
@@ -36,22 +35,16 @@ public class NoConnectionDialog extends DialogFragment
             if (isConnected) {
                 // put your online code here
                 Toast.makeText(getContext(), "Network connection is now available", Toast.LENGTH_SHORT).show();
-                tryAgainListener.OnSuccessfulClick();
+                Toast.makeText(getContext(), "Refresh the list to continue!", Toast.LENGTH_SHORT).show();
                 getDialog().dismiss();
             } else {
                 Toast.makeText(getContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
             }
-
         });
+
 
         setCancelable(false);
 
-
         return view;
-    }
-
-    public interface TryAgainListener extends Serializable
-    {
-        void OnSuccessfulClick();
     }
 }

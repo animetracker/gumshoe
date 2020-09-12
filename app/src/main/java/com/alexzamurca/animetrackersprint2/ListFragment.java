@@ -45,7 +45,6 @@ import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
-import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -53,7 +52,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NoConnectionDialog.TryAgainListener, SeriesRecyclerViewAdapter.OnSeriesListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
+public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.OnSeriesListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
     private static final String TAG = "ListFragment";
     private transient FragmentActivity mContext;
 
@@ -366,14 +365,6 @@ public class ListFragment extends Fragment implements NoConnectionDialog.TryAgai
 
         MySQLConnection mySQLConnection = new MySQLConnection();
         mySQLConnection.execute();
-    }
-
-    @Override
-    public void OnSuccessfulClick()
-    {
-        Toast.makeText(getContext(), "Series List has refreshed", Toast.LENGTH_SHORT).show();
-
-        mNavController.navigate(R.id.listFragment);
     }
 
     @Override

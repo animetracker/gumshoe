@@ -27,6 +27,9 @@
     <string name="remove">Remove</string>
     <string name="hide">Hide</string>
     <string name="reportBugDiscord">To report a bug, you need to join our gumshoe discord server. You can join by clicking the button below.</string>
+    <string name="support_devs">Support the developers</string>
+
+
 
     <string-array name="layout_drop_down_options">
         <item>List</item>
@@ -136,4 +139,5 @@
     <string name="minutes_error_warning">Minutes cannot be set to more than 60, use hours instead!</string>
     <string name="hours_error_warning">Hours cannot be set to more than 23, use days instead!</string>
     <string name="days_error_warning">Days cannot be set to more than 6!</string>
+    <string name="watch_ads_gain_points"><![CDATA[Watch Ads & gain points]]></string>
 </resources>

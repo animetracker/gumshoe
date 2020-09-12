@@ -32,12 +32,10 @@ import androidx.navigation.Navigation;
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.series.Database.UpdateAirDateChange;
-import com.alexzamurca.animetrackersprint2.series.Database.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 public class ChangeAirDateFragment extends Fragment
 {

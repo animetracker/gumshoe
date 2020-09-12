@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,7 +53,7 @@ public class SettingsFragment extends Fragment
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
 
-        TextView reportBug = view.findViewById(R.id.settings_report_bug_header);
+        Button reportBug = view.findViewById(R.id.settings_report_bug);
         reportBug.setOnClickListener(view1 ->
         {
            // navController.navigate(R.id.action_reporting_bug);
@@ -62,14 +61,14 @@ public class SettingsFragment extends Fragment
             dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
         });
 
-        TextView aboutUs = view.findViewById(R.id.settings_about_header);
+        Button aboutUs = view.findViewById(R.id.settings_about);
         aboutUs.setOnClickListener(view12 ->
         {
             NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.action_settingsFragment_to_aboutFragment);
         });
 
-        TextView tutorial = view.findViewById(R.id.settings_tutorial_header);
+        Button tutorial = view.findViewById(R.id.settings_tutorial);
         tutorial.setOnClickListener(view13 -> {
             NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.action_settingsFragment_to_tutorialActivity);
@@ -81,8 +80,8 @@ public class SettingsFragment extends Fragment
             navController.navigate(R.id.action_change_time_zone)
         );
 
-        TextView logOutButton = view.findViewById(R.id.logoutText);
-        logOutButton.setOnClickListener(view14 ->
+        Button logOut = view.findViewById(R.id.settings_logout);
+        logOut.setOnClickListener(view14 ->
             openLogin()
         );
 
