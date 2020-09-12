@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
@@ -36,6 +37,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
+        {
+            ResetAlarmForUpdateDB resetAlarmForUpdateDB = new ResetAlarmForUpdateDB(this);
+            resetAlarmForUpdateDB.reset();
+        }
+
         sharedPreferences = getSharedPreferences("App", MODE_PRIVATE);
         firstTime = sharedPreferences.getBoolean("first_time", true);
 
@@ -44,8 +52,8 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("first_time", false);
             editor.apply();
 
-            Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
-            startActivity(intent);
+            Intent tutorialIntent = new Intent(MainActivity.this, TutorialActivity.class);
+            startActivity(tutorialIntent);
         }
         else
         {

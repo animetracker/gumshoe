@@ -205,6 +205,16 @@ public class ChangeAirDateFragment extends Fragment
                 if(hasAirDateChangeChanged())
                 {
                     updateAirDateDB();
+
+                    String change;
+                    if(hours_to_change==0 && minutes_to_change==0) change = "";
+                    else
+                    {
+                        change = getFormattedChange();
+                    }
+
+                    series.setAir_date_change(change);
+
                     ResetAlarmForSeries resetAlarmForSeries = new ResetAlarmForSeries(getContext());
                     resetAlarmForSeries.reset(series);
                 }
@@ -301,7 +311,8 @@ public class ChangeAirDateFragment extends Fragment
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s)
+            {
 
             }
         });

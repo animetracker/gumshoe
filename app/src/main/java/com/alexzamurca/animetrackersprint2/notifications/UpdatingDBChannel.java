@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+
 import java.util.Calendar;
 
 // This class is for setting or cancelling notifications through the airing channel
@@ -37,6 +39,9 @@ public class UpdatingDBChannel
 
         Calendar calendar = setUpCalendar();
 
+        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+        Log.d(TAG, "startAlarm: alarm set for " + convertDateToCalendar.reverseConvert(calendar));
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
@@ -46,7 +51,7 @@ public class UpdatingDBChannel
     {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(mContext, SeriesAiringNotificationReceiver.class);
+        Intent intent = new Intent(mContext, UpdateDBReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
         alarmManager.cancel(pendingIntent);
         Log.d(TAG, "cancel: update DB alarm cancelled");

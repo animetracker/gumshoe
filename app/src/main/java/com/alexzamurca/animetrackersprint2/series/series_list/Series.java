@@ -65,6 +65,14 @@ public class Series implements Serializable
         this.next_episode_number = next_episode_number;
     }
 
+    public void setNotification_change(String notification_change) {
+        this.notification_change = notification_change;
+    }
+
+    public void setAir_date_change(String air_date_change) {
+        this.air_date_change = air_date_change;
+    }
+
     public void setAir_date(String air_date) {
         this.air_date = air_date;
     }

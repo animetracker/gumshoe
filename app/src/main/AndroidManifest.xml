@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".App"
@@ -20,7 +21,7 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,6 +31,7 @@
         <activity android:name=".tutorial.TutorialActivity"></activity>
         <receiver android:name=".notifications.SeriesAiringNotificationReceiver"/>
         <receiver android:name=".notifications.UpdateSeriesReceiver"/>
+        <receiver android:name=".notifications.UpdateDBReceiver"/>
 
         <meta-data android:name="com.google.firebase.reminder.default_notification_icon"
 

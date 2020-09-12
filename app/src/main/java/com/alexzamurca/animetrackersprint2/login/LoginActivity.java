@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity
             if(checkData())
             {
                 login();
-                setUpDatabaseCheckAlarm();
             }
         });
 
@@ -125,6 +124,7 @@ public class LoginActivity extends AppCompatActivity
 
     private void setUpDatabaseCheckAlarm()
     {
+        Log.d(TAG, "setUpDatabaseCheckAlarm: setting up");
         UpdatingDBChannel updatingDBChannel = new UpdatingDBChannel(this);
         updatingDBChannel.setNotification();
     }
@@ -182,6 +182,8 @@ public class LoginActivity extends AppCompatActivity
 
                         editor.putBoolean("logged_in", true);
                         editor.apply();
+
+                        setUpDatabaseCheckAlarm();
 
                         Toast.makeText(LoginActivity.this, "Welcome !", Toast.LENGTH_LONG).show();
 

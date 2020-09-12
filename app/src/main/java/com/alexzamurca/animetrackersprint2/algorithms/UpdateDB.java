@@ -52,6 +52,7 @@ public class UpdateDB
     {
         String oldStatus = series.getStatus();
         String newStatus = getSeriesInfo.getStatus();
+        Log.d(TAG, "update: series: " + series.getTitle() + " COMPARING oldStatus: " + oldStatus +" AND newStatus: " + newStatus);
 
         // Error getting new status
         if(newStatus.equals(""))
@@ -146,7 +147,6 @@ public class UpdateDB
         @Override
         protected void onPostExecute(Void aVoid)
         {
-
             update(series, getSeriesInfo);
             super.onPostExecute(aVoid);
         }

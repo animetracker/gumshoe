@@ -274,6 +274,16 @@ public class ChangeNotificationReminderFragment extends Fragment
                 if(hasNotificationReminderChanged())
                 {
                     updateNotificationChangeDB();
+
+                    String change;
+                    if(quantity==0) change = "";
+                    else
+                    {
+                        change = quantity + " " + metric + " " + beforeAfter;
+                    }
+
+                    series.setNotification_change(change);
+
                     ResetAlarmForSeries resetAlarmForSeries = new ResetAlarmForSeries(getContext());
                     resetAlarmForSeries.reset(series);
                 }
