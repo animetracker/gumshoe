@@ -29,7 +29,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = "MainActivity";
-    String URL = "http://192.168.0.15:2000/series/findTitle/";
+    String URL = "https://gumshoe.digital15.net/series/findTitle/";
     SharedPreferences sharedPreferences;
     Boolean firstTime;
 

@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,20 +46,20 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     private String series_name;
     private Context context;
     private RowClickListener rowClickListener;
-    private LoadedListener loadedListener;
     private TextView noSearchResultsTV;
     private View searchActivityView;
     public String title_content;
     private NavController navController;
+    private ProgressBar progressBar;
 
-    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, LoadedListener loadedListener, TextView noSearchResultsTV, View searchActivityView, NavController navController) {
+    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, NavController navController, ProgressBar progressBar) {
         this.list = list;
         this.context = context;
         this.rowClickListener = rowClickListener;
-        this.loadedListener = loadedListener;
         this.noSearchResultsTV = noSearchResultsTV;
         this.searchActivityView = searchActivityView;
         this.navController = navController;
+        this.progressBar = progressBar;
     }
 
     @NonNull
@@ -121,11 +122,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     {
         void onFailedClick();
         void onSuccessfulClick(Series series);
-    }
-
-    public interface LoadedListener
-    {
-        void onFinishedLoading();
     }
 
 
@@ -227,12 +223,14 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public void searchName(String series_name)
     {
         this.series_name = series_name;
+        progressBar.setVisibility(View.VISIBLE);
         Connection connection = new Connection();
         connection.execute();
     }
 
     public void insert(int position)
     {
+        progressBar.setVisibility(View.VISIBLE);
         DatabaseInsert databaseInsert = new DatabaseInsert();
         databaseInsert.setAdapter_position(position);
         databaseInsert.execute();
@@ -249,6 +247,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     // Network activity is done in the background
     public class Connection extends AsyncTask<Void, Void, Void>
     {
+
         @Override
         protected Void doInBackground(Void... voids) {
             search = new Search(series_name, context);
@@ -262,7 +261,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            loadedListener.onFinishedLoading();
+            progressBar.setVisibility(View.GONE);
             notifyDataSetChanged();
             if(list.size() == 0)
             {
@@ -300,7 +299,9 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Void aVoid)
+        {
+            progressBar.setVisibility(View.GONE);
             if(request_success_rating == 0)
             {
                 Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_LONG).show();

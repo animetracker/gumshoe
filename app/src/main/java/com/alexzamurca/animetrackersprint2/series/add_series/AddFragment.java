@@ -9,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,13 +30,11 @@ import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Objects;
 
-public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.RowClickListener, AddRecyclerViewAdapter.LoadedListener {
+public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.RowClickListener {
 
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
@@ -47,8 +44,7 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     private AddRecyclerViewAdapter adapter;
     private EditText editText;
     private View globalView;
-    private TextView loadingTV;
-    private ImageView loadingImage;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -66,10 +62,6 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-
-        loadingTV = globalView.findViewById(R.id.search_loading_text);
-        loadingImage = globalView.findViewById(R.id.search_loading_image);
-
         return globalView;
     }
 
@@ -78,6 +70,8 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         editText = view.findViewById(R.id.search_edit_text);
+        progressBar = view.findViewById(R.id.add_series_progress_bar);
+        progressBar.setVisibility(View.GONE);
         initImageBitmaps();
         initRecyclerView();
 
@@ -85,11 +79,6 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
         {
             if (actionId == EditorInfo.IME_ACTION_SEARCH)
             {
-                // Show loading - (credit: http://www.lowgif.com/view.html)
-                Glide.with(requireContext())
-                        .load(R.drawable.loading)
-                        .into(loadingImage);
-                loadingTV.setText("Loading...");
                 searchProcess();
             }
             return false;
@@ -137,7 +126,7 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new AddRecyclerViewAdapter(list, getContext(), this, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
+        adapter = new AddRecyclerViewAdapter(list, getContext(), this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController, progressBar);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
@@ -168,14 +157,5 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
         }
 
         navController.navigate(R.id.listFragment);
-    }
-
-    @Override
-    public void onFinishedLoading()
-    {
-        Log.d(TAG, "onFinishedLoading: hiding loading");
-        // Hide loading
-        Glide.with(requireContext()).clear(loadingImage);
-        loadingTV.setText("");
     }
 }

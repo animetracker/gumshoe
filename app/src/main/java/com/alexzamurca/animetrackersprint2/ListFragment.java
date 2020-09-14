@@ -433,6 +433,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onNotificationsOn(Series series)
     {
+        progressBar.setVisibility(View.VISIBLE);
         UpdateNotificationsOnAsync updateNotificationsOnAsync = new UpdateNotificationsOnAsync();
         updateNotificationsOnAsync.setSelectedSeries(series);
         updateNotificationsOnAsync.execute();
@@ -495,6 +496,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onYesClickListener(Series series)
     {
+        progressBar.setVisibility(View.VISIBLE);
         UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
         updateNotificationsOffAsync.setSelectedSeries(series);
         updateNotificationsOffAsync.execute();
@@ -610,6 +612,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         @Override
         protected void onPostExecute(Void aVoid)
         {
+            progressBar.setVisibility(View.GONE);
             String title = selectedSeries.getTitle();
             if(isSuccessful)
             {
@@ -649,6 +652,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         @Override
         protected void onPostExecute(Void aVoid)
         {
+            progressBar.setVisibility(View.GONE);
             String title = selectedSeries.getTitle();
             if(isSuccessful)
             {
