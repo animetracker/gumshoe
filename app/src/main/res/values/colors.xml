@@ -8,10 +8,13 @@
     <color name="pleasantRed"> #cb4335</color>
     <color name="pleasantPurple">#673ab7</color>
     <color name="greyishWhite">#e5e7e9 </color>
-    <color name="brightYellow"> #99FF00 </color>
+    <color name="neon"> #99FF00 </color>
+    <color name="peachy"> #ffc100</color>
     <color name="brightBlue"> #46AFF6 </color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorTransparentWhite">#cccccc</color>
+    <color name="light"> #aab7b8 </color>
+    <color name="dark"> #121212</color>
 
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>

@@ -66,7 +66,6 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="change">Change</string>
     <string name="change_color">Change Color</string>
     <string name="change_notification_reminder">Change Notification Reminder</string>
     <string name="search">Search</string>
@@ -91,6 +90,7 @@
     <string name="login">Login</string>
     <string name="change_air_date">Change\nAir Date</string>
     <string name="change_time_zone">Change\nTime Zone</string>
+    <string name="time_zone_change">Change Time Zone</string>
     <string name="_30">30</string>
     <string name="_45">45</string>
     <string name="this_is_the_time_zone_we_identified_for_your_region">This is the Time Zone we identified for your region:</string>

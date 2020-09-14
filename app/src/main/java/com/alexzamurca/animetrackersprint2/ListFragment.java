@@ -401,6 +401,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         RecyclerView recyclerView = requireView().findViewById(R.id.series_recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 
     private void initList()

@@ -10,7 +10,7 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/gumshoe27_circle"
+        android:icon="@drawable/gumshoe27_cropped2"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/gumshoe27_circle"
         android:supportsRtl="true"
@@ -18,7 +18,9 @@
         android:usesCleartextTraffic="true"
         android:screenOrientation="portrait">
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -26,9 +28,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".login.LoginActivity"/>
-        <activity android:name=".login.RegisterActivity"/>
-        <activity android:name=".tutorial.TutorialActivity" />
+        <activity android:name=".login.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".login.RegisterActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".tutorial.TutorialActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <receiver android:name=".notifications.SeriesAiringNotificationReceiver"/>
         <receiver android:name=".notifications.UpdateSeriesReceiver"/>
         <receiver android:name=".notifications.UpdateDBReceiver"/>

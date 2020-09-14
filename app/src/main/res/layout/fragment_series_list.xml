@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/series_list_layout">
@@ -16,8 +15,8 @@
         android:layout_below="@id/series_list_toolbar_object">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:id="@+id/series_list_floating_add_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
@@ -27,8 +26,8 @@
             />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:id="@+id/series_list_floating_set_notification_button"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
@@ -46,7 +45,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/series_recycler_view">
+                android:id="@+id/series_recycler_view"
+                android:paddingBottom="70dp"
+                android:clipToPadding="false">
 
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

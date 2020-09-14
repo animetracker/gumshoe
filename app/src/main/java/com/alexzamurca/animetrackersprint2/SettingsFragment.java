@@ -16,8 +16,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
@@ -30,7 +30,7 @@ import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
-    private SwitchCompat darkModeSwitch;
+    private Button darkMode;
     private NavController navController;
     private FragmentActivity mContext;
 
@@ -86,32 +86,33 @@ public class SettingsFragment extends Fragment
         );
 
         // This method is used to create the dark mode using the switch
-        darkModeSwitch= view.findViewById(R.id.settings_dark_mode_switch);
-        darkModeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) ->
-        {
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            if(isChecked)
+        darkMode= view.findViewById(R.id.settings_dark_mode_button);
+        darkMode.setOnClickListener(view15 ->
             {
-                // Dark mode
-                Log.d(TAG, "onCheckedChanged: change to dark mode");
-                //getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                boolean darkModeOn = sharedPreferences.getBoolean("dark_mode_on", false);
+                if(darkModeOn)
+                {
+                    darkMode.setBackgroundResource(R.drawable.dark_fill_light_border);
+                    String darkModeOffString = "Dark Mode: Off";
+                    darkMode.setText(darkModeOffString);
+                    darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
 
-                editor.putBoolean("dark_mode_on", true);
+                    editor.putBoolean("dark_mode_on", false);
+                }
+                else
+                {
+                    darkMode.setBackgroundResource(R.drawable.light_fill_dark_border);
+                    String darkModeOnString = "Dark Mode: On";
+                    darkMode.setText(darkModeOnString);
+                    darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark));
 
+                    editor.putBoolean("dark_mode_on", true);
+                }
+                editor.apply();
             }
-            else
-            {
-                // Light mode
-                Log.d(TAG, "onCheckedChanged: change to light mode");
-                //getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
-                editor.putBoolean("dark_mode_on", false);
-
-            }
-            editor.apply();
-        });
+        );
 
         return view;
     }
@@ -124,8 +125,8 @@ public class SettingsFragment extends Fragment
         navController = Navigation.findNavController(view);
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        boolean selection = sharedPreferences.getBoolean("dark_mode_on", false);
-        darkModeSwitch.setChecked(selection);
+        boolean darkModeOn = sharedPreferences.getBoolean("dark_mode_on", false);
+        modifyDarkModeButton(darkModeOn);
     }
 
     @Override
@@ -149,6 +150,24 @@ public class SettingsFragment extends Fragment
             startActivity((Intent.createChooser(myIntent, "Share using")));
         }
         return true;
+    }
+
+    private void modifyDarkModeButton(boolean isDarkModeOn)
+    {
+        if(isDarkModeOn)
+        {
+            darkMode.setBackgroundResource(R.drawable.light_fill_dark_border);
+            String darkModeOnString = "Dark Mode: On";
+            darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark));
+            darkMode.setText(darkModeOnString);
+        }
+        else
+        {
+            darkMode.setBackgroundResource(R.drawable.dark_fill_light_border);
+            String darkModeOffString = "Dark Mode: Off";
+            darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
+            darkMode.setText(darkModeOffString);
+        }
     }
 
     public void openLogin()
