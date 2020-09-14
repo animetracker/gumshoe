@@ -51,6 +51,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.OnSeriesListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
@@ -183,7 +184,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
             // Get sort state from SharedPreferences
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-            int selection = sharedPreferences.getInt("selected_sort_option_index", 7);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", 5);
 
             popup.getMenu().getItem(selection).setChecked(true);
 
@@ -258,13 +259,15 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
             sortListAccordingToSelection(itemIndex);
 
-
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putInt("selected_sort_option_index", itemIndex);
 
             editor.apply();
+
+            mNavController.navigate(R.id.listFragment);
+
             return true;
         });
     }
@@ -333,11 +336,13 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 // Add Date up
             case 4:
                 Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
+                Collections.reverse(listFromAdapter);
+                adapter.restoreFromList(listFromAdapter);
                 return;
 
             // Add Date down
             case 5:
-                Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
+                Log.d(TAG, "setupDropDownOnClick: sort air date down clicked");
         }
     }
 
