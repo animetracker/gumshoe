@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,6 @@ import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
-import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -67,8 +67,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     private TextView emptyListTV;
     private ImageView emptyListImage;
     private LinearLayout emptyListLayout;
-    private TextView loadingTV;
-    private ImageView loadingImage;
+    private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private View mView;
@@ -93,8 +92,10 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         emptyListTV = mView.findViewById(R.id.series_empty_list);
         emptyListImage = mView.findViewById(R.id.series_empty_list_image);
         emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
-        loadingTV = mView.findViewById(R.id.series_loading_text);
-        loadingImage = mView.findViewById(R.id.series_loading_image);
+
+        progressBar = mView.findViewById(R.id.series_progress_bar);
+        progressBar.setVisibility(View.GONE);
+
         swipeRefreshLayout = mView.findViewById(R.id.series_swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(this::checkConnectionAndInitList);
@@ -198,34 +199,36 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         Intent activityIntent = requireActivity().getIntent();
         Log.d(TAG, "performNotificationButtonCheck: is intent from MainActivity null?:" + (activityIntent != null));
 
-
-        // Try get notifications off bundle
-        Bundle notificationsOffBundle = activityIntent.getBundleExtra("bundle_notifications_off");
-        if(notificationsOffBundle!=null)
+        if(activityIntent!=null)
         {
-            Log.d(TAG, "performNotificationButtonCheck: received a notification off bundle, meaning a notification's \"turn notifications off\" button was pressed");
-            boolean notificationsOff = notificationsOffBundle.getBoolean("notifications_off");
-            if(notificationsOff)
+            // Try get notifications off bundle
+            Bundle notificationsOffBundle = activityIntent.getBundleExtra("bundle_notifications_off");
+            if(notificationsOffBundle!=null)
             {
-                Log.d(TAG, "performNotificationButtonCheck: notifications off boolean is true");
-                Series series = (Series) notificationsOffBundle.getSerializable("series");
-                doOnNotificationsOff(series);
-                notificationsOffBundle.putBoolean("notifications_off", false);
+                Log.d(TAG, "performNotificationButtonCheck: received a notification off bundle, meaning a notification's \"turn notifications off\" button was pressed");
+                boolean notificationsOff = notificationsOffBundle.getBoolean("notifications_off");
+                if(notificationsOff)
+                {
+                    Log.d(TAG, "performNotificationButtonCheck: notifications off boolean is true");
+                    Series series = (Series) notificationsOffBundle.getSerializable("series");
+                    doOnNotificationsOff(series);
+                    notificationsOffBundle.putBoolean("notifications_off", false);
+                }
             }
-        }
 
-        // Try get notifications off bundle
-        Bundle incorrectAirDateBundle = activityIntent.getBundleExtra("bundle_incorrect_air_date");
-        if(incorrectAirDateBundle!=null)
-        {
-            Log.d(TAG, "performNotificationButtonCheck: received a incorrect air date bundle, meaning a notification's \"incorrect air date\" button was pressed");
-            boolean incorrectAirDate = incorrectAirDateBundle.getBoolean("incorrect_air_date");
-            if(incorrectAirDate)
+            // Try get notifications off bundle
+            Bundle incorrectAirDateBundle = activityIntent.getBundleExtra("bundle_incorrect_air_date");
+            if(incorrectAirDateBundle!=null)
             {
-                Log.d(TAG, "performNotificationButtonCheck: incorrect air date boolean is true");
-                Series series = (Series) incorrectAirDateBundle.getSerializable("series");
-                doOnSeriesError(series);
-                incorrectAirDateBundle.putBoolean("incorrect_air_date", false);
+                Log.d(TAG, "performNotificationButtonCheck: received a incorrect air date bundle, meaning a notification's \"incorrect air date\" button was pressed");
+                boolean incorrectAirDate = incorrectAirDateBundle.getBoolean("incorrect_air_date");
+                if(incorrectAirDate)
+                {
+                    Log.d(TAG, "performNotificationButtonCheck: incorrect air date boolean is true");
+                    Series series = (Series) incorrectAirDateBundle.getSerializable("series");
+                    doOnSeriesError(series);
+                    incorrectAirDateBundle.putBoolean("incorrect_air_date", false);
+                }
             }
         }
     }
@@ -397,11 +400,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     private void initList()
     {
-        // Show loading - (credit: http://www.lowgif.com/view.html)
-        Glide.with(requireContext())
-                .load(R.drawable.loading)
-                .into(loadingImage);
-        loadingTV.setText(R.string.loading_3_dots);
+        progressBar.setVisibility(View.VISIBLE);
 
         MySQLConnection mySQLConnection = new MySQLConnection();
         mySQLConnection.execute();
@@ -549,8 +548,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         protected void onPostExecute(Void aVoid)
         {
             // Hide loading
-            Glide.with(requireContext()).clear(loadingImage);
-            loadingTV.setText("");
+            progressBar.setVisibility(View.GONE);
 
             // Stop refreshing (need this in case swipe refresh is used)
             swipeRefreshLayout.setRefreshing(false);
