@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Database;
+package com.alexzamurca.animetrackersprint2.Database;
 
 import android.content.Context;
 
@@ -7,19 +7,19 @@ import com.alexzamurca.animetrackersprint2.series.JSON.Construct;
 
 import org.json.JSONObject;
 
-public class Login
+public class Register
 {
     private Context context;
 
-    public Login(Context context) {
+    public Register(Context context) {
         this.context = context;
     }
 
-    public String login(String email, String password)
+    public String register(String username, String email, String password)
     {
         Construct construct = new Construct();
-        JSONObject json = construct.constructLoginJSON(email, password);
-        String URL = "http://192.168.0.15:2000/login/";
+        JSONObject json = construct.constructRegisterJSON(username, email, password);
+        String URL = "https://gumshoe.digital15.net/account/";
         POST request = new POST(URL, context, json);
 
         return request.sendRequest();

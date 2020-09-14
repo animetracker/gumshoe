@@ -23,7 +23,7 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
-import com.alexzamurca.animetrackersprint2.series.Database.Insert;
+import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;

@@ -18,10 +18,9 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
-import com.alexzamurca.animetrackersprint2.ListFragment;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
-import com.alexzamurca.animetrackersprint2.series.Database.Remove;
+import com.alexzamurca.animetrackersprint2.Database.Remove;
 import com.bumptech.glide.Glide;
 
 import java.io.Serializable;

@@ -1,6 +1,5 @@
-package com.alexzamurca.animetrackersprint2.series.Database;
+package com.alexzamurca.animetrackersprint2.Database;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
@@ -34,7 +33,7 @@ public class Insert
 
     private void constructURL()
     {
-        URL = "http://192.168.0.15:2000/series/insert/" + session;
+        URL = "https://gumshoe.digital15.net/series/insert/" + session;
     }
 
     // 0 = successful new addition, 1 = already in list, 2: fail

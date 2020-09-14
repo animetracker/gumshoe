@@ -31,7 +31,7 @@ import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
-import com.alexzamurca.animetrackersprint2.series.Database.UpdateAirDateChange;
+import com.alexzamurca.animetrackersprint2.Database.UpdateAirDateChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

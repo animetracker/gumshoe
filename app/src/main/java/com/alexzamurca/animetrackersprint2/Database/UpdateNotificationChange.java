@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Database;
+package com.alexzamurca.animetrackersprint2.Database;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,22 +9,22 @@ import com.alexzamurca.animetrackersprint2.series.JSON.Construct;
 
 import org.json.JSONObject;
 
-public class UpdateNotificationsOn
+public class UpdateNotificationChange
 {
     private static final String TAG = "Insert";
 
-    String URL = "http://192.168.0.15:2000/series/updateNotificationsOn/";
+    String URL = "https://gumshoe.digital15.net/series/updateNotificationChange/";
     private final String session;
     private final int anilist_id;
-    private final int notifications_on;
-    private Context context;
+    private final String notifications_change;
     private JSONObject json;
+    private Context context;
 
-    public UpdateNotificationsOn(String session, int anilist_id, int notifications_on, Context context)
+    public UpdateNotificationChange(String session, int anilist_id, String notifications_change, Context context)
     {
         this.session = session;
         this.anilist_id = anilist_id;
-        this.notifications_on = notifications_on;
+        this.notifications_change = notifications_change;
         this.context = context;
         constructURL();
         constructJSON();
@@ -38,7 +38,7 @@ public class UpdateNotificationsOn
     private void constructJSON()
     {
         Construct jsonConstructor = new Construct();
-        this.json = jsonConstructor.constructUpdateNotificationsOnJSON(notifications_on);
+        this.json = jsonConstructor.constructUpdateNotificationChangeJSON(notifications_change);
     }
 
     // 0 = successful new addition, 1: fail
@@ -51,7 +51,7 @@ public class UpdateNotificationsOn
         sessionCheck.check();
 
         if(response.equals("Connection Error"))return 1;
-        Log.d(TAG, "insert: updated notifications_on");
+        Log.d(TAG, "insert: updated notifications_change");
         return 0;
     }
 }

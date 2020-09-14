@@ -25,11 +25,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
-import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
-import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
+import com.alexzamurca.animetrackersprint2.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
-import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
-import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
@@ -38,7 +35,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
 public class ChangeTimeZoneFragment extends Fragment

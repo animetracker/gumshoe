@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Database;
+package com.alexzamurca.animetrackersprint2.Database;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,27 +9,23 @@ import com.alexzamurca.animetrackersprint2.series.JSON.Construct;
 
 import org.json.JSONObject;
 
-public class UpdateSeriesAiring
+public class UpdateAirDateChange
 {
     private static final String TAG = "Insert";
 
-    String URL = "http://192.168.0.15:2000/series/updateAiringSeries/";
+    String URL = "https://gumshoe.digital15.net/series/updateAirDateChange/";
     private final String session;
     private final int anilist_id;
-    int next_episode_number;
-    String air_date;
-    String status;
-    private Context context;
+    private final String air_date_change;
     private JSONObject json;
+    private Context context;
 
-    public UpdateSeriesAiring(String session, int anilist_id, int next_episode_number, String air_date, String status, Context context) {
+    public UpdateAirDateChange(String session, int anilist_id, String air_date_change, Context context)
+    {
         this.session = session;
         this.anilist_id = anilist_id;
-        this.next_episode_number = next_episode_number;
-        this.air_date = air_date;
-        this.status = status;
+        this.air_date_change = air_date_change;
         this.context = context;
-
         constructURL();
         constructJSON();
     }
@@ -42,7 +38,7 @@ public class UpdateSeriesAiring
     private void constructJSON()
     {
         Construct jsonConstructor = new Construct();
-        this.json = jsonConstructor.constructUpdateSeriesAiringJSON(next_episode_number, air_date, status);
+        this.json = jsonConstructor.constructUpdateAirDateChangeJSON(air_date_change);
     }
 
     // 0 = successful new addition, 1: fail
@@ -55,7 +51,7 @@ public class UpdateSeriesAiring
         sessionCheck.check();
 
         if(response.equals("Connection Error"))return 1;
-        Log.d(TAG, "insert: updated notifications_on");
+        Log.d(TAG, "insert: updated air_date_change");
         return 0;
     }
 }

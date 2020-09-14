@@ -91,7 +91,7 @@ public class NotificationAiringChannel
         args.putBoolean("set_new_notification", (airDateFirst&&!calendarsEqual)||(!airDateFirst&&calendarsEqual) );
         intent.putExtra("args", args);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, series.getAnilist_id(), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, series.getAnilist_id(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateAfterChangesCalendar.getTimeInMillis(), pendingIntent);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
@@ -109,7 +109,7 @@ public class NotificationAiringChannel
         args.putBoolean("set_new_notification", (!airDateFirst && !calendarsEqual));
         intent.putExtra("args", args);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, -series.getAnilist_id(), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, -series.getAnilist_id(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateCalendar.getTimeInMillis(), pendingIntent);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();

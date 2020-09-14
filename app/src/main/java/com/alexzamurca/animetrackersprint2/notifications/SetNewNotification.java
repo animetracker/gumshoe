@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 
-import com.alexzamurca.animetrackersprint2.series.Database.SelectTable;
+import com.alexzamurca.animetrackersprint2.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import java.util.Calendar;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Database;
+package com.alexzamurca.animetrackersprint2.Database;
 
 import android.content.Context;
 
@@ -21,7 +21,7 @@ public class Remove
 
     private void constructURL()
     {
-        URL = "http://192.168.0.15:2000/series/remove/" + session + "/" + anilist_id;
+        URL = "https://gumshoe.digital15.net/series/remove/" + session + "/" + anilist_id;
     }
 
     public boolean remove()

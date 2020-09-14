@@ -17,7 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alexzamurca.animetrackersprint2.R;
-import com.alexzamurca.animetrackersprint2.series.Database.Register;
+import com.alexzamurca.animetrackersprint2.Database.Register;
 
 import org.json.JSONException;
 import org.json.JSONObject;

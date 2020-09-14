@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Database;
+package com.alexzamurca.animetrackersprint2.Database;
 
 import android.content.Context;
 import android.util.Log;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class SelectTable
 {
     private static final String TAG = "SelectTable";
-    String URL = "http://192.168.0.15:2000/series/list/";
+    String URL = "https://gumshoe.digital15.net/series/list/";
 
     private final String session;
     private Context context;

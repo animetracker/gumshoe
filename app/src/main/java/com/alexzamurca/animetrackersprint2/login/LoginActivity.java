@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
-import com.alexzamurca.animetrackersprint2.series.Database.Login;
+import com.alexzamurca.animetrackersprint2.Database.Login;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
-import com.alexzamurca.animetrackersprint2.series.Database.Remove;
+import com.alexzamurca.animetrackersprint2.Database.Remove;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 public class RemoveSeries

@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.Database;
+package com.alexzamurca.animetrackersprint2.Database;
 
 import android.content.Context;
 import android.util.Log;
@@ -28,7 +28,7 @@ public class IsSeriesInDB
 
     private String getTitleFromDB()
     {
-        GET get = new GET("http://192.168.0.15:2000/series/findTitle/" + session + "/" + series_name, context);
+        GET get = new GET("https://gumshoe.digital15.net/series/findTitle/" + session + "/" + series_name, context);
         return get.sendRequest();
     }
 

@@ -1,6 +1,7 @@
 package com.alexzamurca.animetrackersprint2.notifications;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
@@ -93,14 +95,35 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
                     " was released " + afterText + " ago!";
         }
 
+        // Intent to reopen app on notification click
+        Intent activityIntent = new Intent(context, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 1, activityIntent, 0);
+
+        Intent notificationsOffIntent = new Intent(context, MainActivity.class);
+        Bundle bundle =  new Bundle();
+        bundle.putBoolean("notifications_off", true);
+        bundle.putSerializable("series", series);
+        notificationsOffIntent.putExtra("bundle_notifications_off", bundle);
+        PendingIntent notificationsOffActionIntent = PendingIntent.getActivity(context, 2, notificationsOffIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent incorrectAirDateIntent = new Intent(context, MainActivity.class);
+        Bundle args =  new Bundle();
+        bundle.putBoolean("incorrect_air_date", true);
+        bundle.putSerializable("series", series);
+        notificationsOffIntent.putExtra("bundle_incorrect_air_date", args);
+        PendingIntent incorrectAirDateActionIntent = PendingIntent.getActivity(context, -2, incorrectAirDateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new  NotificationCompat.Builder(context, SERIES_AIRING_REMINDER_ID)
                 .setSmallIcon(R.drawable.ic_gumshoe_notification_fill_icon)
                 .setColor(ContextCompat.getColor(context, R.color.pleasantBlue))
                 .setContentTitle(series.getTitle())
                 .setContentText(text)
+                .setAutoCancel(true)
+                .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .addAction(R.drawable.ic_notifications_on, "Turn notifications Off", notificationsOffActionIntent)
+                .addAction(R.drawable.ic_error_black, "Incorrect Air Date", incorrectAirDateActionIntent)
                 .build();
     }
 

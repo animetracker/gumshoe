@@ -10,7 +10,7 @@ import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChann
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.SetNewNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
-import com.alexzamurca.animetrackersprint2.series.Database.UpdateSeriesAiring;
+import com.alexzamurca.animetrackersprint2.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 public class UpdateSeries
