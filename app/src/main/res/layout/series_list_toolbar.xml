@@ -5,8 +5,24 @@
     android:layout_height="?attr/actionBarSize"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/series_list_toolbar"
-    android:background="#ffffff"
-    app:title="@string/series_list"
-    android:theme="@style/ThemeOverlay.AppCompat.Light">
+    android:background="?attr/bgh">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/logo"
+        app:civ_border_width="2dp"
+        app:civ_border_color="?attr/primaryTextColor"/>
+
+    <TextView
+        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:text="@string/series_list"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:paddingLeft="10dp"
+        android:textColor="?attr/primaryTextColor"
+        android:gravity="center_vertical"/>
 
 </androidx.appcompat.widget.Toolbar>
