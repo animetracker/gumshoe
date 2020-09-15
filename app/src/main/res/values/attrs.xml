@@ -9,4 +9,5 @@
     <attr name="generalColor" format="color"/>
     <attr name="generalColor2" format="color"/>
     <attr name="bottomToolbar" format="color"/>
+    <attr name="dropdownbg" format="color"/>
 </resources>

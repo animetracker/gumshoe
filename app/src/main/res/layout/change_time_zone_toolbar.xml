@@ -5,8 +5,14 @@
     android:layout_height="?attr/actionBarSize"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/series_info_toolbar"
-    android:background="#ffffff"
-    app:title="Change Time Zone"
-    android:theme="@style/ThemeOverlay.AppCompat.Light">
+    android:background="?attr/bgh">
+
+    <TextView
+        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:text="Change Time Zone"
+        android:textSize="20dp"
+        android:textColor="?attr/primaryTextColor"
+        android:gravity="center_vertical"/>
 
 </androidx.appcompat.widget.Toolbar>
