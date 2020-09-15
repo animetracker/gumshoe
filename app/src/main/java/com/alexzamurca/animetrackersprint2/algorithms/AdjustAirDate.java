@@ -1,5 +1,7 @@
 package com.alexzamurca.animetrackersprint2.algorithms;
 
+import android.content.Context;
+
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
@@ -9,13 +11,13 @@ import java.util.TimeZone;
 // Get date after changes (air_date_changes, notification_change, timezone)
 public class AdjustAirDate
 {
-    private static final String TAG = "AdjustAirDate";
 
     private Series series;
+    private Context context;
 
-    public AdjustAirDate(Series series)
-    {
+    public AdjustAirDate(Series series, Context context) {
         this.series = series;
+        this.context = context;
     }
 
     public Calendar getCalendar()
@@ -25,13 +27,13 @@ public class AdjustAirDate
         if(!series.getAir_date().equals("") && notificationsOn)
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(series.getAir_date());
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, series.getAir_date());
 
             if(!hasAirDatePassed(calendar))
             {
-                applyAirDateChange(calendar);
+                calendar = applyAirDateChange(calendar);
 
-                applyNotificationChange(calendar);
+                calendar = applyNotificationChange(calendar);
 
                 return calendar;
             }

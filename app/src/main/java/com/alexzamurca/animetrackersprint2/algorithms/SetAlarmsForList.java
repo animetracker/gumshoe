@@ -41,7 +41,7 @@ public class SetAlarmsForList
         {
             Series selectedSeries = currentList.get(i);
 
-            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries);
+            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries, context);
             Calendar calendar = adjustAirDate.getCalendar();
 
             if(calendar!=null)

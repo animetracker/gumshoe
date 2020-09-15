@@ -523,7 +523,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         String air_date = series.getAir_date();
         Log.d(TAG, "adjustAndSetNotifications: air date " + air_date);
 
-        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series, getContext());
         Calendar calendar = adjustAirDate.getCalendar();
 
         // If calendar returned it means all is good and notifications can be set
@@ -669,7 +669,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 Toast.makeText(getContext(), "Failed to turn notifications on for \"" + title +"\", notifications are still off.", Toast.LENGTH_LONG).show();
             }
 
-            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries);
+            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries, getContext());
             Calendar calendar = adjustAirDate.getCalendar();
 
             if(calendar!=null)

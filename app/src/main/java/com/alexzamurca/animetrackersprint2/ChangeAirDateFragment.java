@@ -370,7 +370,7 @@ public class ChangeAirDateFragment extends Fragment
     private void updateNewTimeTV()
     {
         // Form string
-        Calendar newCalendar = convertDateToCalendar.timeZoneConvert(series.getAir_date());
+        Calendar newCalendar = convertDateToCalendar.timeZoneConvert(getContext(), series.getAir_date());
         // Add hours, minutes
         if(isSignNegative)
         {
@@ -382,7 +382,7 @@ public class ChangeAirDateFragment extends Fragment
             newCalendar.add(Calendar.HOUR_OF_DAY, +hours_to_change);
             newCalendar.add(Calendar.MINUTE, +minutes_to_change);
         }
-        String text = convertDateToCalendar.reverseConvert(newCalendar);
+        String text = convertDateToCalendar.timeZoneReverseConvert(getContext(), newCalendar);
         newTimeTV.setText(text);
     }
 

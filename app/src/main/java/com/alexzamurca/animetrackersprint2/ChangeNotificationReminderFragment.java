@@ -50,7 +50,6 @@ public class ChangeNotificationReminderFragment extends Fragment
 
 
     private int quantity = 0;
-    private int Alex=100;
 
     private String metric = "minutes";
     private String beforeAfter = "before";
@@ -334,7 +333,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         if(!air_date_change.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(air_date);
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(getContext(), air_date);
 
             // get sign, hours, minutes from air_date change
             String[] signHoursMinutesArray  = air_date_change.split(":");
@@ -353,7 +352,7 @@ public class ChangeNotificationReminderFragment extends Fragment
                 calendar.add(Calendar.MINUTE, -minutes);
             }
 
-            newAirDate = convertDateToCalendar.reverseConvert(calendar);
+            newAirDate = convertDateToCalendar.timeZoneReverseConvert(getContext(), calendar);
         }
         else
         {
@@ -409,7 +408,7 @@ public class ChangeNotificationReminderFragment extends Fragment
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         // Get date in calendar form (so we can change it)
-        Calendar calendar = convertDateToCalendar.timeZoneConvert(getChangedAirDate());
+        Calendar calendar = convertDateToCalendar.timeZoneConvert(getContext(), getChangedAirDate());
 
         // Add minutes, hours, days
         if(beforeAfter.equals("before"))
@@ -444,7 +443,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         }
 
         // Update text
-        String newDate = convertDateToCalendar.reverseConvert(calendar);
+        String newDate = convertDateToCalendar.timeZoneReverseConvert(getContext(), calendar);
         String notificationChange = quantity + " " + metric + " " + beforeAfter + "\nMeaning you will be notified on: " + newDate;
         newChangeTV.setText(notificationChange);
 

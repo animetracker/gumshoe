@@ -188,7 +188,7 @@ public class UpdateDB
                 series.setNext_episode_number(episode_number);
 
                 NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
-                AdjustAirDate adjustAirDate = new AdjustAirDate(series);
+                AdjustAirDate adjustAirDate = new AdjustAirDate(series, context);
                 notificationAiringChannel.setNotification(series, adjustAirDate.getCalendar());
             }
             else

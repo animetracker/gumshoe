@@ -40,7 +40,7 @@ public class UpdatingDBChannel
         Calendar calendar = setUpCalendar();
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Log.d(TAG, "startAlarm: alarm set for " + convertDateToCalendar.reverseConvert(calendar));
+        Log.d(TAG, "startAlarm: alarm set for " + convertDateToCalendar.timeZoneReverseConvert(mContext, calendar));
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);

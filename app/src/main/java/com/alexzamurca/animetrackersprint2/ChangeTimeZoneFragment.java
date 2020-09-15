@@ -32,10 +32,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class ChangeTimeZoneFragment extends Fragment
 {
@@ -128,20 +131,43 @@ public class ChangeTimeZoneFragment extends Fragment
     // DONT FORGET TO IMPLEMENT SHARED PREFERENCES FOR TIMEZONE
     private void showTimeZoneAndTime()
     {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("time_zone", Context.MODE_PRIVATE);
+
+        boolean negative_sign = sharedPreferences.getBoolean("is_sign_negative", false);
+        int hours_change = sharedPreferences.getInt("hours_to_change", 0);
+        int minutes_change = sharedPreferences.getInt("minutes_to_change", 0);
+        Log.d(TAG, "showTimeZoneAndTime: hours:" + hours_change);
+        Log.d(TAG, "showTimeZoneAndTime: minutes:" + minutes_change);
+
         // Find time zone
         TimeZone timeZone = TimeZone.getDefault();
-
+        boolean daylight = timeZone.inDaylightTime(new Date());
+        String timeZoneText = timeZone.getDisplayName(daylight, TimeZone.LONG);
+        if(!(hours_change==0 && minutes_change==0))
+        {
+            timeZoneText += " (and ";
+            if(negative_sign)
+            {
+                timeZoneText += "-";
+            }
+            else
+            {
+                timeZoneText += "+";
+            }
+            timeZoneText += Integer.toString(hours_change);
+            timeZoneText += ":";
+            timeZoneText += Integer.toString(minutes_change);
+            timeZoneText += ")";
+        }
+        timeZoneTV.setText(timeZoneText);
         // Set texts
-        timeZoneTV.setText(timeZone.getDisplayName(false, TimeZone.SHORT));
-
         setupOldTimeTV(timeZone);
-
         setupNewTimeTV(timeZone);
     }
 
-    private Calendar initCalendarFromPreferences(Calendar calendar)
+    private Calendar adjustLocalTimeZoneChanges(Calendar calendar)
     {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("time_zone", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("time_zone", Context.MODE_PRIVATE);
 
         boolean negative_sign = sharedPreferences.getBoolean("is_sign_negative", false);
         int hours_change = sharedPreferences.getInt("hours_to_change", 0);
@@ -165,8 +191,7 @@ public class ChangeTimeZoneFragment extends Fragment
     private String constructOldDateString(TimeZone timeZone)
     {
         Calendar calendar = Calendar.getInstance(timeZone);
-        calendar = initCalendarFromPreferences(calendar);
-
+        calendar = adjustLocalTimeZoneChanges(calendar);
         return String.format("%02d" , calendar.get(Calendar.HOUR_OF_DAY))+":"+
                 String.format("%02d" , calendar.get(Calendar.MINUTE))+" "+
                 String.format("%02d" , calendar.get(Calendar.DAY_OF_MONTH))+"/"+
@@ -177,8 +202,7 @@ public class ChangeTimeZoneFragment extends Fragment
     private String constructNewDateString(TimeZone timeZone)
     {
         Calendar calendar = Calendar.getInstance(timeZone);
-        calendar = initCalendarFromPreferences(calendar);
-
+        calendar = adjustLocalTimeZoneChanges(calendar);
         // Add hours, minutes
         if(isSignNegative)
         {
@@ -238,7 +262,6 @@ public class ChangeTimeZoneFragment extends Fragment
     private void setupHoursSpinner(View view)
     {
         Spinner spinner = view.findViewById(R.id.time_zone_hours_spinner);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
