@@ -51,6 +51,8 @@ public class UpdateDB
     private void update(Series series, GetSeriesInfo getSeriesInfo)
     {
         String oldStatus = series.getStatus();
+        String oldAirDate = series.getAir_date();
+        int oldEpisodeNumber = series.getNext_episode_number();
         String newStatus = getSeriesInfo.getStatus();
         Log.d(TAG, "update: series: " + series.getTitle() + " COMPARING oldStatus: " + oldStatus +" AND newStatus: " + newStatus);
 
@@ -61,7 +63,17 @@ public class UpdateDB
             dbUpdateFailedNotification.showNotification();
         }
         else if(oldStatus.equals(newStatus))
-        {}
+        {
+            int episode_number = getSeriesInfo.getEpisode_number();
+            String air_date = getSeriesInfo.getAir_date();
+            if(!oldAirDate.equals(air_date) || episode_number!=oldEpisodeNumber)
+            {
+                Log.d(TAG, "update: oldAirDate: " + oldAirDate + " COMPARED TO newAirDate: " + air_date);
+                Log.d(TAG, "update: oldEpisodeNumber: " + oldEpisodeNumber + " COMPARED TO newEpisodeNumber: " + episode_number);
+                Log.d(TAG, "update: status is unchanged but air date or episode number has changed");
+                updateAirDate(series, air_date, newStatus, episode_number);
+            }
+        }
         else
         {
             if( ( oldStatus.equals("RELEASING") && newStatus.equals("FINISHED") ) ||  ((oldStatus.equals("RELEASING") || (oldStatus.equals("NOT_YET_RELEASED"))) && newStatus.equals("CANCELLED")))

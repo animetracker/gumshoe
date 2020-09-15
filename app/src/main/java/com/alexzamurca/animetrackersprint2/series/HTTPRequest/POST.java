@@ -45,6 +45,7 @@ public class POST
 
     public boolean sendSimpleRequest()
     {
+        Log.d(TAG, "sendSimpleRequest: to URL: " + url);
         try
         {
             // Establish connection / request
@@ -83,6 +84,7 @@ public class POST
 
     public String sendRequest()
     {
+        Log.d(TAG, "sendRequest: sent to URL: " + url);
         try
         {
             // Establish connection / request

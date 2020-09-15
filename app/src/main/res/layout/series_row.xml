@@ -99,7 +99,7 @@
         <ImageView
             android:layout_width="36dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_remove"
+            android:src="@drawable/ic_delete"
             android:id="@+id/remove_series"
             android:contentDescription="@string/remove"
             android:layout_weight="25"

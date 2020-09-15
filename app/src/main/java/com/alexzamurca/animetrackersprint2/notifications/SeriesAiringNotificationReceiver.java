@@ -97,9 +97,11 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
 
         // Intent to reopen app on notification click
         Intent activityIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 1, activityIntent, 0);
+        activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 1, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent notificationsOffIntent = new Intent(context, MainActivity.class);
+        notificationsOffIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bundle bundle =  new Bundle();
         bundle.putBoolean("notifications_off", true);
         bundle.putSerializable("series", series);
@@ -107,6 +109,7 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
         PendingIntent notificationsOffActionIntent = PendingIntent.getActivity(context, 2, notificationsOffIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent incorrectAirDateIntent = new Intent(context, MainActivity.class);
+        incorrectAirDateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bundle args =  new Bundle();
         bundle.putBoolean("incorrect_air_date", true);
         bundle.putSerializable("series", series);

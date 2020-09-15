@@ -18,7 +18,7 @@
 
     <TextView
         style="@style/headerTextPrimary"
-        android:text="Welcome"
+        android:text="Welcome!"
         android:layout_marginTop="@dimen/loginViewsMargin"/>
 
     <TextView
@@ -69,7 +69,7 @@
         android:onClick="viewRegisterClicked"
         android:text="@string/login_signup_hint"
         android:textAlignment="center"
-        android:textColor="@color/primaryTextColor"
+        android:textColor="@color/pleasantBlue"
         android:textStyle="bold" />
 
     </LinearLayout>

@@ -42,8 +42,6 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        checkIfSessionExpired();
-
         enterEmail = findViewById(R.id.enterEmail);
         enterPassword = findViewById(R.id.enterPassword);
         createAccountText = findViewById(R.id.SignUpText);
@@ -110,16 +108,6 @@ public class LoginActivity extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         LoginActivity.this.finish();
-    }
-
-    private void checkIfSessionExpired()
-    {
-        SharedPreferences sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
-        boolean hasSessionExpired = sharedPreferences.getBoolean("has_session_expired", false);
-        if(hasSessionExpired)
-        {
-            Toast.makeText(this, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
-        }
     }
 
     private void setUpDatabaseCheckAlarm()
@@ -201,7 +189,7 @@ public class LoginActivity extends AppCompatActivity
             }
             else
             {
-                Toast.makeText(LoginActivity.this, "Failed to login in.", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Failed to login in (Database Issue)!", Toast.LENGTH_LONG).show();
             }
 
             super.onPostExecute(aVoid);

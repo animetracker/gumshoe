@@ -80,7 +80,7 @@
             android:layout_marginTop="@dimen/loginViewsMargin"
             android:text="@string/signup_login_hint"
             android:textAlignment="center"
-            android:textColor="@color/primaryTextColor"
+            android:textColor="@color/pleasantBlue"
             android:textStyle="bold" />
 
     </LinearLayout>

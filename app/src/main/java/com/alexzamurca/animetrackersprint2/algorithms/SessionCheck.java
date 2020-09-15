@@ -37,7 +37,6 @@ public class SessionCheck
             Log.d(TAG, "hasSessionExpired: trying to get response from get request to check session has not returned a json with error (JSONException)");
             return false;
         }
-
     }
 
     private void openLoginActivity() {

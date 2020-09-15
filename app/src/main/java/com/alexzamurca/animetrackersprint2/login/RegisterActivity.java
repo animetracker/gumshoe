@@ -28,7 +28,6 @@ public class RegisterActivity extends AppCompatActivity
 {
     private static final String TAG = "RegisterActivity";
 
-
     EditText username;
     EditText email;
     EditText password;
@@ -158,6 +157,7 @@ public class RegisterActivity extends AppCompatActivity
     private class RegisterAsync extends AsyncTask<Void, Void, Void>
     {
         private boolean isSuccessful;
+        private boolean alreadyRegistered;
         private JSONObject response = null;
 
         @Override
@@ -165,27 +165,39 @@ public class RegisterActivity extends AppCompatActivity
             Register register = new Register(RegisterActivity.this);
             String responseString = register.register(username.getText().toString(), email.getText().toString(), password.getText().toString());
             Log.d(TAG, "doInBackground: reponse from login:" + responseString);
-            try {
+            try
+            {
                 response = new JSONObject(responseString);
-                isSuccessful = !response.getBoolean("error");
-                Log.d(TAG, "doInBackground: successful?:" + isSuccessful);
-            } catch (JSONException e) {
+                alreadyRegistered = response.getBoolean("error");
+                isSuccessful = true;
+            }
+            catch (JSONException e)
+            {
                 Log.d(TAG, "register: error trying to get response");
                 isSuccessful = false;
+                alreadyRegistered = true;
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (isSuccessful) {
+            if (isSuccessful && !alreadyRegistered)
+            {
                 Log.d(TAG, "onPostExecute: isSuccessful");
-                if (response != null) {
-                    Toast.makeText(RegisterActivity.this, "User:" + username.getText().toString() + "is now registered and can login!", Toast.LENGTH_LONG).show();
+                if (response != null)
+                {
+                    Toast.makeText(RegisterActivity.this, email.getText().toString() + " is now registered and can login!", Toast.LENGTH_LONG).show();
                     openLoginActivity();
                 }
-            } else {
-                Toast.makeText(RegisterActivity.this, "Failed to login in.", Toast.LENGTH_LONG).show();
+            }
+            else if(isSuccessful && alreadyRegistered)
+            {
+                Toast.makeText(RegisterActivity.this, "An account with this email already exists!", Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(RegisterActivity.this, "Failed to register (Database Issue)!", Toast.LENGTH_LONG).show();
             }
             super.onPostExecute(aVoid);
         }
