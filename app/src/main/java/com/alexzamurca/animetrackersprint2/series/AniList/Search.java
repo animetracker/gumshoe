@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.series.AniList;
 import android.content.Context;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.Date.ConvertMillisToDate;
 import com.alexzamurca.animetrackersprint2.series.JSON.SortFiltering;
 import com.alexzamurca.animetrackersprint2.series.add_series.SearchResult;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class Search
 {
+    private static final String TAG = "Search";
     private JSONArray search_array;
 
     GraphQLRequest graphQL;
@@ -29,7 +31,7 @@ public class Search
     {
         for(SearchResult sr:list)
         {
-            Log.d("printList", "||" + sr.getImage_directory() + "|" + sr.getTitle() + "|" + sr.getStatus() + "|" + sr.getIsAdult() + "|" + sr.getStart_date() + "|"+ sr.getActive_users() + "|"+ sr.getRating() + "|"+ sr.getSynonyms().toString() + "|"+ sr.getTrailer_URL() + "|"+ sr.getDescription()  + "||");
+            Log.d("printList", "||" + sr.getImage_directory() + "|" + sr.getTitle() + "|" + sr.getStatus() + "|" + sr.getIsAdult() + "|" + sr.getStart_date() + "|"+ sr.getActive_users() + "|"+ sr.getRating() + "|"+ sr.getTrailer_URL() + "|"+ sr.getDescription()  + "||");
         }
     }
 
@@ -47,14 +49,17 @@ public class Search
             {
                 String title;
                 String rating;
+                String air_date = "";
+                int next_episode_number;
+                String romaji = "";
                 String description = "";
                 boolean isAdult = false;
                 int active_users = -1;
                 String start_date;
-                ArrayList<String> synonyms = new ArrayList<>();
                 String trailer_URL = "";
                 String status = "";
                 String image_directory = "";
+
                 try
                 {
                     String dummy_title = search_array.getJSONObject(i).getJSONObject("title").getString("english");
@@ -74,6 +79,16 @@ public class Search
                     title = search_array.getJSONObject(i).getJSONObject("title").getString("romaji");
                     Log.e("getList" , "Romaji worked!");
                 }
+
+                try
+                {
+                    romaji = search_array.getJSONObject(i).getJSONObject("title").getString("romaji");
+                }
+                catch(JSONException e)
+                {
+                    Log.d(TAG, "getList: couldn't get romaji");
+                }
+
                 try
                 {
                     rating = Integer.toString(search_array.getJSONObject(i).getInt("averageScore"));
@@ -164,15 +179,37 @@ public class Search
 
                 try
                 {
-                    JSONArray array = search_array.getJSONObject(i).getJSONArray("synonyms");
-                    for(int j = 0; j<array.length() ; j++)
-                    {
-                        synonyms.add(array.getString(j));
-                    }
+                    ConvertMillisToDate convertMillisToDate = new ConvertMillisToDate(search_array.getJSONObject(i).getJSONObject("nextAiringEpisode").getInt("airingAt"));
+                    air_date = convertMillisToDate.getDate();
+                }
+                catch(JSONException j)
+                {
+                    Log.d(TAG, "constructFormattedJSON: JSONException when trying to get air date from JSON");
+
+                }
+
+                try
+                {
+                    next_episode_number = search_array.getJSONObject(i).getJSONObject("nextAiringEpisode").getInt("episode");
                 }
                 catch(JSONException e)
                 {
-                    Log.e("getList" , "Can't get synonyms");
+                    String current_episode;
+                    int episode_number = -1;
+                    try
+                    {
+                        current_episode = search_array.getJSONObject(i).getJSONArray("streamingEpisodes").getJSONObject(0).getString("title");
+                        episode_number  = Integer.parseInt(current_episode.substring(current_episode.indexOf(" ")+1, current_episode.indexOf("-")-1)) + 1;
+                    }
+                    catch(JSONException j)
+                    {
+                        Log.d(TAG, "constructFormattedJSON: JSONException when trying to get current episode through alternative route");
+                    }
+                    catch(NumberFormatException n)
+                    {
+                        Log.d(TAG, "constructFormattedJSON: NumberFormatException when trying to convert string to number");
+                    }
+                    next_episode_number =  episode_number;
                 }
 
                 try
@@ -211,7 +248,7 @@ public class Search
                     Log.e("getList" , "Can't get image_directory");
                 }
 
-                list.add(new SearchResult(title, rating, description, isAdult, active_users, start_date, synonyms, trailer_URL, status, image_directory));
+                list.add(new SearchResult(title, air_date, next_episode_number, romaji, rating, description, isAdult, active_users, start_date, trailer_URL, status, image_directory));
             }
         }
         catch(JSONException e)

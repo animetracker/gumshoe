@@ -17,7 +17,7 @@ public class ConvertDateToCalendar
 
     public Calendar timeZoneConvert(Context context, String dateInFormat)
     {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         calendar = adjustLocalTimeZoneChanges(context, calendar);
         if(!dateInFormat.equals(""))
         {

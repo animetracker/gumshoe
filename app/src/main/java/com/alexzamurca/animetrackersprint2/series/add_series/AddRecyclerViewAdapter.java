@@ -23,6 +23,8 @@ import androidx.core.text.HtmlCompat;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
@@ -34,7 +36,7 @@ import com.bumptech.glide.Glide;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerViewAdapter.ViewHolder>
@@ -75,20 +77,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
         final String title = list.get(position).getTitle();
         String rating = "<b> Average Rating (out of 100): </b>" + list.get(position).getRating();
+        String air_date = "<b> Airs on: </b>" + airDateConvert(list.get(position).getAir_date()) + "<br>" + "<i> *Subject to user location and time zone changes </i>";
+        String next_episode_number = "<b> Next Episode Number: </b>" + list.get(position).getNext_episode_number();
+        String romaji = "<b> Japanese Name: </b>" + list.get(position).getRomaji();
         String description = "<b> Description: </b> <br>" + list.get(position).getDescription();
         String adult_rating = "<b> Adult Series?: </b>" + list.get(position).getIsAdult();
         String start_date = "<b> Release Date: </b>" + list.get(position).getStart_date();
         String active_users = "<b> Popularity: </b>" + list.get(position).getActive_users();
-        String synonyms = "<b> Other Names: </b>";
-        ArrayList<String> synonymList = list.get(position).getSynonyms();
-        for(int i = 0; i < synonymList.size(); i++)
-        {
-            synonyms += synonymList.get(i);
-            if(i != synonymList.size() - 1)
-            {
-                synonyms += ", ";
-            }
-        }
         String trailer_URL = list.get(position).getTrailer_URL();
         String APIStatus = list.get(position).getStatus();
         String status = APIStatus.equals("RELEASING") ? "Airing" : "Not Yet Released";
@@ -103,11 +98,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         // Setting the text views
         holder.title.setText(title);
         holder.average.setText(HtmlCompat.fromHtml(rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.air_date.setText(HtmlCompat.fromHtml(air_date, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.next_episode_number.setText(HtmlCompat.fromHtml(next_episode_number, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.romaji.setText(HtmlCompat.fromHtml(romaji, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.description.setText(HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.adult_rating.setText(HtmlCompat.fromHtml(adult_rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.start_date.setText(HtmlCompat.fromHtml(start_date, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.active_watchers.setText(HtmlCompat.fromHtml(active_users, HtmlCompat.FROM_HTML_MODE_LEGACY));
-        holder.synonyms.setText(HtmlCompat.fromHtml(synonyms, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.status.setText(status);
         holder.expandableLayout.setVisibility(View.GONE);
 
@@ -136,11 +133,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         ImageView image;
         ImageView expand_collapse;
         TextView title;
+        TextView air_date;
+        TextView next_episode_number;
+        TextView romaji;
         TextView average;
         TextView description;
         TextView start_date;
         TextView active_watchers;
-        TextView synonyms;
         Button show_trailer;
         TextView adult_rating;
         TextView status;
@@ -154,12 +153,14 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             image = itemView.findViewById(R.id.search_row_cover_image);
             title = itemView.findViewById(R.id.search_row_title);
             expand_collapse = itemView.findViewById(R.id.search_row_expand_collapse);
+            air_date = itemView.findViewById(R.id.search_row_air_date);
+            next_episode_number = itemView.findViewById(R.id.search_row_next_episode_number);
+            romaji = itemView.findViewById(R.id.search_row_romaji);
             average = itemView.findViewById(R.id.search_row_average);
             description = itemView.findViewById(R.id.search_row_description);
             start_date = itemView.findViewById(R.id.search_row_start_date);
             adult_rating = itemView.findViewById(R.id.search_row_adult_rating);
             active_watchers = itemView.findViewById(R.id.search_row_active_users);
-            synonyms = itemView.findViewById(R.id.search_row_synonyms);
             show_trailer = itemView.findViewById(R.id.search_row_trailer_button);
             status = itemView.findViewById(R.id.search_row_status);
 
@@ -224,8 +225,8 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     {
         this.series_name = series_name;
         progressBar.setVisibility(View.VISIBLE);
-        Connection connection = new Connection();
-        connection.execute();
+        AniListSearch aniListSearch = new AniListSearch();
+        aniListSearch.execute();
     }
 
     public void insert(int position)
@@ -237,15 +238,26 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     }
 
 
-    public void hideKeyboard()
+    private void hideKeyboard()
     {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchActivityView.getWindowToken(), 0);
     }
 
+    String airDateConvert(String air_date)
+    {
+        Log.d(TAG, "airDateConvert: airDate:" + air_date);
+        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+        Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+        String[] days = new String[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+        String dayOfWeek = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+        String timeOfDay = calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + ((calendar.get(Calendar.AM)==1)? "am":"pm");
+        String time = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        return dayOfWeek + "s at " + timeOfDay + " (or in 24-hour-time: "+ time + ")";
+    }
 
     // Network activity is done in the background
-    public class Connection extends AsyncTask<Void, Void, Void>
+    public class AniListSearch extends AsyncTask<Void, Void, Void>
     {
 
         @Override
