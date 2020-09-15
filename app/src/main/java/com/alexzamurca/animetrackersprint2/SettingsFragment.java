@@ -16,6 +16,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -85,7 +87,7 @@ public class SettingsFragment extends Fragment
             openLogin()
         );
 
-        // This method is used to create the dark mode using the switch
+        // This method is used to create the dark mode using the button
         darkMode= view.findViewById(R.id.settings_dark_mode_button);
         darkMode.setOnClickListener(view15 ->
             {
@@ -98,7 +100,7 @@ public class SettingsFragment extends Fragment
                     String darkModeOffString = "Dark Mode: Off";
                     darkMode.setText(darkModeOffString);
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
-
+                    mContext.setTheme(R.style.AppThemeLight);
                     editor.putBoolean("dark_mode_on", false);
                 }
                 else
@@ -107,7 +109,7 @@ public class SettingsFragment extends Fragment
                     String darkModeOnString = "Dark Mode: On";
                     darkMode.setText(darkModeOnString);
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark));
-
+                    mContext.setTheme(R.style.AppThemeDark);
                     editor.putBoolean("dark_mode_on", true);
                 }
                 editor.apply();
