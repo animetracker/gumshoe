@@ -50,6 +50,8 @@ public class ChangeNotificationReminderFragment extends Fragment
 
 
     private int quantity = 0;
+    private int Alex=100;
+
     private String metric = "minutes";
     private String beforeAfter = "before";
 
