@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/series_list_constraint_layout"
-        android:layout_below="@id/series_list_toolbar_object">
+        android:layout_below="@id/series_list_toolbar_object"
+        android:background="?attr/bg">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="80dp"
