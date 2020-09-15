@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="370dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/loginCard"
+    app:cardCornerRadius="@dimen/loginCardRadius"
     android:elevation="5dp"
     android:layout_gravity="center"
-    android:layout_marginTop="@dimen/loginViewsMargin"
+    android:layout_marginTop="10dp"
     android:layout_marginBottom="@dimen/loginViewsMargin"
     android:background="@color/whiteCardColor">
 
@@ -17,8 +18,16 @@
 
     <TextView
         style="@style/headerTextPrimary"
-        android:text="Login"
+        android:text="Welcome"
         android:layout_marginTop="@dimen/loginViewsMargin"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Never miss an episode of the latest animes!"
+        android:textSize="15sp"
+        android:layout_marginTop="5dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputEmail"
@@ -49,6 +58,7 @@
         android:id="@+id/signInButton"
         style="@style/loginButton"
         android:text="Login"
+        android:textSize="18sp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/loginViewsMargin"/>
 

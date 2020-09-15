@@ -61,7 +61,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     public SeriesRecyclerViewAdapter.OnSeriesListener recyclerViewListener;
 
     private ArrayList<Series> list = new ArrayList<>();
-    private List<Series> oldList;
     private String session;
 
     private SeriesRecyclerViewAdapter adapter;
@@ -81,7 +80,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
         recyclerViewListener = this;
 
-        //performNotificationButtonCheck();
+        performNotificationButtonCheck();
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
@@ -106,7 +105,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
         // Search button
         addButton.setOnClickListener(v ->
-            changeToSearchFragment()
+            changeToAddFragment()
         );
 
         FloatingActionButton setNotificationButton = mView.findViewById(R.id.series_list_floating_set_notification_button);
@@ -136,7 +135,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         inflater.inflate(R.menu.series_list_toolbar_menu, menu);
 
         MenuItem item = menu.findItem(R.id.series_list_toolbar_search);
-        oldList = new ArrayList<>();
         
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener()
         {
@@ -145,8 +143,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             {
                 if(list.size()!=0)
                 {
-                    oldList.clear();
-                    oldList.addAll(adapter.getList());
                     return true;
                 }
                 else
@@ -159,12 +155,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item)
             {
-                if(list.size()!=0)
-                {
-                    adapter.restoreFromList(oldList);
-                    return true;
-                }
-                return false;
+                mNavController.navigate(R.id.listFragment);
+                return true;
             }
         });
         SearchView searchView = (SearchView) item.getActionView();
@@ -370,7 +362,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         });
     }
 
-    private void changeToSearchFragment()
+    private void changeToAddFragment()
     {
         mNavController.navigate(R.id.action_adding_new_series);
     }
