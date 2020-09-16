@@ -50,7 +50,7 @@
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/Ash"
+                    android:src="@drawable/ash"
                     app:civ_border_width="2dp"
                     app:civ_border_color="?attr/primaryTextColor"/>
 
@@ -93,7 +93,7 @@
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/Attack_Titan"
+                    android:src="@drawable/ash"
                     app:civ_border_width="2dp"
                     app:civ_border_color="?attr/primaryTextColor"/>
 
@@ -139,7 +139,7 @@
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/Goku"
+                    android:src="@drawable/goku"
                     app:civ_border_width="2dp"
                     app:civ_border_color="?attr/primaryTextColor"/>
 
@@ -185,7 +185,7 @@
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/Luffy"
+                    android:src="@drawable/luffy"
                     app:civ_border_width="2dp"
                     app:civ_border_color="?attr/primaryTextColor"/>
 
@@ -231,7 +231,7 @@
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/Naruto"
+                    android:src="@drawable/naruto"
                     app:civ_border_width="2dp"
                     app:civ_border_color="?attr/primaryTextColor"/>
 

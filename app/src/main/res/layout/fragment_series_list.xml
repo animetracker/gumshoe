@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:id="@+id/series_list_constraint_layout"
         android:layout_below="@id/series_list_toolbar_object"
-        android:background="?attr/bg">
+        >
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="80dp"
@@ -41,7 +41,8 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/series_swipe_refresh_layout">
+            android:id="@+id/series_swipe_refresh_layout"
+            android:background="?attr/bg">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
