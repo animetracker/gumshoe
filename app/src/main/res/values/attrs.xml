@@ -10,4 +10,9 @@
     <attr name="generalColor2" format="color"/>
     <attr name="bottomToolbar" format="color"/>
     <attr name="dropdownbg" format="color"/>
+    <attr name="seriesRowBg" format="color"/>
+    <attr name="seriesRowButtonBg" format="color"/>
+    <attr name="seriesButtonColor" format="color"/>
+    <attr name="seriesEpisodeTextColor" format="color"/>
+    <attr name="seriesReleaseTextColor" format="color"/>
 </resources>

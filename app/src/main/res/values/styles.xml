@@ -9,6 +9,11 @@
         <item name="bg">#ebececec</item>
         <item name="bgh">#FFFFFF</item>
         <item name="dropdownbg">#FFFFFF</item>
+        <item name="seriesRowBg">#e5e7e9</item>
+        <item name="seriesRowButtonBg">#FFFFFF</item>
+        <item name="seriesButtonColor">#787373</item>
+        <item name="seriesEpisodeTextColor">#641e16</item>
+        <item name="seriesReleaseTextColor">#283747</item>
         <item name="primaryTextColor">#DE000000</item>
         <item name="headerTextColor">@android:color/holo_blue_light</item>
         <item name="generalColor">#DE000000</item>bottomToolbar
@@ -24,6 +29,11 @@
         <item name="bgh">#212121</item>
         <item name="bg">#303030</item>
         <item name="dropdownbg">#B0B0B0</item>
+        <item name="seriesRowBg">#505050</item>
+        <item name="seriesRowButtonBg">#606060</item>
+        <item name="seriesButtonColor">#C1BBBB</item>
+        <item name="seriesEpisodeTextColor">#A52819</item>
+        <item name="seriesReleaseTextColor">#48729E</item>
         <item name="primaryTextColor">#FFFFFF</item>
         <item name="headerTextColor">@android:color/holo_red_dark</item>
         <item name="generalColor">#DEDDDBDB</item>
