@@ -9,6 +9,8 @@
     <color name="greyishWhite">#e5e7e9 </color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorTransparentWhite">#cccccc</color>
+    <color name="lol">#121212</color>
+    <color name="darkmode">#222831</color>
 
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>

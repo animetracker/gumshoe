@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 
@@ -107,6 +109,9 @@ public class SettingsFragment extends Fragment
 
                 editor.putBoolean("dark_mode_on", true);
 
+                BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
+                bottomNavigationView.setBackgroundResource(R.color.darkmode);
+
             }
             else
             {
@@ -115,6 +120,9 @@ public class SettingsFragment extends Fragment
                 //getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
                 editor.putBoolean("dark_mode_on", false);
+
+                BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
+                bottomNavigationView.setBackgroundResource(R.color.whiteCardColor);
 
             }
             editor.apply();
