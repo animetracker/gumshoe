@@ -17,8 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -98,6 +96,12 @@ public class SettingsFragment extends Fragment implements RewardedVideoAdListene
             openLogin()
         );
 
+        Button store = view.findViewById(R.id.settings_store);
+        store.setOnClickListener(view15 ->
+        {
+            navController.navigate(R.id.action_to_store);
+        });
+
         // This method is used to create the dark mode using the button
         darkMode= view.findViewById(R.id.settings_dark_mode_button);
         darkMode.setOnClickListener(view15 ->
@@ -124,6 +128,7 @@ public class SettingsFragment extends Fragment implements RewardedVideoAdListene
                     editor.putBoolean("dark_mode_on", true);
                 }
                 editor.apply();
+                navController.navigate(R.id.settingsFragment);
             }
         );
 
@@ -134,7 +139,8 @@ public class SettingsFragment extends Fragment implements RewardedVideoAdListene
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (rewardedVideoAd.isLoaded()){
+                if (rewardedVideoAd.isLoaded())
+                {
                     rewardedVideoAd.show();
                 }
             }

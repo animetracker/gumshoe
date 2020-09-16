@@ -17,8 +17,6 @@ import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
-import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
-import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -40,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkDarkMode();
 
         listFragmentInstance  = ListFragment.getInstance();
 
@@ -89,6 +88,14 @@ public class MainActivity extends AppCompatActivity
     {
         navController.navigateUp();
         return super.onSupportNavigateUp();
+    }
+
+    private void checkDarkMode()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        boolean darkModeOn = sharedPreferences.getBoolean("dark_mode_on", false);
+        if(darkModeOn) setTheme(R.style.AppThemeDark);
+        else setTheme(R.style.AppThemeLight);
     }
 
     private void performNotificationButtonCheck()

@@ -72,6 +72,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_tutorialActivity"
             app:destination="@id/tutorialActivity" />
+        <action
+            android:id="@+id/action_to_store"
+            app:destination="@id/storeFragment" />
     </fragment>
     <fragment
         android:id="@+id/addFragment"
@@ -130,6 +133,11 @@
         android:label="activity_tutorial"
         tools:layout="@layout/activity_tutorial" >
     </activity>
+    <fragment
+        android:id="@+id/storeFragment"
+        android:name="com.alexzamurca.animetrackersprint2.settings.StoreFragment"
+        android:label="StoreFragment"
+        tools:layout="@layout/fragment_store"/>
 
 
 </navigation>

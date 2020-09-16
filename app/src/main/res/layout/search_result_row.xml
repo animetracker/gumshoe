@@ -6,12 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="5dp"
-    android:background="@drawable/series_row_buttons_background">
+    android:background="?attr/seriesRowBg">
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@drawable/series_row_background">
+        android:background="?attr/seriesRowBg">
 
         <ImageView
             android:layout_width="140dp"
@@ -29,7 +29,8 @@
             android:orientation="vertical"
             android:id="@+id/info_layout"
             android:layout_marginStart="10dp"
-            android:layout_weight="10">
+            android:layout_weight="10"
+            android:background="?attr/seriesRowBg">
 
             <TextView
                 android:id="@+id/search_row_title"
@@ -40,7 +41,7 @@
                 android:minWidth="250dp"
                 android:minHeight="70dp"
                 android:gravity="center_vertical"
-                android:textColor="#000000"
+                android:textColor="?attr/primaryTextColor"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
@@ -50,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:minHeight="40dp"
-                android:textColor="#283747"
+                android:textColor="?attr/primaryTextColor"
                 android:textSize="15sp"
                 android:layout_marginEnd="10dp"
                 android:gravity="start|center_vertical"/>
@@ -71,7 +72,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:minHeight="20dp"
-            android:textColor="#283747"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 
@@ -81,7 +82,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:minHeight="20dp"
-            android:textColor="#283747"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 
@@ -91,7 +92,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:minHeight="20dp"
-            android:textColor="#283747"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 
@@ -103,7 +104,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:minHeight="20dp"
-            android:textColor="#283747"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 
@@ -113,7 +114,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:minHeight="20dp"
-            android:textColor="#283747"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 
@@ -123,7 +124,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:minHeight="20dp"
-            android:textColor="#283747"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 
@@ -140,7 +141,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:minHeight="20dp"
-                android:textColor="#283747"
+                android:textColor="?attr/primaryTextColor"
                 android:textSize="15sp"
                 android:gravity="start|center_vertical"/>
 
@@ -153,7 +154,7 @@
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:layout_margin="5dp"
-                    android:textColor="#283747"
+                    android:textColor="?attr/primaryTextColor"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_alignParentStart="true"
@@ -177,7 +178,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:minHeight="20dp"
-            android:textColor="#283747"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="15sp"
             android:gravity="start|center_vertical"/>
 

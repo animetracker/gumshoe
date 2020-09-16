@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/gumshoe27_circle"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeDark"
+        android:theme="@style/AppThemeLight"
         android:usesCleartextTraffic="true"
         android:screenOrientation="portrait">
         <activity android:name=".MainActivity"
