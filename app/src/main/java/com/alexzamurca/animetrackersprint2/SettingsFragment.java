@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,12 +30,22 @@ import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
-public class SettingsFragment extends Fragment
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+
+public class SettingsFragment extends Fragment implements RewardedVideoAdListener
 {
     private static final String TAG = "SettingsFragment";
     private Button darkMode;
     private NavController navController;
     private FragmentActivity mContext;
+    RewardedVideoAd rewardedVideoAd;
+    TextView textView;
+    Button button;
+    int value=0;
 
     @Override
     public void onAttach(@NonNull Context context)
@@ -116,7 +127,85 @@ public class SettingsFragment extends Fragment
             }
         );
 
+        //RewardAd
+        textView=view.findViewById(R.id.text_view);
+        button =view.findViewById(R.id.settings_ads);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rewardedVideoAd.isLoaded()){
+                    rewardedVideoAd.show();
+                }
+            }
+        });
+
+        MobileAds.initialize(mContext, "ca-app-pub-3940256099942544~3347511713");
+        rewardedVideoAd= MobileAds.getRewardedVideoAdInstance(mContext);
+        rewardedVideoAd.setRewardedVideoAdListener(this);
+        loadAds();
+
         return view;
+    }
+
+
+    //adwork
+    private void loadAds() {
+        rewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
+                new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        loadAds();
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        value=value+50;
+        textView.setText(""+value);
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+    }
+
+    @Override
+    public void onResume() {
+        rewardedVideoAd.resume(mContext);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        rewardedVideoAd.pause(mContext);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        rewardedVideoAd.destroy(mContext);
+        super.onDestroy();
     }
 
     @Override

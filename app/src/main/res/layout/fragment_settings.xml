@@ -119,7 +119,7 @@
 
             <TextView
                 android:id="@+id/settings_points"
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:text="Total Points"
                 android:layout_below="@id/settings_store"
@@ -130,10 +130,10 @@
 
             <TextView
                 android:id="@+id/text_view"
-                android:layout_width="70dp"
+                android:layout_width="30dp"
                 android:layout_height="40dp"
                 android:layout_below="@+id/settings_store"
-                android:layout_alignEnd="@+id/settings_points"
+                android:layout_alignParentEnd="true"
                 android:text=""
                 android:textSize="15sp"
                 android:textStyle="bold"
