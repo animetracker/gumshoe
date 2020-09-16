@@ -33,12 +33,16 @@
                 android:autofillHints="One Piece"
                 android:hint="@string/series_name"
                 android:inputType="text"
+                android:textColorHint="?attr/hintColor"
+                android:textColor="?attr/primaryTextColor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/search_edit_text"
                 android:layout_marginHorizontal="10dp"
                 android:imeOptions="actionSearch"
                 />
+
+
         </LinearLayout>
 
 
