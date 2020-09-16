@@ -34,7 +34,7 @@ import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
-public class SettingsFragment extends Fragment implements RewardedVideoAdListener
+public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
     private Button darkMode;
