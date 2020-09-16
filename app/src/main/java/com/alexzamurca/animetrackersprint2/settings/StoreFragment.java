@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -15,11 +17,11 @@ import com.alexzamurca.animetrackersprint2.R;
 
 public class StoreFragment extends Fragment
 {
-    private NavController navController;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_store, container, false);
     }
 
@@ -28,6 +30,13 @@ public class StoreFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(view);
+        Toolbar toolbar = view.findViewById(R.id.change_profile_toolbar_object);
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        activity.setSupportActionBar(toolbar);
+        if(activity.getSupportActionBar()!=null)
+        {
+            activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 }
