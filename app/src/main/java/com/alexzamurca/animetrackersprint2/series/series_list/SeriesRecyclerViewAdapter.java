@@ -1,6 +1,7 @@
 package com.alexzamurca.animetrackersprint2.series.series_list;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,11 +17,15 @@ import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.R;
-import com.alexzamurca.animetrackersprint2.series.Database.Remove;
+import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
+import com.alexzamurca.animetrackersprint2.Database.Remove;
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,9 +34,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     private static final String TAG = "SeriesRecyclerViewAdapter";
 
     private List<Series> list;
-    private Context context;
+    private transient Context context;
     private OnSeriesListener onSeriesListener;
-    private NavController navController;
+    private transient NavController navController;
 
     public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, NavController navController)
     {
@@ -52,11 +57,10 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     @Override
     public void onBindViewHolder(@NonNull SeriesRecyclerViewAdapter.ViewHolder holder, int position)
     {
-        Log.d(TAG, "SeriesRecyclerViewAdapter onBindViewHolder: called.");
 
         final String title = list.get(position).getTitle();
         String next_episode = "Episode:\n";
-        int next_episode_number = list.get(position).getEpisode_number();
+        int next_episode_number = list.get(position).getNext_episode_number();
         if(next_episode_number < 0)
         {
             next_episode += "N/A";
@@ -66,10 +70,13 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             next_episode += Integer.toString(next_episode_number);
         }
 
-        String air_date = "Releasing:\n" + list.get(position).getAir_date();
+        String air_date = list.get(position).getAir_date();
         String cover_image = list.get(position).getCover_image();
+        int notifications_on = list.get(position).getNotifications_on();
+        String notification_change = list.get(position).getNotification_change();
+        String air_date_change = list.get(position).getAir_date_change();
 
-        // Setting the image
+        // Setting the cover image
         Glide.with(context)
                 .asBitmap()
                 .load(cover_image)
@@ -78,7 +85,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         // Setting the text views
         holder.title.setText(title);
         holder.next_episode.setText(next_episode);
-        holder.air_date.setText(air_date);
+        showAirDate(holder, air_date, air_date_change);
+        sortNotificationStateColours(holder, notifications_on);
+        sortNotificationReminderAndErrorColours(holder, notification_change, air_date_change);
     }
 
     @Override
@@ -139,13 +148,78 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         notifyDataSetChanged();
     }
 
-    public void printList(List<Series> list)
+    private void sortNotificationStateColours(SeriesRecyclerViewAdapter.ViewHolder holder, int notifications_on)
     {
-        Log.d(TAG, "printList: printing");
-        for(Series sr:list)
+        if(notifications_on==1)
         {
-            Log.d(TAG, "||" + sr.getCover_image() + "|" + sr.getTitle() + "|" + sr.getAir_date() + "|" + sr.getEpisode_number() + "||");
+            holder.notifications_off.setImageResource(R.drawable.ic_notifications_on);
+            holder.notifications_off.setTag("notifications_on");
         }
+        else if(notifications_on==0)
+        {
+            holder.notifications_off.setImageResource(R.drawable.ic_notifications_off_blue);
+            holder.notifications_off.setTag("notifications_off");
+        }
+    }
+
+    private void sortNotificationReminderAndErrorColours(SeriesRecyclerViewAdapter.ViewHolder holder, String notification_change, String air_date_change)
+    {
+        if(!notification_change.equals(""))
+        {
+            holder.change_notification_time.setImageResource(R.drawable.ic_timer_sand_blue);
+        }
+        if(!air_date_change.equals(""))
+        {
+            holder.error_wrong_air_date.setImageResource(R.drawable.ic_error_blue);
+        }
+    }
+
+    private void showAirDate(SeriesRecyclerViewAdapter.ViewHolder holder, String air_date, String air_date_change)
+    {
+        String newAirDate;
+        if(!air_date.equals(""))
+        {
+            ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+            if(calendar != null)
+            {
+
+                // Account for the fact that there may not be any change
+                if(!air_date_change.equals(""))
+                {
+                    // get sign, hours, minutes from air_date change
+                    String[] signHoursMinutesArray  = air_date_change.split(":");
+                    Character sign = air_date_change.toCharArray()[0];
+                    int hours = Integer.parseInt(signHoursMinutesArray[0].substring(1));
+                    int minutes = Integer.parseInt(signHoursMinutesArray[1]);
+
+                    if(sign.equals('+'))
+                    {
+                        calendar.add(Calendar.HOUR_OF_DAY, +hours);
+                        calendar.add(Calendar.MINUTE, +minutes);
+                    }
+                    else if(sign.equals('-'))
+                    {
+                        calendar.add(Calendar.HOUR_OF_DAY, -hours);
+                        calendar.add(Calendar.MINUTE, -minutes);
+                    }
+                }
+
+                newAirDate = convertDateToCalendar.timeZoneReverseConvert(context, calendar);
+            }
+            else
+            {
+                newAirDate = "Unknown Date";
+            }
+        }
+        else
+        {
+            newAirDate = "Unknown Date";
+        }
+
+        newAirDate = "Releasing:\n" + newAirDate;
+
+        holder.air_date.setText(newAirDate);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -172,40 +246,55 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             error_wrong_air_date = itemView.findViewById(R.id.error_wrong_air_date_series);
 
             itemView.setOnClickListener(v ->
-                    onSeriesListener.onSeriesClick(list.get(getAdapterPosition()))
+                {
+                    Log.d(TAG, "ViewHolder: onSeriesClick");
+                    onSeriesListener.onSeriesClick(list.get(getAdapterPosition()));
+                }
             );
 
             notifications_off.setOnClickListener(v ->
+                {
+                    if(notifications_off.getTag()=="notifications_off")
                     {
-                        Log.d(TAG, "ViewHolder: notifications_off clicked");
+                        Log.d(TAG, "ViewHolder: onNotificationsOn");
+                        onSeriesListener.onNotificationsOn(list.get(getAdapterPosition()));
+                    }
+                    else if(notifications_off.getTag()=="notifications_on")
+                    {
                         onSeriesListener.onNotificationsOff(list.get(getAdapterPosition()));
                     }
-
+                }
             );
 
-            remove.setOnClickListener(v -> {
-                Log.d(TAG, "ViewHolder: remove clicked");
-
-                RemoveAsync removeAsync = new RemoveAsync();
-                removeAsync.setSelectedSeries(list.get(getAdapterPosition()));
-                removeAsync.execute();
-
-                refreshSeriesList();
-            });
+            remove.setOnClickListener(v ->
+                {
+                    removeSeries(list.get(getAdapterPosition()));
+                }
+            );
 
             change_notification_time.setOnClickListener(v ->
                 {
-                    Log.d(TAG, "ViewHolder: change_notification_time clicked");
+                    Log.d(TAG, "ViewHolder: onChangeNotificationTime");
                     onSeriesListener.onChangeNotificationTime(list.get(getAdapterPosition()));
                 }
             );
 
             error_wrong_air_date.setOnClickListener(v ->
-            {
-                Log.d(TAG, "ViewHolder: error_wrong_air_date clicked");
-                onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
-            });
+                {
+                    Log.d(TAG, "ViewHolder: onErrorWrongAirDate");
+                    onSeriesListener.onErrorWrongAirDate(list.get(getAdapterPosition()));
+                }
+            );
         }
+    }
+
+    public void removeSeries(Series series)
+    {
+        RemoveAsync removeAsync = new RemoveAsync();
+        removeAsync.setSelectedSeries(series);
+        removeAsync.execute();
+
+        refreshSeriesList();
     }
 
     private void refreshSeriesList()
@@ -214,10 +303,11 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     }
 
 
-    public interface OnSeriesListener
+    public interface OnSeriesListener extends Serializable
     {
         void onSeriesClick(Series series);
         void onNotificationsOff(Series series);
+        void onNotificationsOn(Series series);
         void onChangeNotificationTime(Series series);
         void onErrorWrongAirDate(Series series);
     }
@@ -235,7 +325,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         @Override
         protected Void doInBackground(Void... voids)
         {
-            Remove remove = new Remove(0, selectedSeries.getAnilist_id());
+            SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+            String session = sharedPreferences.getString("session", "");
+            Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
             isSeriesRemoved = remove.remove();
             return null;
         }
@@ -247,6 +339,10 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             if(isSeriesRemoved)
             {
                 Toast.makeText(context, "\"" + title +"\" is no longer in your series list.", Toast.LENGTH_SHORT).show();
+
+                // Cancel alarm
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+                notificationAiringChannel.cancel(selectedSeries);
             }
             else
             {

@@ -2,12 +2,10 @@ package com.alexzamurca.animetrackersprint2.series.series_list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,26 +30,37 @@ public class SeriesInfoFragment extends Fragment
         Toolbar toolbar = view.findViewById(R.id.series_info_toolbar_object);
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(activity.getSupportActionBar()!=null)
+        {
+            activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Bundle arguments = getArguments();
-        Series selectedSeries = (Series)arguments.getSerializable("series");
-        descriptionTV = view.findViewById(R.id.individual_series_description);
-        titleTV = view.findViewById(R.id.individual_series_title);
-        coverImage = view.findViewById(R.id.individual_series_cover_image);
+        if(arguments!=null)
+        {
+            Series selectedSeries = (Series)arguments.getSerializable("series");
 
-        String title = selectedSeries.getTitle();
+            if(selectedSeries!=null)
+            {
+                descriptionTV = view.findViewById(R.id.individual_series_description);
+                titleTV = view.findViewById(R.id.individual_series_title);
+                coverImage = view.findViewById(R.id.individual_series_cover_image);
 
-        descriptionTV.setText(selectedSeries.getDescription());
-        titleTV.setText(title);
+                String title = selectedSeries.getTitle();
 
-        String image_directory = selectedSeries.getCover_image();
-        // Setting the image
-        Glide.with(getContext())
-                .asBitmap()
-                .load(image_directory)
-                .into(coverImage);
+                descriptionTV.setText(selectedSeries.getDescription());
+                titleTV.setText(title);
+
+                String image_directory = selectedSeries.getCover_image();
+                // Setting the image
+                Glide.with(requireContext())
+                        .asBitmap()
+                        .load(image_directory)
+                        .into(coverImage);
+            }
+        }
+
         
         
         return view;

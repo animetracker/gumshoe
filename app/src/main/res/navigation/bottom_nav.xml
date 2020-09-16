@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_series_list">
         <action
             android:id="@+id/action_adding_new_series"
-            app:destination="@id/searchFragment"
+            app:destination="@id/addFragment"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
@@ -25,17 +25,29 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"/>
         <action
-            android:id="@+id/action_report_bug_dialog_button_clicked"
-            app:destination="@id/reportBugFragment" />
-        <action
             android:id="@+id/action_dialog_change_time_zone"
-            app:destination="@id/changeTimeZoneFragment" />
+            app:destination="@id/changeTimeZoneFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_dialog_change_air_date"
-            app:destination="@id/changeAirDateFragment" />
+            app:destination="@id/changeAirDateFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_change_notification_reminder"
-            app:destination="@id/changeNotificationReminderFragment" />
+            app:destination="@id/changeNotificationReminderFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+        <argument
+            android:name="Series"
+            app:argType="com.alexzamurca.animetrackersprint2.series.series_list.Series" />
     </fragment>
 
     <fragment
@@ -44,23 +56,25 @@
         android:label="Settings"
         tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_reporting_bug"
-            app:destination="@id/reportBugFragment"
+            android:id="@+id/action_change_time_zone"
+            app:destination="@id/changeTimeZoneFragment"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"/>
         <action
-            android:id="@+id/action_change_time_zone"
-            app:destination="@id/changeTimeZoneFragment" />
+            android:id="@+id/action_settingsFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settingsFragment_to_tutorialActivity"
+            app:destination="@id/tutorialActivity" />
     </fragment>
     <fragment
-        android:id="@+id/reportBugFragment"
-        android:name="com.alexzamurca.animetrackersprint2.settings.ReportBugFragment"
-        android:label="Report A Bug"
-        tools:layout="@layout/fragment_report_bug"/>
-    <fragment
-        android:id="@+id/searchFragment"
+        android:id="@+id/addFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.add_series.AddFragment"
         android:label="Add a new Series"
         tools:layout="@layout/fragment_search">
@@ -81,16 +95,41 @@
         android:id="@+id/changeTimeZoneFragment"
         android:name="com.alexzamurca.animetrackersprint2.ChangeTimeZoneFragment"
         android:label="ChangeTimeZoneFragment"
-        tools:layout="@layout/fragment_change_time_zone"/>
+        tools:layout="@layout/fragment_change_time_zone">
+    </fragment>
     <fragment
         android:id="@+id/changeAirDateFragment"
         android:name="com.alexzamurca.animetrackersprint2.ChangeAirDateFragment"
         android:label="ChangeAirDateFragment"
-        tools:layout="@layout/fragment_change_air_date"/>
+        tools:layout="@layout/fragment_change_air_date">
+        <argument
+            android:name="series"
+            app:argType="com.alexzamurca.animetrackersprint2.series.series_list.Series" />
+    </fragment>
+
     <fragment
         android:id="@+id/changeNotificationReminderFragment"
         android:name="com.alexzamurca.animetrackersprint2.ChangeNotificationReminderFragment"
         android:label="ChangeNotificationReminderFragment"
-        tools:layout="@layout/fragment_change_notification_reminder"/>
+        tools:layout="@layout/fragment_change_notification_reminder">
+
+        <argument
+            android:name="series"
+            app:argType="com.alexzamurca.animetrackersprint2.series.series_list.Series" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.alexzamurca.animetrackersprint2.settings.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
+    <activity
+        android:id="@+id/tutorialActivity"
+        android:name="com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity"
+        android:label="activity_tutorial"
+        tools:layout="@layout/activity_tutorial" >
+    </activity>
+
 
 </navigation>

@@ -25,16 +25,16 @@ public class App extends Application
         NotificationChannel seriesAiringReminderChannel = new NotificationChannel
                 (
                         SERIES_AIRING_REMINDER_ID,
-                        "Channel 1",
-                        NotificationManager.IMPORTANCE_DEFAULT
+                        "Series_Airing_Channel",
+                        NotificationManager.IMPORTANCE_HIGH
                 );
         seriesAiringReminderChannel.setDescription("Channel to notify about airing series releasing");
 
         NotificationChannel settingsChannel = new NotificationChannel
                 (
                         SETTINGS_ID,
-                        "Channel 2",
-                        NotificationManager.IMPORTANCE_LOW
+                        "Settings_Channel",
+                        NotificationManager.IMPORTANCE_HIGH
                 );
         settingsChannel.setDescription("Channel to notify about any settings issues");
 

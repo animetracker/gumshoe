@@ -9,6 +9,13 @@
         layout="@layout/add_series_toolbar"
         android:id="@+id/add_series_toolbar_object"/>
 
+    <ProgressBar
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/add_series_progress_bar"
+        android:indeterminateDrawable="@drawable/progress"
+        android:layout_centerInParent="true" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,35 +59,6 @@
             android:gravity="center_horizontal"
             android:textColor="#000000"/>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:orientation="vertical"
-            android:id="@+id/search_loading_linear_layout">
-
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:id="@+id/search_loading_image"
-                android:layout_marginTop="50dp"
-                android:layout_marginHorizontal="10dp"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:textSize="20sp"
-                android:textColor="#000000"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:id="@+id/search_loading_text"
-                android:layout_marginTop="-60dp"
-                android:layout_marginStart="10dp" />
-
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

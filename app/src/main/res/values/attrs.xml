@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="bg" format="color"/>
+    <attr name="bgh" format="color"/>
+    <attr name="primaryTextColor" format="color"/>
+    <attr name="secondaryTextColor" format="color"/>
+    <attr name="hintColor" format="color"/>
+    <attr name="headerTextColor" format="color"/>
+    <attr name="generalColor" format="color"/>
+    <attr name="generalColor2" format="color"/>
+    <attr name="bottomToolbar" format="color"/>
+</resources>

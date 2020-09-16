@@ -5,26 +5,50 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/gumshoe_logo"
+        android:icon="@mipmap/gumshoe27_circle"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/gumshoe27_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         android:screenOrientation="portrait">
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".login.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".login.RegisterActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".tutorial.TutorialActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <receiver android:name=".notifications.SeriesAiringNotificationReceiver"/>
+        <receiver android:name=".notifications.UpdateSeriesReceiver"/>
+        <receiver android:name=".notifications.UpdateDBReceiver"/>
+
+        <meta-data android:name="com.google.firebase.reminder.default_notification_icon"
+
+            android:resource="@mipmap/gumshoe27_circle" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorWhite" />
     </application>
+
+
 
 </manifest>

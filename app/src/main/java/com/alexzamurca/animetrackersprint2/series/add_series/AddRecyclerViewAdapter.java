@@ -3,9 +3,9 @@ package com.alexzamurca.animetrackersprint2.series.add_series;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,41 +23,45 @@ import androidx.core.text.HtmlCompat;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
-import com.alexzamurca.animetrackersprint2.series.Database.Insert;
+import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerViewAdapter.ViewHolder>
 {
-    private static final String TAG = "RecyclerViewAdapter";
+    private static final String TAG = "AddRecyclerViewAdapter";
 
     private Search search;
     private List<SearchResult> list;
     private String series_name;
     private Context context;
     private RowClickListener rowClickListener;
-    private LoadedListener loadedListener;
     private TextView noSearchResultsTV;
     private View searchActivityView;
     public String title_content;
     private NavController navController;
+    private ProgressBar progressBar;
 
-    public AddRecyclerViewAdapter(Context context, List<SearchResult> list, RowClickListener rowClickListener, LoadedListener loadedListener, TextView noSearchResultsTV, View searchActivityView, NavController navController)
-    {
+    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, NavController navController, ProgressBar progressBar) {
         this.list = list;
         this.context = context;
-        this.rowClickListener  = rowClickListener;
+        this.rowClickListener = rowClickListener;
         this.noSearchResultsTV = noSearchResultsTV;
         this.searchActivityView = searchActivityView;
         this.navController = navController;
-        this.loadedListener = loadedListener;
+        this.progressBar = progressBar;
     }
 
     @NonNull
@@ -72,20 +77,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
         final String title = list.get(position).getTitle();
         String rating = "<b> Average Rating (out of 100): </b>" + list.get(position).getRating();
+        String air_date = "<b> Airs on: </b>" + airDateConvert(list.get(position).getAir_date()) + "<br>" + "<i> *Subject to user location and time zone changes </i>";
+        String next_episode_number = "<b> Next Episode Number: </b>" + list.get(position).getNext_episode_number();
+        String romaji = "<b> Japanese Name: </b>" + list.get(position).getRomaji();
         String description = "<b> Description: </b> <br>" + list.get(position).getDescription();
         String adult_rating = "<b> Adult Series?: </b>" + list.get(position).getIsAdult();
         String start_date = "<b> Release Date: </b>" + list.get(position).getStart_date();
         String active_users = "<b> Popularity: </b>" + list.get(position).getActive_users();
-        String synonyms = "<b> Other Names: </b>";
-        ArrayList<String> synonymList = list.get(position).getSynonyms();
-        for(int i = 0; i < synonymList.size(); i++)
-        {
-            synonyms += synonymList.get(i);
-            if(i != synonymList.size() - 1)
-            {
-                synonyms += ", ";
-            }
-        }
         String trailer_URL = list.get(position).getTrailer_URL();
         String APIStatus = list.get(position).getStatus();
         String status = APIStatus.equals("RELEASING") ? "Airing" : "Not Yet Released";
@@ -100,11 +98,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         // Setting the text views
         holder.title.setText(title);
         holder.average.setText(HtmlCompat.fromHtml(rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.air_date.setText(HtmlCompat.fromHtml(air_date, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.next_episode_number.setText(HtmlCompat.fromHtml(next_episode_number, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.romaji.setText(HtmlCompat.fromHtml(romaji, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.description.setText(HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.adult_rating.setText(HtmlCompat.fromHtml(adult_rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.start_date.setText(HtmlCompat.fromHtml(start_date, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.active_watchers.setText(HtmlCompat.fromHtml(active_users, HtmlCompat.FROM_HTML_MODE_LEGACY));
-        holder.synonyms.setText(HtmlCompat.fromHtml(synonyms, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.status.setText(status);
         holder.expandableLayout.setVisibility(View.GONE);
 
@@ -118,12 +118,9 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public interface RowClickListener
     {
         void onFailedClick();
+        void onSuccessfulClick(Series series);
     }
 
-    public interface LoadedListener
-    {
-        void onFinishedLoading();
-    }
 
 
     @Override
@@ -136,11 +133,13 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         ImageView image;
         ImageView expand_collapse;
         TextView title;
+        TextView air_date;
+        TextView next_episode_number;
+        TextView romaji;
         TextView average;
         TextView description;
         TextView start_date;
         TextView active_watchers;
-        TextView synonyms;
         Button show_trailer;
         TextView adult_rating;
         TextView status;
@@ -154,12 +153,14 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             image = itemView.findViewById(R.id.search_row_cover_image);
             title = itemView.findViewById(R.id.search_row_title);
             expand_collapse = itemView.findViewById(R.id.search_row_expand_collapse);
+            air_date = itemView.findViewById(R.id.search_row_air_date);
+            next_episode_number = itemView.findViewById(R.id.search_row_next_episode_number);
+            romaji = itemView.findViewById(R.id.search_row_romaji);
             average = itemView.findViewById(R.id.search_row_average);
             description = itemView.findViewById(R.id.search_row_description);
             start_date = itemView.findViewById(R.id.search_row_start_date);
             adult_rating = itemView.findViewById(R.id.search_row_adult_rating);
             active_watchers = itemView.findViewById(R.id.search_row_active_users);
-            synonyms = itemView.findViewById(R.id.search_row_synonyms);
             show_trailer = itemView.findViewById(R.id.search_row_trailer_button);
             status = itemView.findViewById(R.id.search_row_status);
 
@@ -208,16 +209,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 if (isConnectedToInternet)
                 {
                     insert(getAdapterPosition());
-
                     Log.d(TAG, "ViewHolder: selected result is stored");
-
-                    navController.navigate(R.id.action_selected_search_result);
-                    /*
-                    //Go series_row_background to previous fragment
-                    FragmentTransaction tr = fragmentManager.beginTransaction();
-                    tr.replace(R.id.fragment_container, new ListFragment());
-                    tr.commit();
-                     */
                 }
                 else
                 {
@@ -232,34 +224,52 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public void searchName(String series_name)
     {
         this.series_name = series_name;
-        Connection connection = new Connection();
-        connection.execute();
+        progressBar.setVisibility(View.VISIBLE);
+        AniListSearch aniListSearch = new AniListSearch();
+        aniListSearch.execute();
     }
 
     public void insert(int position)
     {
+        progressBar.setVisibility(View.VISIBLE);
         DatabaseInsert databaseInsert = new DatabaseInsert();
         databaseInsert.setAdapter_position(position);
         databaseInsert.execute();
     }
 
 
-    public void hideKeyboard()
+    private void hideKeyboard()
     {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchActivityView.getWindowToken(), 0);
     }
 
+    String airDateConvert(String air_date)
+    {
+        Log.d(TAG, "airDateConvert: airDate:" + air_date);
+        if(!air_date.equals(""))
+        {
+            ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+            String[] days = new String[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            String dayOfWeek = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+            int minute = calendar.get(Calendar.MINUTE);
+            String timeOfDay = calendar.get(Calendar.HOUR) + ":" + ((minute<10)?"0":"") + minute + ((calendar.get(Calendar.AM)==1)? "am":"pm");
+            String time = calendar.get(Calendar.HOUR_OF_DAY) + ":" + ((minute<10)?"0":"") + minute;
+            return dayOfWeek + "s at " + timeOfDay + " (or in 24-hour-time: "+ time + ")";
+        }
+        return "Unknown";
+    }
 
     // Network activity is done in the background
-    public class Connection extends AsyncTask<Void, Void, Void>
+    public class AniListSearch extends AsyncTask<Void, Void, Void>
     {
+
         @Override
         protected Void doInBackground(Void... voids) {
-            search = new Search(series_name);
+            search = new Search(series_name, context);
             search.printList(list);
             list = search.getSearchResults();
-            Log.d(TAG, "doInBackground: Changed List");
             search.printList(list);
             noSearchResultsTV.setText("");
             return null;
@@ -268,9 +278,8 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            loadedListener.onFinishedLoading();
+            progressBar.setVisibility(View.GONE);
             notifyDataSetChanged();
-            Log.d("OnPostExecute", "Data set is changed");
             if(list.size() == 0)
             {
                 noSearchResultsTV.setText("No search results for\"" + series_name + "\"");
@@ -295,9 +304,10 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                //HARD CODED USER ID
-                Insert insert = new Insert(0, search.getSearchArray().getJSONObject(adapter_position));
-                Log.d(TAG, "doInBackground: search ARRAY: \n\n\n" + search.getSearchArray().getJSONObject(adapter_position).toString(4) + "\n\n\n");
+                SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+                String session = sharedPreferences.getString("session", "");
+
+                Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session, context);
                 request_success_rating = insert.insert();
             } catch (JSONException e) {
                 Log.d(TAG, "DatabaseInsert: doInBackground: JSONException");
@@ -306,19 +316,34 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Void aVoid)
+        {
+            progressBar.setVisibility(View.GONE);
             if(request_success_rating == 0)
             {
-                Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_LONG).show();
+                try
+                {
+                    JSONObject json = search.getSearchArray().getJSONObject(adapter_position);
+                    SearchResponseToString searchResponseToString = new SearchResponseToString();
+                    rowClickListener.onSuccessfulClick(searchResponseToString.getSeries(json));
+                }
+                catch(JSONException e)
+                {
+                    Log.d(TAG, "onPostExecute: JSONException when trying to call RowOnClickListener.onSuccessfulClick interface - error getting series from search array");
+                }
+
             }
-            if(request_success_rating == 1)
+            else if(request_success_rating == 1)
             {
-                Toast.makeText(context, "\"" + title_content + "\" is already in your series list!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + title_content + "\" is already in your series list!", Toast.LENGTH_LONG).show();
             }
-            if(request_success_rating == 2)
+            else if(request_success_rating == 2)
             {
-                Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_LONG).show();
             }
+
+            navController.navigate(R.id.listFragment);
             super.onPostExecute(aVoid);
         }
     }

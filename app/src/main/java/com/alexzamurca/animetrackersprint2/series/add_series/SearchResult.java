@@ -1,29 +1,32 @@
 package com.alexzamurca.animetrackersprint2.series.add_series;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class SearchResult implements Serializable
 {
     private String title;
+    private String air_date;
+    private int next_episode_number;
+    private String romaji;
     private String rating;
     private String description;
     private boolean isAdult;
     private int active_users;
     private String start_date;
-    private ArrayList<String> synonyms;
     private String trailer_URL;
     private String status;
     private String image_directory;
 
-    public SearchResult(String title, String rating, String description, boolean isAdult, int active_users, String start_date, ArrayList<String> synonyms, String trailer_URL, String status, String image_directory) {
+    public SearchResult(String title, String air_date, int next_episode_number, String romaji, String rating, String description, boolean isAdult, int active_users, String start_date, String trailer_URL, String status, String image_directory) {
         this.title = title;
+        this.air_date = air_date;
+        this.next_episode_number = next_episode_number;
+        this.romaji = romaji;
         this.rating = rating;
         this.description = description;
         this.isAdult = isAdult;
         this.active_users = active_users;
         this.start_date = start_date;
-        this.synonyms = synonyms;
         this.trailer_URL = trailer_URL;
         this.status = status;
         this.image_directory = image_directory;
@@ -61,11 +64,19 @@ public class SearchResult implements Serializable
         return start_date;
     }
 
-    public ArrayList<String> getSynonyms() {
-        return synonyms;
-    }
-
     public String getTrailer_URL() {
         return trailer_URL;
+    }
+
+    public String getAir_date() {
+        return air_date;
+    }
+
+    public int getNext_episode_number() {
+        return next_episode_number;
+    }
+
+    public String getRomaji() {
+        return romaji;
     }
 }

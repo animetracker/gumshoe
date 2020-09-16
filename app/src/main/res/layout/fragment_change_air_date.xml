@@ -10,7 +10,7 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/series_list_floating_add_button"
+        android:id="@+id/change_air_date_save_button"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
@@ -52,6 +52,34 @@
                     android:layout_margin="10dp"
                     android:gravity="center_vertical"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/change_air_date_change_layout"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/change_air_date_change_title"
+                        android:textSize="15sp"
+                        android:textColor="#000000"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/change_air_date_change"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/pleasantBlue"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,6 +102,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:id="@+id/anichart_image"
                         android:src="@drawable/anichart"
                         android:layout_marginStart="10dp"
                         android:layout_weight="33.3"/>
@@ -81,6 +110,7 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="50dp"
+                        android:id="@+id/crunchyroll_image"
                         android:src="@drawable/crunchyroll"
                         android:layout_marginHorizontal="10dp"
                         android:layout_weight="33.3"/>
@@ -88,6 +118,7 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="50dp"
+                        android:id="@+id/livechart_image"
                         android:src="@drawable/livechart"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="33.3" />
@@ -172,6 +203,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/change_air_date_hidden_layout"
                 android:orientation="vertical"
                 android:layout_below="@id/button_layout">
 
@@ -221,13 +253,14 @@
                         android:gravity="center_vertical"
                         android:text="@string/hours"/>
 
-                    <Spinner
+                    <EditText
                         android:layout_width="100dp"
                         android:layout_height="40dp"
-                        android:id="@+id/air_date_hours_spinner"
+                        android:id="@+id/air_date_hours_edit_text"
                         android:layout_alignParentEnd="true"
-                        android:entries="@array/hours_spinner_options"
-                        />
+                        android:autofillHints="@string/positive_num"
+                        android:inputType="number"
+                        android:digits="0123456789" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -244,18 +277,83 @@
                         android:gravity="center_vertical"
                         android:text="@string/minutes"/>
 
-                    <Spinner
+                    <EditText
                         android:layout_width="100dp"
                         android:layout_height="40dp"
-                        android:id="@+id/air_date_minutes_spinner"
+                        android:id="@+id/air_date_minutes_edit_text"
                         android:layout_alignParentEnd="true"
-                        android:entries="@array/minutes_spinner_options"
+                        android:autofillHints="@string/positive_num"
+                        android:inputType="number"
+                        android:digits="0123456789"
                         />
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/change_air_date_error_layout"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/minutes_air_date_warning"
+                        android:orientation="horizontal"
+                        android:layout_marginVertical="5dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginHorizontal="10dp"
+                            android:src="@drawable/ic_error_red"
+                            android:contentDescription="error"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/pleasantRed"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="@string/minutes_error_warning"
+                            android:gravity="center_vertical"
+                            android:layout_gravity="center_vertical"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/hours_air_date_warning"
+                        android:orientation="horizontal"
+                        android:layout_marginVertical="5dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginHorizontal="10dp"
+                            android:src="@drawable/ic_error_red"
+                            android:contentDescription="error"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/pleasantRed"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="@string/hours_error_warning"
+                            android:gravity="center_vertical"
+                            android:layout_gravity="center_vertical"/>
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/c_air_date_identified_new_header"
                     android:textSize="15sp"
                     android:textColor="#000000"
                     android:layout_marginHorizontal="10dp"
@@ -273,7 +371,7 @@
                     android:gravity="center_vertical"/>
 
                 <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:textColor="#000000"
@@ -281,7 +379,7 @@
                     android:layout_marginTop="5dp"
                     android:textStyle="italic"
                     android:gravity="center_vertical"
-                    android:text="@string/tap_the_save_icon_on_the_bottom_right_if_the_new_time_is_correct"/>
+                    android:text="@string/save_suggestion"/>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

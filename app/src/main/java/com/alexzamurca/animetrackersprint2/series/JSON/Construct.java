@@ -11,23 +11,12 @@ import org.json.JSONObject;
 public class Construct 
 {
     private static final String TAG = "Construct";
-    private int user_id;
-    JSONObject unformattedJson;
 
-    public Construct(int user_id, JSONObject unformattedJson)
-    {
-        this.user_id = user_id;
-        this.unformattedJson = unformattedJson;
-    }
-
-    public JSONObject constructFormattedJSON()
+    public JSONObject constructFormattedInsertJSON(JSONObject unformattedJson)
     {
         JSONObject json = new JSONObject();
         try
         {
-            Log.d(TAG, "constructFormattedJSON: INSERTING \n\n\n");
-            json.put("user_id", user_id);
-            Log.d(TAG, "constructFormattedJSON: user_id: " + user_id);
             try
             {
                 String title = unformattedJson.getJSONObject("title").getString("english");
@@ -36,16 +25,13 @@ public class Construct
                     title =  unformattedJson.getJSONObject("title").getString("romaji");
                 }
                 json.put("title", title);
-                Log.d(TAG, "constructFormattedJSON: title: " + title);
             }
             catch(JSONException e)
             {
                 json.put("title", unformattedJson.getJSONObject("title").getString("romaji"));
-                Log.d(TAG, "constructFormattedJSON: title: " + unformattedJson.getJSONObject("title").getString("romaji"));
             }
 
             json.put("anilist_id", unformattedJson.getInt("id"));
-            Log.d(TAG, "constructFormattedJSON: anilist_id:" + unformattedJson.getInt("id"));
 
             try
             {
@@ -69,7 +55,6 @@ public class Construct
                     Log.d(TAG, "constructFormattedJSON: NumberFormatException when trying to convert string to number");
                 }
                 json.put("next_episode_number", episode_number);
-                Log.d(TAG, "constructFormattedJSON: Couldn't get episode number through usual route so we try the hacky way instead");
             }
 
             json.put("status", unformattedJson.getString("status"));
@@ -89,11 +74,11 @@ public class Construct
             json.put("cover_image", unformattedJson.getJSONObject("coverImage").getString("large"));
 
 
-            Log.d(TAG, "constructFormattedJSON: description" + unformattedJson.getString("description"));
             json.put("description", unformattedJson.getString("description"));
 
-            json.put("notification_on", 1);
+            json.put("notifications_on", 1);
             json.put("notification_change" , "");
+            json.put("air_date_change" , "");
 
         }
         catch(JSONException e)
@@ -101,6 +86,137 @@ public class Construct
             Log.d(TAG, "construct: JSONException");
         }
 
+        return json;
+    }
+
+    public JSONObject constructUpdateNotificationsOnJSON(int notifications_on)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("notifications_on", notifications_on);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationsOnJSON: JSONException");
+        }
+        return json;
+    }
+
+    public JSONObject constructUpdateNotificationChangeJSON(String notification_change)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("notification_change", notification_change);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException");
+        }
+        return json;
+    }
+
+    public JSONObject constructUpdateAirDateChangeJSON(String air_date_change)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("air_date_change", air_date_change);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateAirDateChangeJSON: JSONException");
+        }
+        return json;
+    }
+
+    public JSONObject constructUpdateSeriesAiringJSON(int next_episode_number, String air_date, String status)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("next_episode_number", next_episode_number);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, next episode number");
+        }
+
+        try
+        {
+            json.put("air_date", air_date);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, air_date");
+        }
+
+        try
+        {
+            json.put("status", status);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, status");
+        }
+        return json;
+    }
+
+    public JSONObject constructLoginJSON(String email_address, String password)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("email", email_address);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructLoginJSON: JSONException error putting email");
+        }
+
+        try
+        {
+            json.put("password", password);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructLoginJSON: JSONException error putting password");
+        }
+        return json;
+    }
+
+    public JSONObject constructRegisterJSON(String username, String email_address, String password)
+    {
+        JSONObject json = new JSONObject();
+
+        try
+        {
+            json.put("username", username);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructRegisterJSON: JSONException error putting username");
+        }
+
+
+        try
+        {
+            json.put("email", email_address);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructRegisterJSON: JSONException error putting email");
+        }
+
+        try
+        {
+            json.put("password", password);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructRegisterJSON: JSONException error putting password");
+        }
         return json;
     }
 }

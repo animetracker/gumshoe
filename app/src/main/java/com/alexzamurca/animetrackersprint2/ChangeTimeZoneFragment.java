@@ -2,6 +2,7 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,16 +24,21 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
+import com.alexzamurca.animetrackersprint2.Database.SelectTable;
+import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.eclipse.jetty.util.ajax.JSON;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class ChangeTimeZoneFragment extends Fragment
 {
@@ -66,8 +72,12 @@ public class ChangeTimeZoneFragment extends Fragment
         // Set toolbar and add home (back button)
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
-        Objects.requireNonNull(activity.getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(activity.getSupportActionBar()!=null)
+        {
+            activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
 
         // Set text views and button
         newTimeTV = view.findViewById(R.id.change_time_zone_time_new_time);
@@ -121,20 +131,43 @@ public class ChangeTimeZoneFragment extends Fragment
     // DONT FORGET TO IMPLEMENT SHARED PREFERENCES FOR TIMEZONE
     private void showTimeZoneAndTime()
     {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("time_zone", Context.MODE_PRIVATE);
+
+        boolean negative_sign = sharedPreferences.getBoolean("is_sign_negative", false);
+        int hours_change = sharedPreferences.getInt("hours_to_change", 0);
+        int minutes_change = sharedPreferences.getInt("minutes_to_change", 0);
+        Log.d(TAG, "showTimeZoneAndTime: hours:" + hours_change);
+        Log.d(TAG, "showTimeZoneAndTime: minutes:" + minutes_change);
+
         // Find time zone
         TimeZone timeZone = TimeZone.getDefault();
-
+        boolean daylight = timeZone.inDaylightTime(new Date());
+        String timeZoneText = timeZone.getDisplayName(daylight, TimeZone.LONG);
+        if(!(hours_change==0 && minutes_change==0))
+        {
+            timeZoneText += " (and ";
+            if(negative_sign)
+            {
+                timeZoneText += "-";
+            }
+            else
+            {
+                timeZoneText += "+";
+            }
+            timeZoneText += Integer.toString(hours_change);
+            timeZoneText += ":";
+            timeZoneText += Integer.toString(minutes_change);
+            timeZoneText += ")";
+        }
+        timeZoneTV.setText(timeZoneText);
         // Set texts
-        timeZoneTV.setText(timeZone.getDisplayName(false, TimeZone.SHORT));
-
         setupOldTimeTV(timeZone);
-
         setupNewTimeTV(timeZone);
     }
 
-    private Calendar initCalendarFromPreferences(Calendar calendar)
+    private Calendar adjustLocalTimeZoneChanges(Calendar calendar)
     {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("time_zone", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("time_zone", Context.MODE_PRIVATE);
 
         boolean negative_sign = sharedPreferences.getBoolean("is_sign_negative", false);
         int hours_change = sharedPreferences.getInt("hours_to_change", 0);
@@ -158,8 +191,7 @@ public class ChangeTimeZoneFragment extends Fragment
     private String constructOldDateString(TimeZone timeZone)
     {
         Calendar calendar = Calendar.getInstance(timeZone);
-        calendar = initCalendarFromPreferences(calendar);
-
+        calendar = adjustLocalTimeZoneChanges(calendar);
         return String.format("%02d" , calendar.get(Calendar.HOUR_OF_DAY))+":"+
                 String.format("%02d" , calendar.get(Calendar.MINUTE))+" "+
                 String.format("%02d" , calendar.get(Calendar.DAY_OF_MONTH))+"/"+
@@ -170,8 +202,7 @@ public class ChangeTimeZoneFragment extends Fragment
     private String constructNewDateString(TimeZone timeZone)
     {
         Calendar calendar = Calendar.getInstance(timeZone);
-        calendar = initCalendarFromPreferences(calendar);
-
+        calendar = adjustLocalTimeZoneChanges(calendar);
         // Add hours, minutes
         if(isSignNegative)
         {
@@ -231,7 +262,6 @@ public class ChangeTimeZoneFragment extends Fragment
     private void setupHoursSpinner(View view)
     {
         Spinner spinner = view.findViewById(R.id.time_zone_hours_spinner);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -312,23 +342,29 @@ public class ChangeTimeZoneFragment extends Fragment
             int hours_change = sharedPreferences.getInt("hours_to_change", 0);
             int minutes_change = sharedPreferences.getInt("minutes_to_change", 0);
 
-            JSONObject json = findDifference(negative_sign, hours_change, minutes_change);
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            try
+            if(hasTimeZoneChanged(negative_sign, hours_change, minutes_change))
             {
-                editor.putBoolean("is_sign_negative", json.getBoolean("is_sign_negative"));
-                editor.putInt("hours_to_change", json.getInt("hours_to_change"));
-                editor.putInt("minutes_to_change", json.getInt("minutes_to_change"));
-            }
-            catch (JSONException e)
-            {
-                Log.d(TAG, "setupSaveButton: JSON exception when trying to get sign/hours/minutes from formed JSON");
+                JSONObject json = findDifference(negative_sign, hours_change, minutes_change);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                try
+                {
+                    editor.putBoolean("is_sign_negative", json.getBoolean("is_sign_negative"));
+                    editor.putInt("hours_to_change", json.getInt("hours_to_change"));
+                    editor.putInt("minutes_to_change", json.getInt("minutes_to_change"));
+                }
+                catch (JSONException e)
+                {
+                    Log.d(TAG, "setupSaveButton: JSON exception when trying to get sign/hours/minutes from formed JSON");
+                }
+
+                editor.apply();
+
+                getTableAndResetAlarms();
+
+                Toast.makeText(getContext(), "Your changes have been saved!", Toast.LENGTH_LONG).show();
             }
 
-            editor.apply();
-
-            Toast.makeText(getContext(), "Your changes have been saved!", Toast.LENGTH_LONG).show();
             navController.navigateUp();
         });
     }
@@ -380,5 +416,54 @@ public class ChangeTimeZoneFragment extends Fragment
             Log.d(TAG, "findDifference: json exception when trying to form sign/hours/minutes json");
         }
         return json;
+    }
+
+    private boolean hasTimeZoneChanged(boolean negative_sign, int hours_change, int minutes_change)
+    {
+        return !(negative_sign==isSignNegative && hours_change == hours_to_change && minutes_change == minutes_to_change);
+    }
+
+    private void getTableAndResetAlarms()
+    {
+        GetTableAsync getTableAsync = new GetTableAsync();
+        getTableAsync.execute();
+    }
+
+    private void resetAllAlarms(List<Series> currentList)
+    {
+        ResetAlarmForSeries resetAlarmForSeries = new ResetAlarmForSeries(getContext());
+        for(int i = 0; i < currentList.size(); i++)
+        {
+            resetAlarmForSeries.reset(currentList.get(i));
+        }
+    }
+
+    public class GetTableAsync extends AsyncTask<Void, Void, Void>
+    {
+        private boolean wasRequestSuccessful;
+        private ArrayList<Series> list;
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
+            String session = sharedPreferences.getString("session", "");
+            SelectTable selectTable = new SelectTable(session, getContext());
+            list = selectTable.getSeriesList();
+            wasRequestSuccessful = selectTable.getWasRequestSuccessful();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            if(wasRequestSuccessful)
+            {
+                resetAllAlarms(list);
+            }
+
+            super.onPostExecute(aVoid);
+        }
     }
 }

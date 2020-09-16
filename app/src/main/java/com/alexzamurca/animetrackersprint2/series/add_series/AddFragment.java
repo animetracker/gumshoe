@@ -9,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,14 +23,18 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
+import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
-import com.bumptech.glide.Glide;
+import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class AddFragment extends Fragment implements NoConnectionDialog.TryAgainListener, AddRecyclerViewAdapter.RowClickListener, AddRecyclerViewAdapter.LoadedListener {
+public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.RowClickListener {
 
     private static final String TAG = "SearchActivity";
     private FragmentActivity mContext;
@@ -41,8 +44,7 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     private AddRecyclerViewAdapter adapter;
     private EditText editText;
     private View globalView;
-    private TextView loadingTV;
-    private ImageView loadingImage;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -54,11 +56,11 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         Toolbar toolbar = globalView.findViewById(R.id.add_series_toolbar_object);
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        loadingTV = globalView.findViewById(R.id.search_loading_text);
-        loadingImage = globalView.findViewById(R.id.search_loading_image);
+        if(activity.getSupportActionBar()!=null)
+        {
+            activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         return globalView;
     }
@@ -68,6 +70,8 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         editText = view.findViewById(R.id.search_edit_text);
+        progressBar = view.findViewById(R.id.add_series_progress_bar);
+        progressBar.setVisibility(View.GONE);
         initImageBitmaps();
         initRecyclerView();
 
@@ -75,11 +79,6 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
         {
             if (actionId == EditorInfo.IME_ACTION_SEARCH)
             {
-                // Show loading - (credit: http://www.lowgif.com/view.html)
-                Glide.with(getContext())
-                        .load(R.drawable.loading)
-                        .into(loadingImage);
-                loadingTV.setText("Loading...");
                 searchProcess();
             }
             return false;
@@ -115,9 +114,6 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     public void newInstance()
     {
         NoConnectionDialog dialog = new NoConnectionDialog();
-        Bundle args = new Bundle();
-        args.putSerializable("data", this);
-        dialog.setArguments(args);
         dialog.show(mContext.getSupportFragmentManager(), "NoCustomDialog");
     }
 
@@ -130,10 +126,10 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new AddRecyclerViewAdapter(getContext(), list, this, this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController);
+        adapter = new AddRecyclerViewAdapter(list, getContext(), this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController, progressBar);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     }
 
     @Override
@@ -144,30 +140,22 @@ public class AddFragment extends Fragment implements NoConnectionDialog.TryAgain
     }
 
     @Override
-    public void OnSuccessfulClick()
-    {
-        Toast.makeText(getContext(), "Search has refreshed", Toast.LENGTH_SHORT).show();
-        navController.navigate(R.id.searchFragment);
-        /*
-        FragmentTransaction tr = mContext.getSupportFragmentManager().beginTransaction();
-        tr.replace(R.id.fragment_container, new SearchFragment());
-        tr.commit();
-         */
-
-    }
-
-    @Override
     public void onFailedClick()
     {
         newInstance();
     }
 
     @Override
-    public void onFinishedLoading()
+    public void onSuccessfulClick(Series series)
     {
-        Log.d(TAG, "onFinishedLoading: hiding loading");
-        // Hide loading
-        Glide.with(getContext()).clear(loadingImage);
-        loadingTV.setText("");
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series, getContext());
+        Calendar calendar = adjustAirDate.getCalendar();
+        if(calendar!=null)
+        {
+            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
+            notificationAiringChannel.setNotification(series, calendar);
+        }
+
+        navController.navigate(R.id.listFragment);
     }
 }

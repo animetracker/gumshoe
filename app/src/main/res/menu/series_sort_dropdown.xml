@@ -4,21 +4,12 @@
     <item
         android:id="@+id/sort_alphabetical"
         android:title="@string/alphabetical_up"
-        android:checkable="true"/>
+        android:checkable="true"
+        />
 
     <item
         android:id="@+id/sort_reverse_alphabetical"
         android:title="@string/alphabetical_down"
-        android:checkable="true"/>
-
-    <item
-        android:id="@+id/sort_favourite_down"
-        android:title="@string/favourite_up"
-        android:checkable="true"/>
-
-    <item
-        android:id="@+id/sort_favourite_up"
-        android:title="@string/favourite_down"
         android:checkable="true"/>
 
     <item

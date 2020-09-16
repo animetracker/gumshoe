@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GumShoe</string>
+    <string name="app_name">Gumshoe</string>
     <string name="series_list">Series List</string>
     <string name="list">List</string>
     <string name="profile">Profile</string>
@@ -26,6 +26,10 @@
     <string name="send">send</string>
     <string name="remove">Remove</string>
     <string name="hide">Hide</string>
+    <string name="reportBugDiscord">To report a bug, you need to join our gumshoe discord server. You can join by clicking the button below.</string>
+    <string name="support_devs">Support the developers</string>
+
+
 
     <string-array name="layout_drop_down_options">
         <item>List</item>
@@ -62,7 +66,6 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="change">Change</string>
     <string name="change_color">Change Color</string>
     <string name="change_notification_reminder">Change Notification Reminder</string>
     <string name="search">Search</string>
@@ -87,6 +90,7 @@
     <string name="login">Login</string>
     <string name="change_air_date">Change\nAir Date</string>
     <string name="change_time_zone">Change\nTime Zone</string>
+    <string name="time_zone_change">Change Time Zone</string>
     <string name="_30">30</string>
     <string name="_45">45</string>
     <string name="this_is_the_time_zone_we_identified_for_your_region">This is the Time Zone we identified for your region:</string>
@@ -99,8 +103,7 @@
     <string name="hours">Hours:</string>
     <string name="minutes">Minutes:</string>
     <string name="meaning_the_new_time_in_your_region_is">Meaning the time when you entered this screen is:</string>
-    <string name="tap_the_save_icon_on_the_bottom_right_if_the_new_time_is_correct">Tap the save icon on the bottom right if the new time is correct</string>
-    <string name="tap_the_save_icon_on_the_bottom_right_if_the_new_change_is_correct">Tap the save icon on the bottom right if the new change is correct</string>
+    <string name="save_suggestion">Tap the save icon on the bottom right to save changes. If the button is missing, it means there is some error with your inputs.</string>
 
     <string name="change_air_date_question">Is our air date above the same as the air date provided by the external sources?</string>
     <string name="wrong_air_date_explanation">We unfortunately rely on an API to tell us when a series airs. When the API is wrong only your feedback and changes can help. Please check your series’ air data using either one of the below release calendars and fill in the changes you want to apply to the current air date, if it is incorrect.</string>
@@ -116,4 +119,25 @@
     <string name="positive_num">positive num</string>
     <string name="metric">Metric:</string>
     <string name="before_after">Before/After:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_tutorial">TutorialActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+
+    <string name="register">REGISTER</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="signup_login_hint">Already have an account? Sign In</string>
+    <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+    <string name="minutes_error_warning">Minutes cannot be set to more than 60, use hours instead!</string>
+    <string name="hours_error_warning">Hours cannot be set to more than 23, use days instead!</string>
+    <string name="days_error_warning">Days cannot be set to more than 6!</string>
+    <string name="watch_ads_gain_points"><![CDATA[Watch Ads & gain points]]></string>
 </resources>
