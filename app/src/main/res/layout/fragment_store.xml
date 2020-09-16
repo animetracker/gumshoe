@@ -50,18 +50,7 @@
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ash"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="?attr/primaryTextColor"/>
-
-               <Button
-                   android:layout_width="60dp"
-                   android:layout_height="wrap_content"
-                   android:layout_gravity="center"
-                   android:text="200"
-                   android:background="@color/greyishWhite"
-                   android:drawableRight="@drawable/ic_baseline_monetization_on_24"
-                   />
+                    android:src="@drawable/ic_profile" />
 
             </LinearLayout>
 
