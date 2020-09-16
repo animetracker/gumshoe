@@ -24,7 +24,6 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
-import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
@@ -166,7 +165,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
             expandableLayout = itemView.findViewById(R.id.series_row_expandable_layout);
             moreInfoLayout = itemView.findViewById(R.id.series_row_expandable_possibly_null);
-
             
             expand_collapse.setOnClickListener(v -> 
             {
@@ -195,8 +193,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                     expand_collapse.setImageResource(R.drawable.ic_arrow_down);
                 }
             });
-
-
 
             itemView.setOnClickListener(v -> 
             {
@@ -236,7 +232,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         databaseInsert.setAdapter_position(position);
         databaseInsert.execute();
     }
-
 
     private void hideKeyboard()
     {

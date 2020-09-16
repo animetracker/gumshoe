@@ -6,12 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="5dp"
-    android:background="@drawable/series_row_buttons_background">
+    android:background="?attr/bg">
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@drawable/series_row_background">
+        android:background="?attr/seriesRowBg">
 
         <ImageView
             android:layout_width="140dp"
@@ -39,13 +39,9 @@
                 android:minWidth="250dp"
                 android:minHeight="70dp"
                 android:gravity="center_vertical"
-                android:textColor="#000000"
+                android:textColor="?attr/primaryTextColor"
                 android:textSize="30sp"
                 android:textStyle="bold" />
-
-
-
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -57,7 +53,7 @@
                     android:id="@+id/nextEpisode_series"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:textColor=" #641e16 "
+                    android:textColor="?attr/seriesEpisodeTextColor"
                     android:textSize="15sp"
                     android:layout_marginStart="3dp"
                     android:layout_alignParentStart="true"
@@ -67,7 +63,7 @@
                     android:id="@+id/airDate_series"
                     android:layout_width="125dp"
                     android:layout_height="match_parent"
-                    android:textColor="#283747"
+                    android:textColor="?attr/seriesReleaseTextColor"
                     android:textSize="15sp"
                     android:layout_marginEnd="10dp"
                     android:gravity="center_horizontal|bottom"
@@ -84,7 +80,8 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        android:weightSum="100">
+        android:weightSum="100"
+        android:background="?attr/seriesRowButtonBg">
 
         <ImageView
             android:layout_width="36dp"

@@ -12,7 +12,8 @@
         android:id="@+id/bottom_nav_view"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
-        android:background="?android:attr/windowBackground"/>
+        android:background="?android:attr/windowBackground"
+        app:labelVisibilityMode="unlabeled"/>
 
     <fragment
         android:layout_width="match_parent"
