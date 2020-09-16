@@ -1,7 +1,6 @@
 package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -285,6 +284,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         // Then check the selected item
         item.setChecked(true);
 
+
     }
 
     private void sortListAccordingToSelection(int selection)
@@ -499,6 +499,22 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
         updateNotificationsOffAsync.setSelectedSeries(series);
         updateNotificationsOffAsync.execute();
+    }
+
+    // Main Activity -> List Fragment communication
+    public static ListFragment getInstance()
+    {
+        return new ListFragment();
+    }
+
+    public void OnIncorrectAirDateAction(Series series)
+    {
+        doOnSeriesError(series);
+    }
+
+    public void OnNotificationsOffAction(Series series)
+    {
+        doOnNotificationsOff(series);
     }
 
     private void setNotificationsForAllSeriesInList()

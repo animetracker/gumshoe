@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     String URL = "https://gumshoe.digital15.net/series/findTitle/";
     SharedPreferences sharedPreferences;
     Boolean firstTime;
+    ListFragment listFragmentInstance;
 
     private NavController navController;
     @Override
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //performNotificationButtonCheck();
+        listFragmentInstance  = ListFragment.getInstance();
 
         Intent intent = getIntent();
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
@@ -68,6 +69,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        performNotificationButtonCheck();
+    }
+
     private void initBottomNavigation()
     {
         // add a check to see if logged in or not before opening main activity
@@ -83,7 +91,6 @@ public class MainActivity extends AppCompatActivity
         return super.onSupportNavigateUp();
     }
 
-
     private void performNotificationButtonCheck()
     {
         Log.d(TAG, "performNotificationButtonCheck: is intent from MainActivity null?:" + (getIntent() != null));
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity
             {
                 Log.d(TAG, "performNotificationButtonCheck: notifications off boolean is true");
                 Series series = (Series) notificationsOffBundle.getSerializable("series");
-                doOnNotificationsOff(series);
+                listFragmentInstance.OnNotificationsOffAction(series);
             }
         }
 
@@ -112,32 +119,9 @@ public class MainActivity extends AppCompatActivity
             {
                 Log.d(TAG, "performNotificationButtonCheck: incorrect air date boolean is true");
                 Series series = (Series) incorrectAirDateBundle.getSerializable("series");
-                doOnSeriesError(series);
+                listFragmentInstance.OnIncorrectAirDateAction(series);
             }
         }
-    }
-
-    private void doOnNotificationsOff(Series series)
-    {
-        NotificationsOffDialog dialog = new NotificationsOffDialog();
-        // need to pass series
-        Bundle args = new Bundle();
-        args.putSerializable("series", series);
-        Log.d(TAG, "onNotificationsOff: about to add onResponseListener");
-        dialog.setArguments(args);
-        dialog.show(getSupportFragmentManager(), "notificationsOffDialog");
-    }
-
-    private void doOnSeriesError(Series series)
-    {
-        IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
-        Bundle args = new Bundle();
-        Log.d(TAG, "onErrorWrongAirDate: about to add incorrect air date listener");
-        //args.putSerializable("incorrectAirDateListener", ListFragment.this);
-
-        args.putSerializable("series", series);
-        dialog.setArguments(args);
-        dialog.show(getSupportFragmentManager(), "incorrectAirDateDialog");
     }
 
 
@@ -175,6 +159,8 @@ public class MainActivity extends AppCompatActivity
             setAlarmsForList.run();
         }
     }
+
+
 
     private void checkIfSessionExpired()
     {

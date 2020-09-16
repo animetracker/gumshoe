@@ -247,13 +247,18 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     String airDateConvert(String air_date)
     {
         Log.d(TAG, "airDateConvert: airDate:" + air_date);
-        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
-        String[] days = new String[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-        String dayOfWeek = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
-        String timeOfDay = calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + ((calendar.get(Calendar.AM)==1)? "am":"pm");
-        String time = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
-        return dayOfWeek + "s at " + timeOfDay + " (or in 24-hour-time: "+ time + ")";
+        if(!air_date.equals(""))
+        {
+            ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+            String[] days = new String[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            String dayOfWeek = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+            int minute = calendar.get(Calendar.MINUTE);
+            String timeOfDay = calendar.get(Calendar.HOUR) + ":" + ((minute<10)?"0":"") + minute + ((calendar.get(Calendar.AM)==1)? "am":"pm");
+            String time = calendar.get(Calendar.HOUR_OF_DAY) + ":" + ((minute<10)?"0":"") + minute;
+            return dayOfWeek + "s at " + timeOfDay + " (or in 24-hour-time: "+ time + ")";
+        }
+        return "Unknown";
     }
 
     // Network activity is done in the background

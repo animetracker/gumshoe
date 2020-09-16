@@ -4,7 +4,8 @@
     <item
         android:id="@+id/sort_alphabetical"
         android:title="@string/alphabetical_up"
-        android:checkable="true"/>
+        android:checkable="true"
+        />
 
     <item
         android:id="@+id/sort_reverse_alphabetical"

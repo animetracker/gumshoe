@@ -58,4 +58,32 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="bg">#ebececec</item>
+        <item name="bgh">#FFFFFF</item>
+        <item name="primaryTextColor">#DE000000</item>
+        <item name="headerTextColor">@android:color/holo_blue_light</item>
+        <item name="generalColor">#DE000000</item>bottomToolbar
+        <item name="bottomToolbar">@android:color/secondary_text_light</item>
+    </style>
+
+    <style name="AppThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="bgh">#212121</item>
+        <item name="bg">#303030</item>
+        <item name="primaryTextColor">#FFFFFF</item>
+        <item name="headerTextColor">@android:color/holo_red_dark</item>
+        <item name="generalColor">#DEDDDBDB</item>
+        <item name="bottomToolbar">@android:color/secondary_text_light</item>
+    </style>
+
 </resources>
