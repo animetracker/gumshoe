@@ -104,12 +104,25 @@
                 android:background="@color/brightBlue"
                 android:gravity="center"/>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/settings_tutorial"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/settings_store"
+                android:text="Store"
+                android:textColor=" #000 "
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:background="@color/brightBlue"
+                android:gravity="center"/>
+
             <TextView
                 android:id="@+id/settings_support_devs_header"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:text="@string/support_devs"
-                android:layout_below="@id/settings_tutorial"
+                android:layout_below="@id/settings_store"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold"
                 android:textSize="20sp"
