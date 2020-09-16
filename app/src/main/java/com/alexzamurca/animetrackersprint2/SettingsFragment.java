@@ -122,7 +122,7 @@ public class SettingsFragment extends Fragment
                 editor.putBoolean("dark_mode_on", false);
 
                 BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
-                bottomNavigationView.setBackgroundResource(R.color.whiteCardColor);
+                bottomNavigationView.setBackgroundResource(R.color.lightmode);
 
             }
             editor.apply();

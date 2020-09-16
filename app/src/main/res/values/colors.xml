@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimary">#2e86c1</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="pleasantBlue"> #2e86c1</color>
@@ -9,8 +9,9 @@
     <color name="greyishWhite">#e5e7e9 </color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorTransparentWhite">#cccccc</color>
-    <color name="lol">#121212</color>
+    <color name="nonselect">#121212</color>
     <color name="darkmode">#222831</color>
+    <color name="lightmode">#aab7b8</color>
 
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>
