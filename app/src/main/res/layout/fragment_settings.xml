@@ -55,12 +55,25 @@
                 android:textSize="15sp"
                 android:gravity="center"/>
 
+            <Button
+                android:id="@+id/settings_change_profile"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@id/settings_change_time_zone_button"
+                android:background="#CDDC39"
+                android:text="Change Profile"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:gravity="center"/>
+
             <TextView
                 android:id="@+id/settings_general_header"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:text="@string/general"
-                android:layout_below="@id/settings_change_time_zone_button"
+                android:layout_below="@id/settings_change_profile"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold"
                 android:textSize="20sp"
@@ -114,7 +127,7 @@
                 android:textColor=" #000 "
                 android:textStyle="bold"
                 android:textSize="15sp"
-                android:background="@color/brightBlue"
+                android:background="#6C7BCF"
                 android:gravity="center"/>
 
             <TextView
