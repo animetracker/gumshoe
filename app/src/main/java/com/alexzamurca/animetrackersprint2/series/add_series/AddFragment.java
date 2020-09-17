@@ -148,7 +148,7 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     @Override
     public void onSuccessfulClick(Series series)
     {
-        AdjustAirDate adjustAirDate = new AdjustAirDate(series, getContext());
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
         Calendar calendar = adjustAirDate.getCalendar();
         if(calendar!=null)
         {

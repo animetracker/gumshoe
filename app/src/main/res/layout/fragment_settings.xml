@@ -42,23 +42,10 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/settings_change_time_zone_button"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/settings_dark_mode_button"
-                android:layout_marginBottom="5dp"
-                android:background="@color/peachy"
-                android:gravity="center"
-                android:text="@string/time_zone_change"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <Button
                 android:id="@+id/settings_change_profile"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/settings_change_time_zone_button"
+                android:layout_below="@id/settings_dark_mode_button"
                 android:layout_marginBottom="5dp"
                 android:background="#CDDC39"
                 android:gravity="center"

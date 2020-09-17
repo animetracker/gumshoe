@@ -2,7 +2,6 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,7 +40,6 @@ import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
-import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
 import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
@@ -54,7 +52,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.OnSeriesListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
+public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.OnSeriesListener, NotificationsOffDialog.OnResponseListener{
     private static final String TAG = "ListFragment";
     private transient FragmentActivity mContext;
 
@@ -79,8 +77,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     {
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
         recyclerViewListener = this;
-
-        performNotificationButtonCheck();
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
@@ -185,45 +181,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             popup.show();
         }
         return true;
-    }
-
-    private void performNotificationButtonCheck()
-    {
-        Intent activityIntent = requireActivity().getIntent();
-        Log.d(TAG, "performNotificationButtonCheck: is intent from MainActivity null?:" + (activityIntent != null));
-
-        if(activityIntent!=null)
-        {
-            // Try get notifications off bundle
-            Bundle notificationsOffBundle = activityIntent.getBundleExtra("bundle_notifications_off");
-            if(notificationsOffBundle!=null)
-            {
-                Log.d(TAG, "performNotificationButtonCheck: received a notification off bundle, meaning a notification's \"turn notifications off\" button was pressed");
-                boolean notificationsOff = notificationsOffBundle.getBoolean("notifications_off");
-                if(notificationsOff)
-                {
-                    Log.d(TAG, "performNotificationButtonCheck: notifications off boolean is true");
-                    Series series = (Series) notificationsOffBundle.getSerializable("series");
-                    doOnNotificationsOff(series);
-                    notificationsOffBundle.putBoolean("notifications_off", false);
-                }
-            }
-
-            // Try get notifications off bundle
-            Bundle incorrectAirDateBundle = activityIntent.getBundleExtra("bundle_incorrect_air_date");
-            if(incorrectAirDateBundle!=null)
-            {
-                Log.d(TAG, "performNotificationButtonCheck: received a incorrect air date bundle, meaning a notification's \"incorrect air date\" button was pressed");
-                boolean incorrectAirDate = incorrectAirDateBundle.getBoolean("incorrect_air_date");
-                if(incorrectAirDate)
-                {
-                    Log.d(TAG, "performNotificationButtonCheck: incorrect air date boolean is true");
-                    Series series = (Series) incorrectAirDateBundle.getSerializable("series");
-                    doOnSeriesError(series);
-                    incorrectAirDateBundle.putBoolean("incorrect_air_date", false);
-                }
-            }
-        }
     }
 
     private void checkConnectionAndInitList()
@@ -416,7 +373,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         doOnNotificationsOff(series);
     }
 
-    private NotificationsOffDialog doOnNotificationsOff(Series series)
+    private void doOnNotificationsOff(Series series)
     {
         NotificationsOffDialog dialog = new NotificationsOffDialog();
         // need to pass series
@@ -425,8 +382,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         Log.d(TAG, "onNotificationsOff: about to add onResponseListener");
         args.putSerializable("onResponseListener",this);
         dialog.setArguments(args);
-        return dialog;
-
+        dialog.show(mContext.getSupportFragmentManager(), "NotificationsOffDialog");
     }
 
     @Override
@@ -457,29 +413,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onErrorWrongAirDate(Series series)
     {
-        doOnSeriesError(series);
-    }
-
-    private void doOnSeriesError(Series series)
-    {
-        IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
-        Bundle args = new Bundle();
-        Log.d(TAG, "onErrorWrongAirDate: about to add incorrect air date listener");
-        args.putSerializable("incorrectAirDateListener", ListFragment.this);
-        args.putSerializable("series", series);
-        dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
-    }
-
-    @Override
-    public void OnChangeTimeZoneClick()
-    {
-        mNavController.navigate(R.id.action_dialog_change_time_zone);
-    }
-
-    @Override
-    public void OnChangeAirDateClick(Series series)
-    {
         // If series has an air date
         if(!series.getAir_date().equals(""))
         {
@@ -501,22 +434,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         updateNotificationsOffAsync.execute();
     }
 
-    // Main Activity -> List Fragment communication
-    public static ListFragment getInstance()
-    {
-        return new ListFragment();
-    }
-
-    public void OnIncorrectAirDateAction(Series series)
-    {
-        doOnSeriesError(series);
-    }
-
-    public NotificationsOffDialog OnNotificationsOffAction(Series series)
-    {
-        return doOnNotificationsOff(series);
-    }
-
     private void setNotificationsForAllSeriesInList()
     {
         List<Series> currentList = adapter.getList();
@@ -532,7 +449,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         String air_date = series.getAir_date();
         Log.d(TAG, "adjustAndSetNotifications: air date " + air_date);
 
-        AdjustAirDate adjustAirDate = new AdjustAirDate(series, getContext());
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
         Calendar calendar = adjustAirDate.getCalendar();
 
         // If calendar returned it means all is good and notifications can be set
@@ -681,7 +598,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 Toast.makeText(getContext(), "Failed to turn notifications on for \"" + title +"\", notifications are still off.", Toast.LENGTH_LONG).show();
             }
 
-            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries, getContext());
+            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries);
             Calendar calendar = adjustAirDate.getCalendar();
 
             if(calendar!=null)

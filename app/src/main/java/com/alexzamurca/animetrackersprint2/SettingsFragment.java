@@ -85,12 +85,6 @@ public class SettingsFragment extends Fragment implements RewardedVideoAdListene
             navController.navigate(R.id.action_settingsFragment_to_tutorialActivity);
         });
 
-        Button changeTimeZone = view.findViewById(R.id.settings_change_time_zone_button);
-        changeTimeZone.setOnClickListener(view1 ->
-
-            navController.navigate(R.id.action_change_time_zone)
-        );
-
         Button logOut = view.findViewById(R.id.settings_logout);
         logOut.setOnClickListener(view14 ->
             openLogin()

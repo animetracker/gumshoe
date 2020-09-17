@@ -83,8 +83,8 @@ public class SetNewNotification
         if(!air_date.equals("") && notificationsOn)
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
-            Log.d(TAG, "adjustAirDate: calendar before changes for " + series.getTitle() + " is " + convertDateToCalendar.timeZoneReverseConvert(context, calendar));
+            Calendar calendar = convertDateToCalendar.convert(air_date);
+            Log.d(TAG, "adjustAirDate: calendar before changes for " + series.getTitle() + " is " + convertDateToCalendar.reverseConvert(calendar));
 
             String air_date_change = series.getAir_date_change();
             String notification_change = series.getNotification_change();
@@ -150,7 +150,7 @@ public class SetNewNotification
                     }
                 }
             }
-            Log.d(TAG, "adjustAirDate: calendar after changes for " + series.getTitle() + " is " + convertDateToCalendar.timeZoneReverseConvert(context, calendar));
+            Log.d(TAG, "adjustAirDate: calendar after changes for " + series.getTitle() + " is " + convertDateToCalendar.reverseConvert(calendar));
             return calendar;
 
         }

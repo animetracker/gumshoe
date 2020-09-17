@@ -22,7 +22,7 @@ public class ResetAlarmForSeries
         notificationAiringChannel.cancel(series);
 
         // Set new alarm
-        AdjustAirDate adjustAirDate = new AdjustAirDate(series, context);
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
         Calendar calendar = adjustAirDate.getCalendar();
 
         // If calendar returned it means all is good and notifications can be set

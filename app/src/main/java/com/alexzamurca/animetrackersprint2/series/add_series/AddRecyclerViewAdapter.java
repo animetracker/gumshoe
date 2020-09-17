@@ -245,7 +245,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         if(!air_date.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+            Calendar calendar = convertDateToCalendar.convert(air_date);
             String[] days = new String[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             String dayOfWeek = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
             int minute = calendar.get(Calendar.MINUTE);

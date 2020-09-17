@@ -100,18 +100,12 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
         activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 1, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent notificationsOffIntent = new Intent(context, NotificationsOffActionReceiver.class);
-        Bundle bundle =  new Bundle();
-        bundle.putSerializable("series", series);
-        notificationsOffIntent.putExtra("bundle", bundle);
-        PendingIntent notificationsOffActionIntent = PendingIntent.getBroadcast(context, 2, notificationsOffIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         Intent incorrectAirDateIntent = new Intent(context, MainActivity.class);
         incorrectAirDateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bundle args =  new Bundle();
-        bundle.putBoolean("incorrect_air_date", true);
-        bundle.putSerializable("series", series);
-        notificationsOffIntent.putExtra("bundle_incorrect_air_date", args);
+        args.putBoolean("incorrect_air_date", true);
+        args.putSerializable("series", series);
+        incorrectAirDateIntent.putExtra("bundle_incorrect_air_date", args);
         PendingIntent incorrectAirDateActionIntent = PendingIntent.getActivity(context, -2, incorrectAirDateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new  NotificationCompat.Builder(context, SERIES_AIRING_REMINDER_ID)
@@ -123,7 +117,6 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
                 .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .addAction(R.drawable.ic_notifications_on, "Turn notifications Off", notificationsOffActionIntent)
                 .addAction(R.drawable.ic_error_black, "Incorrect Air Date", incorrectAirDateActionIntent)
                 .build();
     }

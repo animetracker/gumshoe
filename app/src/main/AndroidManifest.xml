@@ -40,7 +40,6 @@
         <receiver android:name=".notifications.SeriesAiringNotificationReceiver"/>
         <receiver android:name=".notifications.UpdateSeriesReceiver"/>
         <receiver android:name=".notifications.UpdateDBReceiver"/>
-        <receiver android:name=".notifications.NotificationsOffActionReceiver"/>
 
         <meta-data android:name="com.google.firebase.reminder.default_notification_icon"
 

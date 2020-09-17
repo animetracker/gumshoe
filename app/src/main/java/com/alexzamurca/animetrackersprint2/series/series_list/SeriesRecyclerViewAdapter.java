@@ -188,7 +188,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         if(!air_date.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+            Calendar calendar = convertDateToCalendar.convert(air_date);
             if(calendar != null)
             {
 
@@ -213,7 +213,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                     }
                 }
 
-                newAirDate = convertDateToCalendar.timeZoneReverseConvert(context, calendar);
+                newAirDate = convertDateToCalendar.reverseConvert(calendar);
             }
             else
             {
