@@ -1,5 +1,7 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,11 +30,20 @@ import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+
 
 public class SettingsFragment extends Fragment
 {
@@ -40,7 +51,7 @@ public class SettingsFragment extends Fragment
     private Button darkMode;
     private NavController navController;
     private FragmentActivity mContext;
-    RewardedVideoAd rewardedVideoAd;
+    RewardedAd rewardedAd;
     TextView textView;
     Button button;
     int value=0;
@@ -133,85 +144,89 @@ public class SettingsFragment extends Fragment
         );
 
         //RewardAd
+        MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        rewardedAd = new RewardedAd(mContext,
+                "ca-app-pub-3940256099942544/5224354917");
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+
         textView=view.findViewById(R.id.text_view);
         button =view.findViewById(R.id.settings_ads);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (rewardedVideoAd.isLoaded())
-                {
-                    rewardedVideoAd.show();
+            public void onClick(View v) {
+                if (rewardedAd.isLoaded()) {
+                    Activity activityContext = mContext;
+                    RewardedAdCallback adCallback = new RewardedAdCallback() {
+                        @Override
+                        public void onRewardedAdOpened() {
+                            // Ad opened.
+                        }
+
+                        @Override
+                        public void onRewardedAdClosed() {
+                            // Ad closed.
+                        }
+
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
+                            value=value+50;
+                            textView.setText(""+value);
+                        }
+
+                        @Override
+                        public void onRewardedAdFailedToShow(AdError adError) {
+                            // Ad failed to display.
+                        }
+                    };
+                    rewardedAd.show(activityContext, adCallback);
+                } else {
+                    Log.d("TAG", "The rewarded ad wasn't loaded yet.");
                 }
+                onRewardedAdClosed();
             }
         });
-
-        MobileAds.initialize(mContext, "ca-app-pub-3940256099942544~3347511713");
-        rewardedVideoAd= MobileAds.getRewardedVideoAdInstance(mContext);
-        rewardedVideoAd.setRewardedVideoAdListener(this);
-        loadAds();
-
         return view;
     }
 
+    public RewardedAd createAndLoadRewardedAd() {
+        RewardedAd rewardedAd = new RewardedAd(mContext,
+                "ca-app-pub-3940256099942544/5224354917");
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+            }
 
-    //adwork
-    private void loadAds() {
-        rewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
-                new AdRequest.Builder().build());
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+        return rewardedAd;
     }
 
-    @Override
-    public void onRewardedVideoAdLoaded() {
-    }
-
-    @Override
-    public void onRewardedVideoAdOpened() {
-    }
-
-    @Override
-    public void onRewardedVideoStarted() {
-    }
-
-    @Override
-    public void onRewardedVideoAdClosed() {
-        loadAds();
-    }
-
-    @Override
-    public void onRewarded(RewardItem rewardItem) {
-        value=value+50;
-        textView.setText(""+value);
-    }
-
-    @Override
-    public void onRewardedVideoAdLeftApplication() {
-    }
-
-    @Override
-    public void onRewardedVideoAdFailedToLoad(int i) {
-    }
-
-    @Override
-    public void onRewardedVideoCompleted() {
-    }
-
-    @Override
-    public void onResume() {
-        rewardedVideoAd.resume(mContext);
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        rewardedVideoAd.pause(mContext);
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        rewardedVideoAd.destroy(mContext);
-        super.onDestroy();
+    //@Override
+    public void onRewardedAdClosed() {
+        this.rewardedAd = createAndLoadRewardedAd();
     }
 
     @Override
