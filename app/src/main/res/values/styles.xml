@@ -13,6 +13,7 @@
         <item name="seriesRowButtonBg">#FFFFFF</item>
         <item name="seriesButtonColor">#787373</item>
         <item name="primaryTextColor">#DE000000</item>
+        <item name="hintColor">#B0B0B0</item>
         <item name="headerTextColor">@android:color/holo_blue_light</item>
         <item name="generalColor">#DE000000</item>
         <item name="bottomToolbar">@android:color/secondary_text_light</item>
@@ -31,6 +32,7 @@
         <item name="seriesRowButtonBg">#606060</item>
         <item name="seriesButtonColor">#C1BBBB</item>
         <item name="primaryTextColor">#FFFFFF</item>
+        <item name="hintColor">#B0B0B0</item>
         <item name="headerTextColor">@android:color/holo_red_dark</item>
         <item name="generalColor">#DEDDDBDB</item>
         <item name="bottomToolbar">@android:color/secondary_text_light</item>
