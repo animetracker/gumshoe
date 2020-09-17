@@ -74,7 +74,7 @@
         android:id="@+id/addFragment"
         android:name="com.alexzamurca.animetrackersprint2.series.add_series.AddFragment"
         android:label="Add a new Series"
-        tools:layout="@layout/fragment_search">
+        tools:layout="@layout/fragment_add">
         <action
             android:id="@+id/action_selected_search_result"
             app:destination="@id/listFragment"

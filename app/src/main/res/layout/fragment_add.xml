@@ -38,6 +38,8 @@
                 android:id="@+id/search_edit_text"
                 android:layout_marginHorizontal="10dp"
                 android:imeOptions="actionSearch"
+                android:textColor="?attr/primaryTextColor"
+                android:textColorHint="?attr/primaryTextColor"
                 />
         </LinearLayout>
 
@@ -58,7 +60,7 @@
             android:textSize="30sp"
             android:textStyle="bold"
             android:gravity="center_horizontal"
-            android:textColor="#000000"/>
+            android:textColor="?attr/primaryTextColor"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

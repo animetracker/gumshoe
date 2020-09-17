@@ -39,7 +39,7 @@ public class NotificationAiringChannel
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         airDateCalendar = convertDateToCalendar.convert(air_date);
-        airDateCalendar.add(Calendar.MINUTE, 30);
+        airDateCalendar.add(Calendar.MINUTE, 1);
     }
 
     private void compareCalendars()

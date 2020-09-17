@@ -97,16 +97,8 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
 
         // Intent to reopen app on notification click
         Intent activityIntent = new Intent(context, MainActivity.class);
-        activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 1, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent incorrectAirDateIntent = new Intent(context, MainActivity.class);
-        incorrectAirDateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Bundle args =  new Bundle();
-        args.putBoolean("incorrect_air_date", true);
-        args.putSerializable("series", series);
-        incorrectAirDateIntent.putExtra("bundle_incorrect_air_date", args);
-        PendingIntent incorrectAirDateActionIntent = PendingIntent.getActivity(context, -2, incorrectAirDateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new  NotificationCompat.Builder(context, SERIES_AIRING_REMINDER_ID)
                 .setSmallIcon(R.drawable.ic_gumshoe_notification_fill_icon)
@@ -117,7 +109,6 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
                 .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .addAction(R.drawable.ic_error_black, "Incorrect Air Date", incorrectAirDateActionIntent)
                 .build();
     }
 

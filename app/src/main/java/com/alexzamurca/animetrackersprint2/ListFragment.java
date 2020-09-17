@@ -112,7 +112,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         return mView;
     }
 
-
     @Override
     public void onAttach(@NonNull Context context)
     {
@@ -412,6 +411,11 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     @Override
     public void onErrorWrongAirDate(Series series)
+    {
+       doOnSeriesError(series);
+    }
+
+    void doOnSeriesError(Series series)
     {
         // If series has an air date
         if(!series.getAir_date().equals(""))

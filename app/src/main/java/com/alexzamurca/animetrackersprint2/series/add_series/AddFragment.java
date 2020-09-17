@@ -50,7 +50,7 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        globalView = inflater.inflate(R.layout.fragment_search, container, false);
+        globalView = inflater.inflate(R.layout.fragment_add, container, false);
         Log.d(TAG, "onCreate: started");
 
         Toolbar toolbar = globalView.findViewById(R.id.add_series_toolbar_object);
