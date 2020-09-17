@@ -13,6 +13,4 @@
     <attr name="seriesRowBg" format="color"/>
     <attr name="seriesRowButtonBg" format="color"/>
     <attr name="seriesButtonColor" format="color"/>
-    <attr name="seriesEpisodeTextColor" format="color"/>
-    <attr name="seriesReleaseTextColor" format="color"/>
 </resources>
