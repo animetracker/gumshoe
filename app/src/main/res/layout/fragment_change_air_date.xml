@@ -19,7 +19,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/change_air_date_toolbar_object"
         android:background="?attr/bg">
 
@@ -244,6 +244,8 @@
                         android:id="@+id/air_date_sign_spinner"
                         android:layout_alignParentEnd="true"
                         android:entries="@array/sign_spinner_options"
+                        android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 
@@ -269,7 +271,9 @@
                         android:layout_alignParentEnd="true"
                         android:autofillHints="@string/positive_num"
                         android:inputType="number"
-                        android:digits="0123456789" />
+                        android:digits="0123456789"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/primaryTextColor"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -295,6 +299,8 @@
                         android:autofillHints="@string/positive_num"
                         android:inputType="number"
                         android:digits="0123456789"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/primaryTextColor"
                         />
                 </RelativeLayout>
 

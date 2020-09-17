@@ -29,7 +29,7 @@ public class NoDatabaseDialog extends DialogFragment
                 {
                     dialog_report_bug dialogReportBug = new dialog_report_bug();
                     dialogReportBug.show(requireActivity().getSupportFragmentManager(), "dialog_report_button");
-                    //openDiscord();
+                    openDiscord();
                 }
 
         );

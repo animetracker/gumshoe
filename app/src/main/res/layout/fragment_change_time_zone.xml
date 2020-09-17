@@ -22,7 +22,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/change_time_zone_toolbar_object"
         android:background="?attr/bg">
 
@@ -164,6 +164,7 @@
                         android:entries="@array/sign_spinner_options"
                         android:layout_marginEnd="10dp"
                         android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 
@@ -190,6 +191,7 @@
                         android:entries="@array/hours_spinner_options"
                         android:layout_marginEnd="10dp"
                         android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 
@@ -216,6 +218,7 @@
                         android:entries="@array/minutes_spinner_options"
                         android:layout_marginEnd="10dp"
                         android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 

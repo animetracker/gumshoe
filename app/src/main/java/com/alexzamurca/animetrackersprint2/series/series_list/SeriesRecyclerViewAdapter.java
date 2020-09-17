@@ -132,7 +132,15 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         protected void publishResults(CharSequence constraint, FilterResults results)
         {
             list.clear();
-            list.addAll((Collection<? extends Series>) results.values);
+            try
+            {
+                list.addAll((Collection<? extends Series>) results.values);
+            }
+            catch (ClassCastException e)
+            {
+
+            }
+
             notifyDataSetChanged();
         }
     };

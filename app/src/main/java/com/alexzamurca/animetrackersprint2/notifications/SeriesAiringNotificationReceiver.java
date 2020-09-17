@@ -100,13 +100,11 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
         activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 1, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent notificationsOffIntent = new Intent(context, MainActivity.class);
-        notificationsOffIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent notificationsOffIntent = new Intent(context, NotificationsOffActionReceiver.class);
         Bundle bundle =  new Bundle();
-        bundle.putBoolean("notifications_off", true);
         bundle.putSerializable("series", series);
-        notificationsOffIntent.putExtra("bundle_notifications_off", bundle);
-        PendingIntent notificationsOffActionIntent = PendingIntent.getActivity(context, 2, notificationsOffIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationsOffIntent.putExtra("bundle", bundle);
+        PendingIntent notificationsOffActionIntent = PendingIntent.getBroadcast(context, 2, notificationsOffIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent incorrectAirDateIntent = new Intent(context, MainActivity.class);
         incorrectAirDateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

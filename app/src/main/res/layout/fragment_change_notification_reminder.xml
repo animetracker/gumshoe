@@ -22,7 +22,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/change_notification_reminder_toolbar_object"
         android:background="?attr/bg">
 
@@ -138,16 +138,17 @@
                         android:text="@string/quantity"/>
 
                     <EditText
+                        android:id="@+id/change_notification_reminder_quantity"
                         android:layout_width="130dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/change_notification_reminder_quantity"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
                         android:autofillHints="positive num"
-                        android:inputType="number"
                         android:digits="0123456789"
                         android:hint="@string/positive_num"
+                        android:inputType="number"
                         android:textColor="?attr/primaryTextColor"
-                        android:layout_marginEnd="10dp"/>
+                        android:textColorHint="?attr/primaryTextColor" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -173,6 +174,7 @@
                         android:entries="@array/metric_spinner_options"
                         android:layout_marginEnd="10dp"
                         android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 
@@ -199,6 +201,7 @@
                         android:entries="@array/before_after_spinner_options"
                         android:layout_marginEnd="10dp"
                         android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 

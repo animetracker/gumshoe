@@ -150,6 +150,7 @@ public class ChangeAirDateFragment extends Fragment
         assert getArguments() != null;
         ChangeNotificationReminderFragmentArgs args = ChangeNotificationReminderFragmentArgs.fromBundle(getArguments());
         series = args.getSeries();
+        Log.d(TAG, "initSeries: series airdate " + series.getAir_date());
 
         setVariables();
     }

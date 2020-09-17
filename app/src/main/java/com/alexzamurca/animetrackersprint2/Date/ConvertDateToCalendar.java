@@ -62,28 +62,6 @@ public class ConvertDateToCalendar
         return calendar;
     }
 
-    public Calendar noTimeZoneConvert(String dateInFormat)
-    {
-        Calendar calendar = Calendar.getInstance();
-        if(!dateInFormat.equals(""))
-        {
-            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy H:mm");
-            try
-            {
-                Date date = sdf.parse(dateInFormat);
-                assert date != null;
-                calendar.setTime(date);
-                return calendar;
-            }
-            catch(ParseException e)
-            {
-                Log.d(TAG, "getDate: ParseException when converting Date type to Calendar type");
-                return null;
-            }
-        }
-        return null;
-    }
-
     public String timeZoneReverseConvert(Context context, Calendar calendar)
     {
         if(calendar!=null)

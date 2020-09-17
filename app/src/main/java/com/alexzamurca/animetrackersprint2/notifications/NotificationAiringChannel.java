@@ -38,7 +38,7 @@ public class NotificationAiringChannel
     private void constructUpdateCalendar(String air_date)
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        airDateCalendar = convertDateToCalendar.noTimeZoneConvert(air_date);
+        airDateCalendar = convertDateToCalendar.timeZoneConvert(mContext, air_date);
         airDateCalendar.add(Calendar.MINUTE, 30);
     }
 

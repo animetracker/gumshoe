@@ -386,7 +386,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         //args.putSerializable("data", this);
         dialog.setArguments(args);
         dialog.show(mContext.getSupportFragmentManager(), "NoConnectionDialog");
-
     }
 
     private void initRecyclerView()
@@ -401,8 +400,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     {
         progressBar.setVisibility(View.VISIBLE);
 
-        MySQLConnection mySQLConnection = new MySQLConnection();
-        mySQLConnection.execute();
+        GettingTableAsync gettingTableAsync = new GettingTableAsync();
+        gettingTableAsync.execute();
     }
 
     @Override
@@ -417,7 +416,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         doOnNotificationsOff(series);
     }
 
-    private void doOnNotificationsOff(Series series)
+    private NotificationsOffDialog doOnNotificationsOff(Series series)
     {
         NotificationsOffDialog dialog = new NotificationsOffDialog();
         // need to pass series
@@ -426,7 +425,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         Log.d(TAG, "onNotificationsOff: about to add onResponseListener");
         args.putSerializable("onResponseListener",this);
         dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+        return dialog;
+
     }
 
     @Override
@@ -512,9 +512,9 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         doOnSeriesError(series);
     }
 
-    public void OnNotificationsOffAction(Series series)
+    public NotificationsOffDialog OnNotificationsOffAction(Series series)
     {
-        doOnNotificationsOff(series);
+        return doOnNotificationsOff(series);
     }
 
     private void setNotificationsForAllSeriesInList()
@@ -546,17 +546,17 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
-    public class MySQLConnection extends AsyncTask<Void, Void, Void>
+    public class GettingTableAsync extends AsyncTask<Void, Void, Void>
     {
         private boolean wasRequestSuccessful;
         private ArrayList<Series> tempList;
+        private SelectTable selectTable;
 
         @Override
         protected Void doInBackground(Void... voids)
         {
-            SelectTable selectTable = new SelectTable(session, getContext());
+            selectTable = new SelectTable(session, getContext());
             tempList = selectTable.getSeriesList();
-            wasRequestSuccessful = selectTable.getWasRequestSuccessful();
 
             return null;
         }
@@ -564,6 +564,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         @Override
         protected void onPostExecute(Void aVoid)
         {
+
+
             // Hide loading
             progressBar.setVisibility(View.GONE);
 
@@ -583,6 +585,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 list.addAll(tempList);
             }
 
+            wasRequestSuccessful = selectTable.getWasRequestSuccessful();
             // Database connection dialog
             if(wasRequestSuccessful)
             {
