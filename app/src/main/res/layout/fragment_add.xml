@@ -39,12 +39,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/search_edit_text"
                 android:layout_marginHorizontal="10dp"
-                android:imeOptions="actionSearch"
-                android:textColor="?attr/primaryTextColor"
-                android:textColorHint="?attr/primaryTextColor"
-                />
-
-
+                android:imeOptions="actionSearch" />
         </LinearLayout>
 
 

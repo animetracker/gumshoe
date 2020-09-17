@@ -34,16 +34,9 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-
 
 public class SettingsFragment extends Fragment
 {
@@ -52,6 +45,7 @@ public class SettingsFragment extends Fragment
     private NavController navController;
     private FragmentActivity mContext;
     RewardedAd rewardedAd;
+    RewardedAd tempLoadedAd;
     TextView textView;
     Button button;
     int value=0;
@@ -103,9 +97,8 @@ public class SettingsFragment extends Fragment
 
         Button store = view.findViewById(R.id.settings_store);
         store.setOnClickListener(view15 ->
-        {
-            navController.navigate(R.id.action_to_store);
-        });
+            navController.navigate(R.id.action_to_store)
+        );
 
         // This method is used to create the dark mode using the button
         darkMode= view.findViewById(R.id.settings_dark_mode_button);
@@ -138,10 +131,7 @@ public class SettingsFragment extends Fragment
         );
 
         //RewardAd
-        MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        MobileAds.initialize(mContext, initializationStatus -> {
         });
         rewardedAd = new RewardedAd(mContext,
                 "ca-app-pub-3940256099942544/5224354917");
@@ -162,39 +152,46 @@ public class SettingsFragment extends Fragment
         textView=view.findViewById(R.id.text_view);
         button =view.findViewById(R.id.settings_ads);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (rewardedAd.isLoaded()) {
-                    Activity activityContext = mContext;
-                    RewardedAdCallback adCallback = new RewardedAdCallback() {
-                        @Override
-                        public void onRewardedAdOpened() {
-                            // Ad opened.
-                        }
+        button.setOnClickListener(v ->
+        {
+            if (rewardedAd.isLoaded())
+            {
+                Activity activityContext = mContext;
+                RewardedAdCallback adCallback = new RewardedAdCallback() {
+                    @Override
+                    public void onRewardedAdOpened()
+                    {
+                        // Ad opened.
+                        tempLoadedAd = createAndLoadRewardedAd();
+                    }
 
-                        @Override
-                        public void onRewardedAdClosed() {
-                            // Ad closed.
+                    @Override
+                    public void onRewardedAdClosed()
+                    {
+                        // Ad closed.
+                        if(tempLoadedAd!=null)
+                        {
+                            rewardedAd = tempLoadedAd;
+                            tempLoadedAd = null;
                         }
+                    }
 
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
-                            value=value+50;
-                            textView.setText(""+value);
-                        }
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
+                        value=value+50;
+                        textView.setText(""+value);
+                    }
 
-                        @Override
-                        public void onRewardedAdFailedToShow(AdError adError) {
-                            // Ad failed to display.
-                        }
-                    };
-                    rewardedAd.show(activityContext, adCallback);
-                } else {
-                    Log.d("TAG", "The rewarded ad wasn't loaded yet.");
-                }
-                onRewardedAdClosed();
+                    @Override
+                    public void onRewardedAdFailedToShow(AdError adError) {
+                        // Ad failed to display.
+                    }
+                };
+                rewardedAd.show(activityContext, adCallback);
+            }
+            else {
+                Log.d("TAG", "The rewarded ad wasn't loaded yet.");
             }
         });
         return view;
@@ -216,11 +213,6 @@ public class SettingsFragment extends Fragment
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
         return rewardedAd;
-    }
-
-    //@Override
-    public void onRewardedAdClosed() {
-        this.rewardedAd = createAndLoadRewardedAd();
     }
 
     @Override
@@ -250,8 +242,6 @@ public class SettingsFragment extends Fragment
             Intent myIntent = new Intent(Intent.ACTION_SEND);
             myIntent.setType("text/plain");
             String shareBody = "Your body here";
-           // String shareSub = "Your Subject here";
-           // myIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
             myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
             startActivity((Intent.createChooser(myIntent, "Share using")));
         }
