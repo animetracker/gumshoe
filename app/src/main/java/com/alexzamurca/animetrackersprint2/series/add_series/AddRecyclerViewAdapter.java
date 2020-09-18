@@ -24,6 +24,7 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
@@ -227,10 +228,28 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
     public void insert(int position)
     {
-        progressBar.setVisibility(View.VISIBLE);
-        DatabaseInsert databaseInsert = new DatabaseInsert();
-        databaseInsert.setAdapter_position(position);
-        databaseInsert.execute();
+        CheckConnection checkConnection = new CheckConnection(context);
+        if(checkConnection.isConnected())
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            DatabaseInsert databaseInsert = new DatabaseInsert();
+            databaseInsert.setAdapter_position(position);
+            databaseInsert.execute();
+        }
+        else
+        {
+            Log.d(TAG, "insert: no internet connection");
+
+            UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
+            updateFailedNotification.showNotification();
+
+            SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putBoolean("offline", true);
+            Log.d(TAG, "insert: app set to offline mode");
+            editor.apply();
+        }
     }
 
     private void hideKeyboard()

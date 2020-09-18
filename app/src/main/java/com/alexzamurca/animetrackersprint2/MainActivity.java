@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
@@ -127,8 +128,18 @@ public class MainActivity extends AppCompatActivity
 
     private void checkIfSessionExpired()
     {
-        CheckSessionAsync checkSessionAsync = new CheckSessionAsync();
-        checkSessionAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(this);
+        boolean isConnected = checkConnection.isConnected();
+        if(isConnected)
+        {
+            Log.d(TAG, "checkIfSessionExpired: checking as have internet connection");
+            CheckSessionAsync checkSessionAsync = new CheckSessionAsync();
+            checkSessionAsync.execute();
+        }
+        else
+        {
+            Log.d(TAG, "checkIfSessionExpired: no internet connection to check session");
+        }
     }
 
 
