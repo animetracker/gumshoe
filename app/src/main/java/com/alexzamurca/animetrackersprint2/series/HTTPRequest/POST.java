@@ -2,11 +2,15 @@ package com.alexzamurca.animetrackersprint2.series.HTTPRequest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.dialog.NoDatabaseDialog;
 
 import org.json.JSONObject;
 
@@ -18,7 +22,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -37,7 +40,8 @@ public class POST
         this.context = context;
     }
 
-    public POST(String url, Context context, JSONObject json_to_send) {
+    public POST(String url, Context context, JSONObject json_to_send)
+    {
         this.url = url;
         this.context = context;
         this.json_to_send = json_to_send;
@@ -45,34 +49,43 @@ public class POST
 
     public boolean sendSimpleRequest()
     {
-        Log.d(TAG, "sendSimpleRequest: to URL: " + url);
-        try
+        boolean isConnected = checkConnection();
+        if(isConnected)
         {
-            // Establish connection / request
-            URL url_object = new URL(url);
-            HttpURLConnection urlConnection = (HttpURLConnection) url_object.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setDoOutput(true);
-
-            urlConnection.connect();
-
-            InputStream is;
-            if (urlConnection.getResponseCode() == 200)
+            Log.d(TAG, "sendSimpleRequest: to URL: " + url);
+            try
             {
-                is = urlConnection.getInputStream();
-            }
-            else
-            {
-                is = urlConnection.getErrorStream();
-            }
-            response = getStringFromInputStream(is);
+                // Establish connection / request
+                URL url_object = new URL(url);
+                HttpURLConnection urlConnection = (HttpURLConnection) url_object.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
 
-            return urlConnection.getResponseCode()==200;
+                urlConnection.connect();
+
+                InputStream is;
+                if (urlConnection.getResponseCode() == 200)
+                {
+                    is = urlConnection.getInputStream();
+                }
+                else
+                {
+                    is = urlConnection.getErrorStream();
+                }
+                response = getStringFromInputStream(is);
+
+                return urlConnection.getResponseCode()==200;
+            }
+            catch(Exception e)
+            {
+                Log.e("CATCH", e.toString());
+                connectionError();
+            }
         }
-        catch(Exception e)
+        else
         {
-            Log.e("CATCH", e.toString());
-            connectionError();
+            newDialogInstance();
+            //Toast.makeText(context, "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
@@ -84,44 +97,53 @@ public class POST
 
     public String sendRequest()
     {
-        Log.d(TAG, "sendRequest: sent to URL: " + url);
-        try
+        boolean isConnected = checkConnection();
+        if(isConnected)
         {
-            // Establish connection / request
-            URL url_object = new URL(url);
-            HttpURLConnection urlConnection = (HttpURLConnection) url_object.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestProperty("Accept", "application/json");
-            urlConnection.setDoOutput(true);
-
-            // Send request
-            OutputStream os = urlConnection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-
-            Log.d(TAG, "sendRequest: " + json_to_send.toString());
-
-            writer.write(json_to_send.toString());
-            writer.flush();
-            writer.close();
-            urlConnection.connect();
-
-            InputStream is;
-
-            if (urlConnection.getResponseCode() == 200)
+            Log.d(TAG, "sendRequest: sent to URL: " + url);
+            try
             {
-                is = urlConnection.getInputStream();
+                // Establish connection / request
+                URL url_object = new URL(url);
+                HttpURLConnection urlConnection = (HttpURLConnection) url_object.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+                urlConnection.setDoOutput(true);
+
+                // Send request
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+
+                Log.d(TAG, "sendRequest: " + json_to_send.toString());
+
+                writer.write(json_to_send.toString());
+                writer.flush();
+                writer.close();
+                urlConnection.connect();
+
+                InputStream is;
+
+                if (urlConnection.getResponseCode() == 200)
+                {
+                    is = urlConnection.getInputStream();
+                }
+                else
+                {
+                    is = urlConnection.getErrorStream();
+                }
+                return getStringFromInputStream(is);
             }
-            else
+            catch(Exception e)
             {
-                is = urlConnection.getErrorStream();
+                Log.e("CATCH", e.toString());
+                connectionError();
             }
-            return getStringFromInputStream(is);
         }
-        catch(Exception e)
+        else
         {
-            Log.e("CATCH", e.toString());
-            connectionError();
+            newDialogInstance();
+            //Toast.makeText(context, "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
         }
         return "Response returned nothing";
     }
@@ -167,6 +189,23 @@ public class POST
 
         editor.putBoolean("db_connect_problem", true);
         editor.apply();
+    }
+
+    private boolean checkConnection()
+    {
+        CheckConnection checkConnection = new CheckConnection(context);
+        return checkConnection.isConnected();
+    }
+
+    public void newDialogInstance()
+    {
+        NoConnectionDialog dialog = new NoConnectionDialog();
+        Bundle args = new Bundle();
+        // Making sure we do not get an IOException
+        Log.d(TAG, "newDialogInstance: about to add NoConnectionDialog.TryAgainListener");
+        //args.putSerializable("data", this);
+        dialog.setArguments(args);
+        dialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
     }
 
 }

@@ -27,8 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
-import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
-import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.ArrayList;

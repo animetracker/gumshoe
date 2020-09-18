@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.dialog;
+package com.alexzamurca.animetrackersprint2.dialog;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

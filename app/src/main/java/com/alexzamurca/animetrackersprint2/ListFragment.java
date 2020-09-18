@@ -3,7 +3,6 @@ package com.alexzamurca.animetrackersprint2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,10 +40,7 @@ import com.alexzamurca.animetrackersprint2.Database.UpdateNotificationsOn;
 import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.algorithms.DateSortSeriesList;
-import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
-import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
-import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
-import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
+import com.alexzamurca.animetrackersprint2.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -96,9 +92,9 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
         swipeRefreshLayout = mView.findViewById(R.id.series_swipe_refresh_layout);
 
-        swipeRefreshLayout.setOnRefreshListener(this::checkConnectionAndInitList);
+        swipeRefreshLayout.setOnRefreshListener(this::initList);
 
-        checkConnectionAndInitList();
+        initList();
 
         FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
         // Search button
@@ -183,21 +179,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             popup.show();
         }
         return true;
-    }
-
-    private void checkConnectionAndInitList()
-    {
-        CheckConnection checkConnection = new CheckConnection(getContext());
-        boolean isConnected = checkConnection.isConnected();
-        if (isConnected)
-        {
-            initList();
-        }
-        else
-        {
-            newDialogInstance();
-            Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setupDropDownOnClick(PopupMenu popup)
@@ -335,18 +316,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         mNavController.navigate(R.id.action_showing_series_info, arguments);
     }
 
-
-    public void newDialogInstance()
-    {
-        NoConnectionDialog dialog = new NoConnectionDialog();
-        Bundle args = new Bundle();
-        // Making sure we do not get an IOException
-        Log.d(TAG, "newDialogInstance: about to add NoConnectionDialog.TryAgainListener");
-        //args.putSerializable("data", this);
-        dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "NoConnectionDialog");
-    }
-
     private void initRecyclerView()
     {
         RecyclerView recyclerView = requireView().findViewById(R.id.series_recycler_view);
@@ -472,7 +441,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
     public class GettingTableAsync extends AsyncTask<Void, Void, Void>
     {
-        private boolean wasRequestSuccessful;
         private ArrayList<Series> tempList;
         private SelectTable selectTable;
 
@@ -509,25 +477,15 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 list.addAll(tempList);
             }
 
-            wasRequestSuccessful = selectTable.getWasRequestSuccessful();
-            // Database connection dialog
-            if(wasRequestSuccessful)
-            {
 
-                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mNavController);
+            adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mNavController);
 
-                initRecyclerView();
+            initRecyclerView();
 
-                // Get sort state from SharedPreferences
-                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-                int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
-                sortListAccordingToSelection(selection);
-            }
-            else
-            {
-                NoDatabaseDialog dialog = new NoDatabaseDialog();
-                dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
-            }
+            // Get sort state from SharedPreferences
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+            sortListAccordingToSelection(selection);
 
             super.onPostExecute(aVoid);
         }

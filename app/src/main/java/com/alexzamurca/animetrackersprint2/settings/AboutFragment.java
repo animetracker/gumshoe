@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 
 import com.alexzamurca.animetrackersprint2.R;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 
 public class AboutFragment extends Fragment {
 
@@ -32,7 +35,6 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
 
         View listItemsView = inflater.inflate(R.layout.fragment_about, container, false);
 

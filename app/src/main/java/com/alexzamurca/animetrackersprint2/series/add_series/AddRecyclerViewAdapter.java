@@ -28,7 +28,7 @@ import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
-import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.bumptech.glide.Glide;
 
@@ -273,7 +273,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            progressBar.setVisibility(View.GONE);
             notifyDataSetChanged();
             if(list.size() == 0)
             {
@@ -283,6 +282,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             {
                 hideKeyboard();
             }
+            progressBar.setVisibility(View.GONE);
         }
     }
 

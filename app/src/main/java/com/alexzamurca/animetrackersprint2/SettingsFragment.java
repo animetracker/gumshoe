@@ -29,7 +29,7 @@ import androidx.navigation.Navigation;
 import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
-import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
+import com.alexzamurca.animetrackersprint2.dialog.dialog_report_bug;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
