@@ -23,6 +23,7 @@ public class UpdateDB
     private static final String TAG = "UpdateDB";
     private Context context;
     private String session;
+    private boolean failed;
 
     SharedPreferences.Editor editor;
     CheckConnection checkConnection;
@@ -51,6 +52,7 @@ public class UpdateDB
         }
         else
         {
+            failed = true;
             updateFailedNotification.showNotification();
 
             editor.putBoolean("offline", true);
@@ -74,6 +76,7 @@ public class UpdateDB
             }
             else
             {
+                failed = true;
                 updateFailedNotification.showNotification();
 
                 editor.putBoolean("offline", true);
@@ -249,6 +252,13 @@ public class UpdateDB
                 NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
                 AdjustAirDate adjustAirDate = new AdjustAirDate(series);
                 notificationAiringChannel.setNotification(series, adjustAirDate.getCalendar());
+
+                if(!failed)
+                {
+                    editor.putBoolean("offline", false);
+                    Log.d(TAG, "insert: app set to online mode (not in need of update)");
+                    editor.apply();
+                }
             }
             else
             {
