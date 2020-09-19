@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.notifications.DBUpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
 import com.alexzamurca.animetrackersprint2.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.Database.UpdateSeriesAiring;
@@ -22,18 +24,40 @@ public class UpdateDB
     private Context context;
     private String session;
 
+    SharedPreferences.Editor editor;
+    CheckConnection checkConnection;
+    UpdateFailedNotification updateFailedNotification;
+
+
     public UpdateDB(Context context)
     {
         this.context = context;
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+
+        SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+        editor = appSharedPreferences.edit();
+        checkConnection = new CheckConnection(context);
+        updateFailedNotification = new UpdateFailedNotification(context);
     }
 
     // Get table and update db
     public void run()
     {
-        GetTableAsync getTableAsync = new GetTableAsync();
-        getTableAsync.execute();
+        if(checkConnection.isConnected())
+        {
+            GetTableAsync getTableAsync = new GetTableAsync();
+            getTableAsync.execute();
+        }
+        else
+        {
+            updateFailedNotification.showNotification();
+
+            editor.putBoolean("offline", true);
+            Log.d(TAG, "insert: app set to offline mode");
+            editor.apply();
+        }
+
     }
 
     private void updateDB(List<Series> list)
@@ -42,9 +66,21 @@ public class UpdateDB
         {
             Series currentSeries = list.get(i);
 
-            GetSeriesInfoAsync getSeriesInfoAsync = new GetSeriesInfoAsync();
-            getSeriesInfoAsync.setSeries(currentSeries);
-            getSeriesInfoAsync.execute();
+            if(checkConnection.isConnected())
+            {
+                GetSeriesInfoAsync getSeriesInfoAsync = new GetSeriesInfoAsync();
+                getSeriesInfoAsync.setSeries(currentSeries);
+                getSeriesInfoAsync.execute();
+            }
+            else
+            {
+                updateFailedNotification.showNotification();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+
         }
     }
 
@@ -101,9 +137,20 @@ public class UpdateDB
 
     private void updateAirDate(Series series, String air_date, String status, int episode_number)
     {
-        UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
-        airDateAsync.setVariables(series, air_date, status, episode_number);
-        airDateAsync.execute();
+        if(checkConnection.isConnected())
+        {
+            UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
+            airDateAsync.setVariables(series, air_date, status, episode_number);
+            airDateAsync.execute();
+        }
+        else
+        {
+            updateFailedNotification.showNotification();
+
+            editor.putBoolean("offline", true);
+            Log.d(TAG, "insert: app set to offline mode");
+            editor.apply();
+        }
     }
 
     private class GetTableAsync extends AsyncTask<Void, Void, Void>

@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
+import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
 import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkDarkMode();
+        checkIfUpdateDBPending();
 
         Intent intent = getIntent();
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
@@ -88,6 +91,29 @@ public class MainActivity extends AppCompatActivity
         else setTheme(R.style.AppThemeLight);
     }
 
+    private void checkIfUpdateDBPending()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
+        boolean needDBUpdate = sharedPreferences.getBoolean("offline", false);
+        if(needDBUpdate)
+        {
+            CheckConnection checkConnection = new CheckConnection(this);
+            boolean isConnected = checkConnection.isConnected();
+            if(isConnected)
+            {
+                UpdateDB updateDB = new UpdateDB(this);
+                updateDB.run();
+            }
+            else
+            {
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(getSupportFragmentManager(), "NoConnectionDialog");
+            }
+        }
+    }
 
     private void checkLoggedInState()
     {
@@ -123,8 +149,6 @@ public class MainActivity extends AppCompatActivity
             setAlarmsForList.run();
         }
     }
-
-
 
     private void checkIfSessionExpired()
     {

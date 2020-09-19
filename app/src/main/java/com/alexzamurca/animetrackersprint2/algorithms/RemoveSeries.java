@@ -3,14 +3,22 @@ package com.alexzamurca.animetrackersprint2.algorithms;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.Database.Remove;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 public class RemoveSeries
 {
+    private static final String TAG = "RemoveSeries";
     private Context context;
 
     public RemoveSeries(Context context) {
@@ -19,9 +27,46 @@ public class RemoveSeries
 
     public void remove(Series series)
     {
-        RemoveAsync removeAsync = new RemoveAsync();
-        removeAsync.setSelectedSeries(series);
-        removeAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(context);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            Log.d(TAG, "remove: we have internet");
+            RemoveAsync removeAsync = new RemoveAsync();
+            removeAsync.setSelectedSeries(series);
+            removeAsync.execute();
+        }
+        else
+        {
+            Log.d(TAG, "remove: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(context);
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "remove request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "remove request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
+                updateFailedNotification.showNotification();
+            }
+
+            SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putBoolean("offline", true);
+            Log.d(TAG, "insert: app set to offline mode");
+            editor.apply();
+        }
+
 
     }
 

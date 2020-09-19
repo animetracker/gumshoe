@@ -220,6 +220,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
                     if(isAppOnForeground)
                     {
+                        Log.d(TAG, "ViewHolder: insert request app in foreground");
                         NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
                         Bundle bundle = new Bundle();
                         bundle.putBoolean("update_db", true);
@@ -228,18 +229,17 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                     }
                     else
                     {
+                        Log.d(TAG, "ViewHolder: insert request app in background");
+                        UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
+                        updateFailedNotification.showNotification();
 
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putBoolean("offline", true);
+                        Log.d(TAG, "insert: app set to offline mode");
+                        editor.apply();
                     }
-
-                    UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
-                    updateFailedNotification.showNotification();
-
-                    SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                    editor.putBoolean("offline", true);
-                    Log.d(TAG, "insert: app set to offline mode");
-                    editor.apply();
                 }
             });
         }
@@ -248,9 +248,23 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public void searchName(String series_name)
     {
         this.series_name = series_name;
-        progressBar.setVisibility(View.VISIBLE);
-        AniListSearch aniListSearch = new AniListSearch();
-        aniListSearch.execute();
+        CheckConnection checkConnection = new CheckConnection(context);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            AniListSearch aniListSearch = new AniListSearch();
+            aniListSearch.execute();
+            Log.d(TAG, "anilist search has connection");
+        }
+        else
+        {
+            Log.d(TAG, "anilist: NO INTERNET");
+
+            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+            noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager() , "NoConnectionDialog");
+        }
+
     }
 
     public void insert(int position)

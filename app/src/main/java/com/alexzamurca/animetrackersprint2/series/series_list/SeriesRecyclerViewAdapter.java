@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +17,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
+import com.alexzamurca.animetrackersprint2.algorithms.RemoveSeries;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.Database.Remove;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.bumptech.glide.Glide;
 
 import java.io.Serializable;
@@ -310,11 +317,27 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
     public void removeSeries(Series series)
     {
-        RemoveAsync removeAsync = new RemoveAsync();
-        removeAsync.setSelectedSeries(series);
-        removeAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(context);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            Log.d(TAG, "remove: we have internet");
+            RemoveAsync removeAsync = new RemoveAsync();
+            removeAsync.setSelectedSeries(series);
+            removeAsync.execute();
+            refreshSeriesList();
+        }
+        else
+        {
+            Log.d(TAG, "removeSeries: NO INTERNET");
 
-        refreshSeriesList();
+            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("update_db", true);
+            noConnectionDialog.setArguments(bundle);
+            noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
+
+        }
     }
 
     private void refreshSeriesList()

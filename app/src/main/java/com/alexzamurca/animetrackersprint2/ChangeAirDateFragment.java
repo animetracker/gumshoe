@@ -31,8 +31,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.Database.UpdateAirDateChange;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -403,8 +407,45 @@ public class ChangeAirDateFragment extends Fragment
 
     private void updateAirDateDB()
     {
-        UpdateAirDateAsync updateAirDateAsync = new UpdateAirDateAsync();
-        updateAirDateAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            UpdateAirDateAsync updateAirDateAsync = new UpdateAirDateAsync();
+            updateAirDateAsync.execute();
+            Log.d(TAG, "update air date has connection");
+        }
+        else
+        {
+            Log.d(TAG, "update air date no internet");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "update air date change request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(requireActivity().getSupportFragmentManager(), "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "update air date change request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     private String getFormattedChange()

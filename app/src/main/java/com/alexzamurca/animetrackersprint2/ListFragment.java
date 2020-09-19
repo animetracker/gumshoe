@@ -34,6 +34,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.Database.UpdateNotificationsOn;
@@ -41,6 +44,7 @@ import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.dialog.NotificationsOffDialog;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -326,10 +330,44 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     private void initList()
     {
-        progressBar.setVisibility(View.VISIBLE);
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
 
-        GettingTableAsync gettingTableAsync = new GettingTableAsync();
-        gettingTableAsync.execute();
+            GettingTableAsync gettingTableAsync = new GettingTableAsync();
+            gettingTableAsync.execute();
+            Log.d(TAG, "getting table has connection");
+        }
+        else
+        {
+            Log.d(TAG, "getting table: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "getTable request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "getTable request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     @Override
@@ -359,10 +397,47 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onNotificationsOn(Series series)
     {
-        progressBar.setVisibility(View.VISIBLE);
-        UpdateNotificationsOnAsync updateNotificationsOnAsync = new UpdateNotificationsOnAsync();
-        updateNotificationsOnAsync.setSelectedSeries(series);
-        updateNotificationsOnAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            UpdateNotificationsOnAsync updateNotificationsOnAsync = new UpdateNotificationsOnAsync();
+            updateNotificationsOnAsync.setSelectedSeries(series);
+            updateNotificationsOnAsync.execute();
+            Log.d(TAG, "update notifications on has connection");
+        }
+        else
+        {
+            Log.d(TAG, "update notifications on: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "getTable request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "update notifications on request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     @Override
@@ -404,10 +479,47 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onYesClickListener(Series series)
     {
-        progressBar.setVisibility(View.VISIBLE);
-        UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
-        updateNotificationsOffAsync.setSelectedSeries(series);
-        updateNotificationsOffAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
+            updateNotificationsOffAsync.setSelectedSeries(series);
+            updateNotificationsOffAsync.execute();
+            Log.d(TAG, "update notifications off has internet");
+        }
+        else
+        {
+            Log.d(TAG, "updateNotificationsOff: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "updateNotificationsOff request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "updateNotificationsOff request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     private void setNotificationsForAllSeriesInList()
