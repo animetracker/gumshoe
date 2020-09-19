@@ -106,15 +106,8 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
         }
         else
         {
-            newInstance();
             Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void newInstance()
-    {
-        NoConnectionDialog dialog = new NoConnectionDialog();
-        dialog.show(mContext.getSupportFragmentManager(), "NoCustomDialog");
     }
 
     private void initImageBitmaps()
@@ -137,12 +130,6 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     {
         mContext = (FragmentActivity)context;
         super.onAttach(context);
-    }
-
-    @Override
-    public void onFailedClick()
-    {
-        newInstance();
     }
 
     @Override

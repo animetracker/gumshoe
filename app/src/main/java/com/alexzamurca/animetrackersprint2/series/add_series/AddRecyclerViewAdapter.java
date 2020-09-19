@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +21,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.Database.Insert;
@@ -117,7 +121,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
     public interface RowClickListener
     {
-        void onFailedClick();
         void onSuccessfulClick(Series series);
     }
 
@@ -210,9 +213,33 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 }
                 else
                 {
-                    Log.d(TAG, "ViewHolder: NO INTERNET");
-                    rowClickListener.onFailedClick();
-                    Toast.makeText(context, "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "insert: NO INTERNET");
+
+                    AppGround appGround = new AppGround();
+                    boolean isAppOnForeground = appGround.isAppOnForeground(context);
+
+                    if(isAppOnForeground)
+                    {
+                        NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("update_db", true);
+                        noConnectionDialog.setArguments(bundle);
+                        noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
+                    }
+                    else
+                    {
+
+                    }
+
+                    UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
+                    updateFailedNotification.showNotification();
+
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    editor.putBoolean("offline", true);
+                    Log.d(TAG, "insert: app set to offline mode");
+                    editor.apply();
                 }
             });
         }
@@ -228,28 +255,10 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
     public void insert(int position)
     {
-        CheckConnection checkConnection = new CheckConnection(context);
-        if(checkConnection.isConnected())
-        {
-            progressBar.setVisibility(View.VISIBLE);
-            DatabaseInsert databaseInsert = new DatabaseInsert();
-            databaseInsert.setAdapter_position(position);
-            databaseInsert.execute();
-        }
-        else
-        {
-            Log.d(TAG, "insert: no internet connection");
-
-            UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
-            updateFailedNotification.showNotification();
-
-            SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            editor.putBoolean("offline", true);
-            Log.d(TAG, "insert: app set to offline mode");
-            editor.apply();
-        }
+        progressBar.setVisibility(View.VISIBLE);
+        DatabaseInsert databaseInsert = new DatabaseInsert();
+        databaseInsert.setAdapter_position(position);
+        databaseInsert.execute();
     }
 
     private void hideKeyboard()
@@ -295,7 +304,8 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             notifyDataSetChanged();
             if(list.size() == 0)
             {
-                noSearchResultsTV.setText("No search results for\"" + series_name + "\"");
+                String text = "No search results for\"" + series_name + "\"";
+                noSearchResultsTV.setText(text);
             }
             else
             {

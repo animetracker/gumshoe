@@ -24,6 +24,8 @@ public class NoConnectionDialog extends DialogFragment
     {
         View view = inflater.inflate(R.layout.dialog_no_connection, container, false);
 
+        // GET BOOLEAN IF TO UPDATE_DB
+
         Button tryAgainButton = view.findViewById(R.id.try_again_button);
         tryAgainButton.setOnClickListener(v -> {
             CheckConnection checkConnection = new CheckConnection(getContext());

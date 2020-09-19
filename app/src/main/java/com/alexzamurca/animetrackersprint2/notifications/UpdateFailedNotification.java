@@ -29,7 +29,7 @@ public class UpdateFailedNotification
     {
         Log.d(TAG, "constructNotification: constructing");
         String title="Failed to update your list";
-        String text = "Start the app with an internet connection so update can happen :)";
+        String text = "Re-start the app with an internet connection :)";
 
         return new  NotificationCompat.Builder(mContext, SERIES_AIRING_REMINDER_ID)
                 .setSmallIcon(R.drawable.ic_gumshoe_notification_fill_icon)
