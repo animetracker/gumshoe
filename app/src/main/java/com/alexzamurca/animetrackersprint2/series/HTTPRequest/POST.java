@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
+import com.alexzamurca.animetrackersprint2.dialog.NoDatabaseDialog;
 
 import org.json.JSONObject;
 
@@ -17,8 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -37,7 +35,8 @@ public class POST
         this.context = context;
     }
 
-    public POST(String url, Context context, JSONObject json_to_send) {
+    public POST(String url, Context context, JSONObject json_to_send)
+    {
         this.url = url;
         this.context = context;
         this.json_to_send = json_to_send;
@@ -74,6 +73,7 @@ public class POST
             Log.e("CATCH", e.toString());
             connectionError();
         }
+
         return false;
     }
 
@@ -129,15 +129,8 @@ public class POST
     private String getStringFromInputStream(InputStream is)
     {
         // Read response
-        BufferedReader reader = null;
-        try
-        {
-            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            Log.d(TAG, "getStringFromInputStream: UnsupportedEncodingException");
-        }
+        BufferedReader reader;
+        reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         StringBuilder response = new StringBuilder();
         String dummy;
         try
@@ -168,5 +161,4 @@ public class POST
         editor.putBoolean("db_connect_problem", true);
         editor.apply();
     }
-
 }

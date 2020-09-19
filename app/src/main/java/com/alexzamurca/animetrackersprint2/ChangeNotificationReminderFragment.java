@@ -333,7 +333,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         if(!air_date_change.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(getContext(), air_date);
+            Calendar calendar = convertDateToCalendar.convert(air_date);
 
             // get sign, hours, minutes from air_date change
             String[] signHoursMinutesArray  = air_date_change.split(":");
@@ -352,7 +352,7 @@ public class ChangeNotificationReminderFragment extends Fragment
                 calendar.add(Calendar.MINUTE, -minutes);
             }
 
-            newAirDate = convertDateToCalendar.timeZoneReverseConvert(getContext(), calendar);
+            newAirDate = convertDateToCalendar.reverseConvert(calendar);
         }
         else
         {
@@ -408,7 +408,7 @@ public class ChangeNotificationReminderFragment extends Fragment
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         // Get date in calendar form (so we can change it)
-        Calendar calendar = convertDateToCalendar.timeZoneConvert(getContext(), getChangedAirDate());
+        Calendar calendar = convertDateToCalendar.convert(getChangedAirDate());
 
         // Add minutes, hours, days
         if(beforeAfter.equals("before"))
@@ -443,7 +443,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         }
 
         // Update text
-        String newDate = convertDateToCalendar.timeZoneReverseConvert(getContext(), calendar);
+        String newDate = convertDateToCalendar.reverseConvert(calendar);
         String notificationChange = quantity + " " + metric + " " + beforeAfter + "\nMeaning you will be notified on: " + newDate;
         newChangeTV.setText(notificationChange);
 

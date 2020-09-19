@@ -6,12 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="5dp"
-    android:background="?attr/seriesRowBg">
+    android:background="@drawable/series_row_background_top">
 
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:background="?attr/seriesRowBg">
+        android:layout_width="match_parent">
 
         <ImageView
             android:layout_width="140dp"
@@ -190,7 +189,8 @@
         android:layout_marginTop="5dp"
         android:src="@drawable/ic_arrow_down"
         android:id="@+id/search_row_expand_collapse"
-        android:contentDescription="@string/expand_or_collapse"/>
+        android:contentDescription="@string/expand_or_collapse"
+        android:background="@drawable/series_row_background_bottom"/>
 
 
 

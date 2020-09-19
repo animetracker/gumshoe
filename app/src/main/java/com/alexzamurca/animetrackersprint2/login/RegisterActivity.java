@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.Database.Register;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -150,8 +152,20 @@ public class RegisterActivity extends AppCompatActivity
 
     private void register()
     {
-        RegisterAsync registerAsync = new RegisterAsync();
-        registerAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(this);
+        if(checkConnection.isConnected())
+        {
+            RegisterAsync registerAsync = new RegisterAsync();
+            registerAsync.execute();
+        }
+        else
+        {
+            Log.d(TAG, "register: no internet connection");
+
+            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+            noConnectionDialog.show(getSupportFragmentManager(), "NoConnectionDialog");
+        }
+
     }
 
     private class RegisterAsync extends AsyncTask<Void, Void, Void>

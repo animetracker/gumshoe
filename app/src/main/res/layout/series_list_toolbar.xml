@@ -9,9 +9,9 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:src="@drawable/logo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/luffy"
         app:civ_border_width="2dp"
         app:civ_border_color="?attr/primaryTextColor"/>
 
@@ -21,7 +21,8 @@
         android:text="@string/series_list"
         android:textStyle="bold"
         android:textSize="30dp"
-        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:textColor="?attr/primaryTextColor"
         android:gravity="center_vertical"/>
 

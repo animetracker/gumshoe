@@ -37,7 +37,8 @@ public class Insert
     }
 
     // 0 = successful new addition, 1 = already in list, 2: fail
-    public int insert() {
+    public int insert() 
+    {
         IsSeriesInDB isSeriesInDB;
         try
         {

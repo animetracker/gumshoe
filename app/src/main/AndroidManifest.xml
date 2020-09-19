@@ -20,6 +20,7 @@
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan"
             android:configChanges="orientation"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,11 +43,11 @@
         <receiver android:name=".notifications.UpdateDBReceiver"/>
 
         <meta-data android:name="com.google.firebase.reminder.default_notification_icon"
-
             android:resource="@mipmap/gumshoe27_circle" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorWhite" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713"/>

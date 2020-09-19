@@ -6,8 +6,12 @@
     <color name="pleasantBlue"> #2e86c1</color>
     <color name="vibrantGreen"> #2ecc71</color>
     <color name="pleasantRed"> #cb4335</color>
+    <color name="brightRed">#CC0000</color>
     <color name="pleasantPurple">#673ab7</color>
+    <color name="darkBlue">  #000099</color>
+    <color name="darkGreen"> #1d6006</color>
     <color name="greyishWhite">#e5e7e9 </color>
+    <color name="darkerGrey"> #f8f9f9 </color>
     <color name="neon"> #99FF00 </color>
     <color name="peachy"> #ffc100</color>
     <color name="brightBlue"> #46AFF6 </color>

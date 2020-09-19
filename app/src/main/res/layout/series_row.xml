@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="5dp"
-    android:background="?attr/bg">
+    android:layout_margin="10dp"
+    android:background="@drawable/series_row_background_top">
 
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:background="?attr/seriesRowBg">
+        android:layout_width="match_parent">
 
         <ImageView
             android:layout_width="140dp"
@@ -53,7 +50,7 @@
                     android:id="@+id/nextEpisode_series"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:textColor="?attr/seriesEpisodeTextColor"
+                    android:textColor="?attr/primaryTextColor"
                     android:textSize="15sp"
                     android:layout_marginStart="3dp"
                     android:layout_alignParentStart="true"
@@ -63,7 +60,7 @@
                     android:id="@+id/airDate_series"
                     android:layout_width="125dp"
                     android:layout_height="match_parent"
-                    android:textColor="?attr/seriesReleaseTextColor"
+                    android:textColor="?attr/primaryTextColor"
                     android:textSize="15sp"
                     android:layout_marginEnd="10dp"
                     android:gravity="center_horizontal|bottom"
@@ -77,11 +74,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:weightSum="100"
-        android:background="?attr/seriesRowButtonBg">
+        android:background="@drawable/series_row_background_bottom">
 
         <ImageView
             android:layout_width="36dp"
@@ -90,8 +85,9 @@
             android:id="@+id/notification_off_series"
             android:contentDescription="@string/turn_notifications_off"
             android:layout_weight="25"
-            android:layout_marginTop="5dp"
-            android:tag="notifications_on"/>
+            android:layout_marginTop="10dp"
+            android:tag="notifications_on"
+            android:layout_marginBottom="10dp"/>
 
         <ImageView
             android:layout_width="36dp"
@@ -100,7 +96,8 @@
             android:id="@+id/remove_series"
             android:contentDescription="@string/remove"
             android:layout_weight="25"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
 
         <ImageView
             android:layout_width="36dp"
@@ -109,7 +106,8 @@
             android:id="@+id/change_notification_reminder_series"
             android:contentDescription="@string/change_notification_reminder"
             android:layout_weight="25"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
 
         <ImageView
             android:layout_width="36dp"
@@ -118,7 +116,8 @@
             android:id="@+id/error_wrong_air_date_series"
             android:contentDescription="@string/error_wrong_air_date"
             android:layout_weight="25"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 
 
