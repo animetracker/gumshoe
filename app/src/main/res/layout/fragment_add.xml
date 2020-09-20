@@ -27,7 +27,12 @@
             android:layout_height="50dp"
             android:id="@+id/constraint"
             app:layout_constraintBottom_toTopOf="@id/search_recycler_view"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:elevation="8dp"
+            android:background="@drawable/grey_button">
 
             <EditText
                 android:autofillHints="One Piece"

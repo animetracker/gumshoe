@@ -11,6 +11,7 @@
         <item name="dropdownbg">#FFFFFF</item>
         <item name="seriesRowBg">@color/darkerGrey</item>
         <item name="seriesRowButtonBg">#FFFFFF</item>
+        <item name="searchButtonColor">#EBC8C4C4</item>
         <item name="seriesButtonColor">#787373</item>
         <item name="primaryTextColor">#DE000000</item>
         <item name="hintColor">#B0B0B0</item>
@@ -30,6 +31,7 @@
         <item name="dropdownbg">#B0B0B0</item>
         <item name="seriesRowBg">#505050</item>
         <item name="seriesRowButtonBg">#606060</item>
+        <item name="searchButtonColor">#2E2C2C</item>
         <item name="seriesButtonColor">#C1BBBB</item>
         <item name="primaryTextColor">#FFFFFF</item>
         <item name="hintColor">#B0B0B0</item>
