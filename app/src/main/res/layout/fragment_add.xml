@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/search_layout">
+    android:id="@+id/search_layout"
+    android:background="?attr/bg">
 
     <include
         layout="@layout/add_series_toolbar"
@@ -20,7 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/add_series_toolbar_object"
-        android:background="?attr/bg">
+        android:background="?attr/bg"
+        android:layout_marginBottom="65dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
