@@ -7,19 +7,19 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/scImage"
+        android:id="@+id/slide_image"
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="40dp"
         tools:srcCompat="@tools:sample/avatars"
         android:layout_centerInParent="true"/>
 
     <TextView
-        android:id="@+id/tutorialText"
+        android:id="@+id/slide_desc"
         android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_below="@+id/scImage"
+        android:layout_height="250dp"
+        android:layout_below="@+id/slide_image"
         android:layout_marginTop="9dp"
         android:text="TextView"
         android:textSize="15sp"

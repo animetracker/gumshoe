@@ -18,6 +18,10 @@ public class SliderAdapter extends PagerAdapter {
     Context context;
     LayoutInflater layoutInflater;
 
+    public SliderAdapter(Context context){
+        this.context=context;
+    }
+
     // insert screenshots here
     public int[] slide_images = {
             R.drawable.screenshot1,
@@ -39,18 +43,14 @@ public class SliderAdapter extends PagerAdapter {
             "Under the general tab, you can report a bug or view our about page, which gives you the contact details of our developers! If you would like to donate to us, you can also do so here. Furthermore, if you enjoy using our app, then you can share it with your friends and family using the share button in the top right."
     };
 
-    public SliderAdapter(Context context) {
-        this.context = context;
-    }
-
     @Override
     public int getCount() {
         return slide_text.length;
     }
 
     @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == (RelativeLayout) object;
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
+        return view == (RelativeLayout) o;
     }
 
     @Override
@@ -58,8 +58,8 @@ public class SliderAdapter extends PagerAdapter {
         layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.slide_layout, container, false);
 
-        ImageView slideImageView = (ImageView) view.findViewById(R.id.scImage);
-        TextView slideText = (TextView) view.findViewById(R.id.tutorialText);
+        ImageView slideImageView = (ImageView) view.findViewById(R.id.slide_image);
+        TextView slideText = (TextView) view.findViewById(R.id.slide_desc);
 
         slideImageView.setImageResource(slide_images[position]);
         slideText.setText(slide_text[position]);
