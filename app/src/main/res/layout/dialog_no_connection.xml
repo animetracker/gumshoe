@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp"
-    android:background="@color/pleasantBlue">
+    android:background="@drawable/blue_with_rounded_corners">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="15dp"
         android:id="@+id/try_again_button"
-        android:background="@color/vibrantGreen"/>
+        android:background="@drawable/vibrant_green_with_rounded_corners"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

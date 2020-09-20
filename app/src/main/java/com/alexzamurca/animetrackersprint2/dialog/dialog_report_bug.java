@@ -24,7 +24,7 @@ public class dialog_report_bug extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View mView = inflater.inflate(R.layout.fragment_dialog_report_bug, container, false);
+        View mView = inflater.inflate(R.layout.dialog_report_bug, container, false);
 
         reportBugButton = mView.findViewById(R.id.reportBugButton);
         closeDialogButton = (ImageButton) mView.findViewById(R.id.closeDialogButton);
