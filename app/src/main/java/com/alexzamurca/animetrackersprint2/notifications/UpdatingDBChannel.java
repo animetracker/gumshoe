@@ -10,6 +10,7 @@ import android.util.Log;
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 // This class is for setting or cancelling notifications through the airing channel
 public class UpdatingDBChannel
@@ -26,13 +27,8 @@ public class UpdatingDBChannel
     }
 
     // Will happen at login and at additions to list
-    public void setNotification()
-    {
-        startAlarm();
-    }
-
     // Daily at 4am
-    private void startAlarm()
+    public void startAlarmAt4()
     {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, UpdateDBReceiver.class);
@@ -40,10 +36,25 @@ public class UpdatingDBChannel
         Calendar calendar = setUpCalendar();
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Log.d(TAG, "startAlarm: alarm set for " + convertDateToCalendar.reverseConvert(calendar));
+        Log.d(TAG, "startAlarmAt4: alarm set for " + convertDateToCalendar.reverseConvert(calendar));
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    public void startAlarm1HourLater()
+    {
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(mContext, UpdateDBReceiver.class);
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        calendar.add(Calendar.HOUR, 1);
+
+        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+        Log.d(TAG, "startAlarm1HourLater: alarm set for " + convertDateToCalendar.reverseConvert(calendar));
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     // Will happen at log out, turning notifications off or changing air_date_change and notification_change

@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity
     {
         Log.d(TAG, "setUpDatabaseCheckAlarm: setting up");
         UpdatingDBChannel updatingDBChannel = new UpdatingDBChannel(this);
-        updatingDBChannel.setNotification();
+        updatingDBChannel.startAlarmAt4();
     }
 
     private void login()

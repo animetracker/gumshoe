@@ -22,6 +22,6 @@ public class ResetAlarmForUpdateDB
         UpdatingDBChannel updatingDBChannel = new UpdatingDBChannel(context);
         updatingDBChannel.cancel();
 
-        updatingDBChannel.setNotification();
+        updatingDBChannel.startAlarmAt4();
     }
 }

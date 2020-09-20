@@ -20,7 +20,8 @@ public class SessionCheck
     private String responseString;
     private Context context;
 
-    public SessionCheck(String responseString, Context context) {
+    public SessionCheck(String responseString, Context context)
+    {
         this.responseString = responseString;
         this.context = context;
     }
@@ -89,8 +90,7 @@ public class SessionCheck
             }
             else
             {
-                Log.d(TAG, "getting table: NO INTERNET");
-
+                Log.d(TAG, "session check: NO INTERNET");
 
             }
             Log.d(TAG, "check: failed session check");
