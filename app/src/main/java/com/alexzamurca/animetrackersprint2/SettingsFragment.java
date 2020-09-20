@@ -38,6 +38,8 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
@@ -115,6 +117,9 @@ public class SettingsFragment extends Fragment
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
                     mContext.setTheme(R.style.AppThemeLight);
                     editor.putBoolean("dark_mode_on", false);
+                    BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
+                    bottomNavigationView.setBackgroundResource(R.drawable.s_bottom_nav_lightmode);
+
                 }
                 else
                 {
@@ -124,6 +129,8 @@ public class SettingsFragment extends Fragment
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark));
                     mContext.setTheme(R.style.AppThemeDark);
                     editor.putBoolean("dark_mode_on", true);
+                    BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
+                    bottomNavigationView.setBackgroundResource(R.drawable.s_bottom_nav_darkmode);
                 }
                 editor.apply();
                 navController.navigate(R.id.settingsFragment);

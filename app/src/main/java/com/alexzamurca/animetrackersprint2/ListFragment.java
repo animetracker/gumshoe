@@ -102,11 +102,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             changeToAddFragment()
         );
 
-        FloatingActionButton setNotificationButton = mView.findViewById(R.id.series_list_floating_set_notification_button);
-        // Search button
-        setNotificationButton.setOnClickListener(v ->
-                setNotificationsForAllSeriesInList()
-        );
         return mView;
     }
 

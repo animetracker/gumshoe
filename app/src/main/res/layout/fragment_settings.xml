@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/bg">
 
     <include layout="@layout/settings_toolbar"
         android:id="@+id/settings_toolbar_object"/>
@@ -9,15 +10,20 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="55dp"
         android:fillViewport="true"
-        android:layout_below="@id/settings_toolbar_object">
+        android:layout_below="@id/settings_toolbar_object"
+        android:background="?attr/bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="55dp"
             android:background="?attr/bg"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:backgroundTint="?attr/bg"
+            >
 
             <TextView
                 android:id="@+id/settings_customisation_header"
@@ -25,7 +31,7 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:text="@string/customisation"
-                android:textColor="@android:color/holo_blue_dark"
+                android:textColor="@color/pleasantBlue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -61,7 +67,7 @@
                 android:layout_below="@id/settings_change_profile"
                 android:gravity="center_vertical"
                 android:text="@string/general"
-                android:textColor="@android:color/holo_blue_dark"
+                android:textColor="@color/pleasantBlue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -147,7 +153,7 @@
                 android:layout_below="@id/text_view"
                 android:gravity="center_vertical"
                 android:text="@string/support_devs"
-                android:textColor="@android:color/holo_blue_dark"
+                android:textColor="@color/pleasantBlue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -182,7 +188,7 @@
                 android:layout_below="@id/settings_ads"
                 android:gravity="center_vertical"
                 android:text="Account"
-                android:textColor="@android:color/holo_blue_dark"
+                android:textColor="@color/pleasantBlue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

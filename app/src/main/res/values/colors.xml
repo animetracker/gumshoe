@@ -19,6 +19,8 @@
     <color name="colorTransparentWhite">#cccccc</color>
     <color name="light"> #aab7b8 </color>
     <color name="dark"> #121212</color>
+    <color name="darkmode">#222831</color>
+    <color name="lightmode">#aab7b8</color>
 
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>

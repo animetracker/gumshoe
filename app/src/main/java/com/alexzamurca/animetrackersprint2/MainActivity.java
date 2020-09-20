@@ -19,7 +19,10 @@ import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,10 +62,27 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
+            checkIfOnDarkMode();
+            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
+            navController = Navigation.findNavController(this, R.id.fragment_container);
+            NavigationUI.setupWithNavController(bottomNavigationView, navController);
             checkLoggedInState();
             checkIfComingFromLogin();
         }
 
+    }
+
+    private void checkIfOnDarkMode() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        Boolean darkMode = sharedPreferences.getBoolean("dark_mode_on", true);
+        if(darkMode) {
+            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
+            bottomNavigationView.setBackgroundResource(R.drawable.s_bottom_nav_darkmode);
+        }
+        else {
+            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
+            bottomNavigationView.setBackgroundResource(R.drawable.s_bottom_nav_lightmode);
+        }
     }
 
     private void initBottomNavigation()

@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/series_list_layout">
+    android:id="@+id/series_list_layout"
+    android:background="?attr/bg">
 
     <include layout="@layout/series_list_toolbar"
         android:id="@+id/series_list_toolbar_object"/>
@@ -11,8 +12,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="55dp"
         android:id="@+id/series_list_constraint_layout"
         android:layout_below="@id/series_list_toolbar_object"
+        android:background="?attr/bg"
         >
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,21 +24,13 @@
             android:id="@+id/series_list_floating_add_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+
             android:layout_margin="16dp"
             android:backgroundTint="@color/pleasantBlue"
             android:src="@drawable/ic_add"
             />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:id="@+id/series_list_floating_set_notification_button"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/pleasantBlue"
-            android:src="@drawable/ic_notifications_on"
-            />
+
 
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -49,7 +44,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/series_recycler_view"
                 android:paddingBottom="70dp"
-                android:clipToPadding="false">
+                android:clipToPadding="false"
+                android:background="?attr/bg">
 
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
