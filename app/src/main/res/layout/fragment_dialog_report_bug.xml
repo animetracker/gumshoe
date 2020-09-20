@@ -55,6 +55,6 @@
         android:layout_marginTop="15dp"
         android:textColor="#ffffff"
         android:id="@+id/reportBugButton"
-        android:background="@drawable/blue_button"/>
+        android:background="@color/brightBlue"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

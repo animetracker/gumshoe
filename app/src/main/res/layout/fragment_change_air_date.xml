@@ -19,25 +19,28 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/change_air_date_toolbar_object">
+        android:layout_height="match_parent"
+        android:layout_below="@id/change_air_date_toolbar_object"
+        android:background="?attr/bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?attr/bg">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/change_air_date_layout"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="?attr/bg">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/c_air_date_identified_header"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"/>
@@ -56,14 +59,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/change_air_date_change_layout"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?attr/bg">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/change_air_date_change_title"
                         android:textSize="15sp"
-                        android:textColor="#000000"
+                        android:textColor="?attr/primaryTextColor"
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginTop="10dp"
                         android:gravity="center_vertical" />
@@ -84,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_marginHorizontal="10dp"
                     android:gravity="center"
                     android:text="@string/wrong_air_date_explanation"
@@ -97,6 +101,7 @@
                     android:layout_marginTop="10dp"
                     android:weightSum="100"
                     android:id="@+id/logo_layout"
+                    android:background="?attr/bg"
                     >
 
                     <ImageView
@@ -129,7 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
@@ -139,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
@@ -159,7 +164,7 @@
                 android:textStyle="bold"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
-                android:textColor="#000000"
+                android:textColor="?attr/primaryTextColor"
                 android:gravity="center"
                 android:layout_below="@id/change_air_date_layout"
                 android:layout_centerInParent="true"/>
@@ -173,7 +178,8 @@
                 android:orientation="horizontal"
                 android:layout_below="@id/change_air_date_question"
                 android:layout_centerInParent="true"
-                style="?attr/buttonBarButtonStyle">
+                style="?attr/buttonBarButtonStyle"
+                android:background="?attr/bg">
 
                 <Button
                     android:layout_width="80dp"
@@ -205,27 +211,29 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/change_air_date_hidden_layout"
                 android:orientation="vertical"
-                android:layout_below="@id/button_layout">
+                android:layout_below="@id/button_layout"
+                android:background="?attr/bg">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_margin="10dp"
                     android:gravity="center_vertical"
                     android:text="@string/air_date_changes_instructions"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/bg">
 
                     <TextView
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#000000"
+                        android:textColor="?attr/primaryTextColor"
                         android:layout_margin="10dp"
                         android:gravity="center_vertical"
                         android:text="@string/sign_positive_or_negative"/>
@@ -236,19 +244,22 @@
                         android:id="@+id/air_date_sign_spinner"
                         android:layout_alignParentEnd="true"
                         android:entries="@array/sign_spinner_options"
+                        android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/bg">
 
                     <TextView
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#000000"
+                        android:textColor="?attr/primaryTextColor"
                         android:layout_margin="10dp"
                         android:gravity="center_vertical"
                         android:text="@string/hours"/>
@@ -260,19 +271,22 @@
                         android:layout_alignParentEnd="true"
                         android:autofillHints="@string/positive_num"
                         android:inputType="number"
-                        android:digits="0123456789" />
+                        android:digits="0123456789"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/primaryTextColor"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/bg">
 
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#000000"
+                        android:textColor="?attr/primaryTextColor"
                         android:layout_margin="10dp"
                         android:gravity="center_vertical"
                         android:text="@string/minutes"/>
@@ -285,6 +299,8 @@
                         android:autofillHints="@string/positive_num"
                         android:inputType="number"
                         android:digits="0123456789"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/primaryTextColor"
                         />
                 </RelativeLayout>
 
@@ -292,14 +308,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/change_air_date_error_layout"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?attr/bg">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/minutes_air_date_warning"
                         android:orientation="horizontal"
-                        android:layout_marginVertical="5dp">
+                        android:layout_marginVertical="5dp"
+                        android:background="?attr/bg">
 
                         <ImageView
                             android:layout_width="30dp"
@@ -326,7 +344,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/hours_air_date_warning"
                         android:orientation="horizontal"
-                        android:layout_marginVertical="5dp">
+                        android:layout_marginVertical="5dp"
+                        android:background="?attr/bg">
 
                         <ImageView
                             android:layout_width="30dp"
@@ -355,7 +374,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/c_air_date_identified_new_header"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_marginHorizontal="10dp"
                     android:gravity="center_vertical"/>
 
@@ -374,7 +393,7 @@
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:textStyle="italic"
@@ -383,9 +402,4 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-
-
-
-
-
 </RelativeLayout>

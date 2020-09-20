@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,16 +21,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
-import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
-import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.bumptech.glide.Glide;
 
@@ -117,7 +121,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
     public interface RowClickListener
     {
-        void onFailedClick();
         void onSuccessfulClick(Series series);
     }
 
@@ -166,7 +169,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
             expandableLayout = itemView.findViewById(R.id.series_row_expandable_layout);
             moreInfoLayout = itemView.findViewById(R.id.series_row_expandable_possibly_null);
-
             
             expand_collapse.setOnClickListener(v -> 
             {
@@ -196,8 +198,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 }
             });
 
-
-
             itemView.setOnClickListener(v -> 
             {
 
@@ -213,9 +213,33 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 }
                 else
                 {
-                    Log.d(TAG, "ViewHolder: NO INTERNET");
-                    rowClickListener.onFailedClick();
-                    Toast.makeText(context, "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "insert: NO INTERNET");
+
+                    AppGround appGround = new AppGround();
+                    boolean isAppOnForeground = appGround.isAppOnForeground(context);
+
+                    if(isAppOnForeground)
+                    {
+                        Log.d(TAG, "ViewHolder: insert request app in foreground");
+                        NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("update_db", true);
+                        noConnectionDialog.setArguments(bundle);
+                        noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
+                    }
+                    else
+                    {
+                        Log.d(TAG, "ViewHolder: insert request app in background");
+                        UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
+                        updateFailedNotification.showNotification();
+
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putBoolean("offline", true);
+                        Log.d(TAG, "insert: app set to offline mode");
+                        editor.apply();
+                    }
                 }
             });
         }
@@ -224,9 +248,23 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     public void searchName(String series_name)
     {
         this.series_name = series_name;
-        progressBar.setVisibility(View.VISIBLE);
-        AniListSearch aniListSearch = new AniListSearch();
-        aniListSearch.execute();
+        CheckConnection checkConnection = new CheckConnection(context);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            AniListSearch aniListSearch = new AniListSearch();
+            aniListSearch.execute();
+            Log.d(TAG, "anilist search has connection");
+        }
+        else
+        {
+            Log.d(TAG, "anilist: NO INTERNET");
+
+            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+            noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager() , "NoConnectionDialog");
+        }
+
     }
 
     public void insert(int position)
@@ -236,7 +274,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         databaseInsert.setAdapter_position(position);
         databaseInsert.execute();
     }
-
 
     private void hideKeyboard()
     {
@@ -250,7 +287,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         if(!air_date.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+            Calendar calendar = convertDateToCalendar.convert(air_date);
             String[] days = new String[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             String dayOfWeek = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
             int minute = calendar.get(Calendar.MINUTE);
@@ -278,16 +315,17 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            progressBar.setVisibility(View.GONE);
             notifyDataSetChanged();
             if(list.size() == 0)
             {
-                noSearchResultsTV.setText("No search results for\"" + series_name + "\"");
+                String text = "No search results for\"" + series_name + "\"";
+                noSearchResultsTV.setText(text);
             }
             else
             {
                 hideKeyboard();
             }
+            progressBar.setVisibility(View.GONE);
         }
     }
 

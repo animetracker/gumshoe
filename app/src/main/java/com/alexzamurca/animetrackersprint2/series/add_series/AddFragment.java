@@ -27,8 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
-import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
-import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        globalView = inflater.inflate(R.layout.fragment_search, container, false);
+        globalView = inflater.inflate(R.layout.fragment_add, container, false);
         Log.d(TAG, "onCreate: started");
 
         Toolbar toolbar = globalView.findViewById(R.id.add_series_toolbar_object);
@@ -89,7 +89,7 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home)
         {
-            Toast.makeText(getContext(), "BugTest: go series_row_background clicked!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "BugTest: go series_row_background_top clicked!", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -106,15 +106,8 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
         }
         else
         {
-            newInstance();
             Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void newInstance()
-    {
-        NoConnectionDialog dialog = new NoConnectionDialog();
-        dialog.show(mContext.getSupportFragmentManager(), "NoCustomDialog");
     }
 
     private void initImageBitmaps()
@@ -140,15 +133,9 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     }
 
     @Override
-    public void onFailedClick()
-    {
-        newInstance();
-    }
-
-    @Override
     public void onSuccessfulClick(Series series)
     {
-        AdjustAirDate adjustAirDate = new AdjustAirDate(series, getContext());
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
         Calendar calendar = adjustAirDate.getCalendar();
         if(calendar!=null)
         {

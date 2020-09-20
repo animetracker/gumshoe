@@ -25,13 +25,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.Database.UpdateAirDateChange;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -115,16 +120,17 @@ public class ChangeAirDateFragment extends Fragment
         TextView identifiedHeader = view.findViewById(R.id.c_air_date_identified_header);
         identifiedHeader.setText(header);
 
-        String oldAirDate = series.getAir_date() + " (24 hour time) (European date format)";
+        ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
+        Calendar oldAirDateCalendar = convertDateToCalendar.convert(series.getAir_date());
+        String oldAirDate =  convertDateToCalendar.reverseConvert(oldAirDateCalendar) + " (24 hour time)<br><i>*this air date is not affected by notification reminder changes</i>";
         TextView oldAirDateTV = view.findViewById(R.id.c_air_date_identified_air_date);
-        oldAirDateTV.setText(oldAirDate);
+        oldAirDateTV.setText(HtmlCompat.fromHtml(oldAirDate, HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         String newHeader = "This is the Air Date you identified for\n\"" + series.getTitle() + "\":";
         TextView identifiedNewHeader = view.findViewById(R.id.c_air_date_identified_new_header);
         identifiedNewHeader.setText(newHeader);
 
         newTimeTV = view.findViewById(R.id.change_air_time_new_time);
-        newTimeTV.setText(oldAirDate);
 
         String oldTitle = "Current Air Date Change for\n\"" + series.getTitle() + "\":";
         TextView changeTitle = view.findViewById(R.id.change_air_date_change_title);
@@ -267,6 +273,7 @@ public class ChangeAirDateFragment extends Fragment
             {
 
             }
+
         });
     }
 
@@ -370,7 +377,7 @@ public class ChangeAirDateFragment extends Fragment
     private void updateNewTimeTV()
     {
         // Form string
-        Calendar newCalendar = convertDateToCalendar.timeZoneConvert(getContext(), series.getAir_date());
+        Calendar newCalendar = convertDateToCalendar.convert(series.getAir_date());
         // Add hours, minutes
         if(isSignNegative)
         {
@@ -382,7 +389,7 @@ public class ChangeAirDateFragment extends Fragment
             newCalendar.add(Calendar.HOUR_OF_DAY, +hours_to_change);
             newCalendar.add(Calendar.MINUTE, +minutes_to_change);
         }
-        String text = convertDateToCalendar.timeZoneReverseConvert(getContext(), newCalendar);
+        String text = convertDateToCalendar.reverseConvert(newCalendar);
         newTimeTV.setText(text);
     }
 
@@ -400,8 +407,45 @@ public class ChangeAirDateFragment extends Fragment
 
     private void updateAirDateDB()
     {
-        UpdateAirDateAsync updateAirDateAsync = new UpdateAirDateAsync();
-        updateAirDateAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            UpdateAirDateAsync updateAirDateAsync = new UpdateAirDateAsync();
+            updateAirDateAsync.execute();
+            Log.d(TAG, "update air date has connection");
+        }
+        else
+        {
+            Log.d(TAG, "update air date no internet");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "update air date change request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(requireActivity().getSupportFragmentManager(), "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "update air date change request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     private String getFormattedChange()

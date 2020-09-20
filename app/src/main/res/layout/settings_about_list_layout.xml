@@ -36,6 +36,7 @@
         android:layout_marginTop="12dp"
         android:textSize="15sp"
         android:textStyle="bold"
+        android:textColor="?attr/primaryTextColor"
         app:layout_constraintStart_toEndOf="@+id/imgIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,6 +47,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="3dp"
         android:textSize="12sp"
+        android:textColor="?attr/primaryTextColor"
         app:layout_constraintStart_toEndOf="@+id/imgIcon"
         app:layout_constraintTop_toBottomOf="@+id/namestxt" />
 

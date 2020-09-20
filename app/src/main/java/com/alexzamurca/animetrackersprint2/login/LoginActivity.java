@@ -20,6 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.Database.Login;
 
@@ -119,8 +122,19 @@ public class LoginActivity extends AppCompatActivity
 
     private void login()
     {
-        LoginAsync loginAsync = new LoginAsync();
-        loginAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(this);
+        if(checkConnection.isConnected())
+        {
+            LoginAsync loginAsync = new LoginAsync();
+            loginAsync.execute();
+        }
+        else
+        {
+            Log.d(TAG, "login: no internet connection");
+
+            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+            noConnectionDialog.show(getSupportFragmentManager(), "NoConnectionDialog");
+        }
     }
 
     private class LoginAsync extends AsyncTask<Void, Void, Void>

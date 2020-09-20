@@ -2,7 +2,10 @@ package com.alexzamurca.animetrackersprint2.series.series_list;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +17,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
+import com.alexzamurca.animetrackersprint2.algorithms.RemoveSeries;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.Database.Remove;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.bumptech.glide.Glide;
 
 import java.io.Serializable;
@@ -58,7 +67,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     public void onBindViewHolder(@NonNull SeriesRecyclerViewAdapter.ViewHolder holder, int position)
     {
 
-        final String title = list.get(position).getTitle();
+        String title = list.get(position).getTitle();
         String next_episode = "Episode:\n";
         int next_episode_number = list.get(position).getNext_episode_number();
         if(next_episode_number < 0)
@@ -82,8 +91,24 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                 .load(cover_image)
                 .into(holder.image);
 
-        // Setting the text views
         holder.title.setText(title);
+        Rect bounds = new Rect();
+        Paint textPaint = holder.title.getPaint();
+        textPaint.getTextBounds(title, 0, title.length(), bounds);
+        int width = bounds.width();
+        Log.d(TAG, "onBindViewHolder: " + title + " width" + width);
+
+        // 1127 = how much text can fit on the screen with 30sp
+        // 2400 = how much text can fit on the screen with 25sp
+        if(width>1127 && width<=2400)
+        {
+            holder.title.setTextSize(25);
+        }
+        else if(width>2400)
+        {
+            holder.title.setTextSize(20);
+        }
+
         holder.next_episode.setText(next_episode);
         showAirDate(holder, air_date, air_date_change);
         sortNotificationStateColours(holder, notifications_on);
@@ -132,7 +157,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         protected void publishResults(CharSequence constraint, FilterResults results)
         {
             list.clear();
+
             list.addAll((Collection<? extends Series>) results.values);
+
             notifyDataSetChanged();
         }
     };
@@ -180,7 +207,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         if(!air_date.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
+            Calendar calendar = convertDateToCalendar.convert(air_date);
             if(calendar != null)
             {
 
@@ -205,7 +232,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
                     }
                 }
 
-                newAirDate = convertDateToCalendar.timeZoneReverseConvert(context, calendar);
+                newAirDate = convertDateToCalendar.reverseConvert(calendar);
             }
             else
             {
@@ -290,11 +317,27 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
     public void removeSeries(Series series)
     {
-        RemoveAsync removeAsync = new RemoveAsync();
-        removeAsync.setSelectedSeries(series);
-        removeAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(context);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            Log.d(TAG, "remove: we have internet");
+            RemoveAsync removeAsync = new RemoveAsync();
+            removeAsync.setSelectedSeries(series);
+            removeAsync.execute();
+            refreshSeriesList();
+        }
+        else
+        {
+            Log.d(TAG, "removeSeries: NO INTERNET");
 
-        refreshSeriesList();
+            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("update_db", true);
+            noConnectionDialog.setArguments(bundle);
+            noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
+
+        }
     }
 
     private void refreshSeriesList()

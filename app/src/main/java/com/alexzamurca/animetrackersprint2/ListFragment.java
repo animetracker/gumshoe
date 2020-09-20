@@ -2,7 +2,6 @@ package com.alexzamurca.animetrackersprint2;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
@@ -34,17 +34,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.Database.UpdateNotificationsOn;
 import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.algorithms.DateSortSeriesList;
-import com.alexzamurca.animetrackersprint2.series.dialog.CheckConnection;
-import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
-import com.alexzamurca.animetrackersprint2.series.dialog.NoConnectionDialog;
-import com.alexzamurca.animetrackersprint2.series.dialog.NoDatabaseDialog;
-import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
+import com.alexzamurca.animetrackersprint2.dialog.NotificationsOffDialog;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,7 +54,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.OnSeriesListener, IncorrectAirDateDialog.IncorrectAirDateListener, NotificationsOffDialog.OnResponseListener{
+public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.OnSeriesListener, NotificationsOffDialog.OnResponseListener{
     private static final String TAG = "ListFragment";
     private transient FragmentActivity mContext;
 
@@ -80,8 +80,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
         recyclerViewListener = this;
 
-        performNotificationButtonCheck();
-
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
 
@@ -98,9 +96,9 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
         swipeRefreshLayout = mView.findViewById(R.id.series_swipe_refresh_layout);
 
-        swipeRefreshLayout.setOnRefreshListener(this::checkConnectionAndInitList);
+        swipeRefreshLayout.setOnRefreshListener(this::initList);
 
-        checkConnectionAndInitList();
+        initList();
 
         FloatingActionButton addButton = mView.findViewById(R.id.series_list_floating_add_button);
         // Search button
@@ -115,7 +113,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         );
         return mView;
     }
-
 
     @Override
     public void onAttach(@NonNull Context context)
@@ -135,7 +132,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         inflater.inflate(R.menu.series_list_toolbar_menu, menu);
 
         MenuItem item = menu.findItem(R.id.series_list_toolbar_search);
-        
+
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener()
         {
             @Override
@@ -161,6 +158,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         });
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setQueryHint("search the series list");
+        searchView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.greyishWhite));
         manageSearchView(searchView);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -185,60 +183,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             popup.show();
         }
         return true;
-    }
-
-    private void performNotificationButtonCheck()
-    {
-        Intent activityIntent = requireActivity().getIntent();
-        Log.d(TAG, "performNotificationButtonCheck: is intent from MainActivity null?:" + (activityIntent != null));
-
-        if(activityIntent!=null)
-        {
-            // Try get notifications off bundle
-            Bundle notificationsOffBundle = activityIntent.getBundleExtra("bundle_notifications_off");
-            if(notificationsOffBundle!=null)
-            {
-                Log.d(TAG, "performNotificationButtonCheck: received a notification off bundle, meaning a notification's \"turn notifications off\" button was pressed");
-                boolean notificationsOff = notificationsOffBundle.getBoolean("notifications_off");
-                if(notificationsOff)
-                {
-                    Log.d(TAG, "performNotificationButtonCheck: notifications off boolean is true");
-                    Series series = (Series) notificationsOffBundle.getSerializable("series");
-                    doOnNotificationsOff(series);
-                    notificationsOffBundle.putBoolean("notifications_off", false);
-                }
-            }
-
-            // Try get notifications off bundle
-            Bundle incorrectAirDateBundle = activityIntent.getBundleExtra("bundle_incorrect_air_date");
-            if(incorrectAirDateBundle!=null)
-            {
-                Log.d(TAG, "performNotificationButtonCheck: received a incorrect air date bundle, meaning a notification's \"incorrect air date\" button was pressed");
-                boolean incorrectAirDate = incorrectAirDateBundle.getBoolean("incorrect_air_date");
-                if(incorrectAirDate)
-                {
-                    Log.d(TAG, "performNotificationButtonCheck: incorrect air date boolean is true");
-                    Series series = (Series) incorrectAirDateBundle.getSerializable("series");
-                    doOnSeriesError(series);
-                    incorrectAirDateBundle.putBoolean("incorrect_air_date", false);
-                }
-            }
-        }
-    }
-
-    private void checkConnectionAndInitList()
-    {
-        CheckConnection checkConnection = new CheckConnection(getContext());
-        boolean isConnected = checkConnection.isConnected();
-        if (isConnected)
-        {
-            initList();
-        }
-        else
-        {
-            newDialogInstance();
-            Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setupDropDownOnClick(PopupMenu popup)
@@ -376,19 +320,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         mNavController.navigate(R.id.action_showing_series_info, arguments);
     }
 
-
-    public void newDialogInstance()
-    {
-        NoConnectionDialog dialog = new NoConnectionDialog();
-        Bundle args = new Bundle();
-        // Making sure we do not get an IOException
-        Log.d(TAG, "newDialogInstance: about to add NoConnectionDialog.TryAgainListener");
-        //args.putSerializable("data", this);
-        dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "NoConnectionDialog");
-
-    }
-
     private void initRecyclerView()
     {
         RecyclerView recyclerView = requireView().findViewById(R.id.series_recycler_view);
@@ -399,10 +330,44 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     private void initList()
     {
-        progressBar.setVisibility(View.VISIBLE);
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
 
-        MySQLConnection mySQLConnection = new MySQLConnection();
-        mySQLConnection.execute();
+            GettingTableAsync gettingTableAsync = new GettingTableAsync();
+            gettingTableAsync.execute();
+            Log.d(TAG, "getting table has connection");
+        }
+        else
+        {
+            Log.d(TAG, "getting table: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "getTable request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "getTable request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     @Override
@@ -426,16 +391,53 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         Log.d(TAG, "onNotificationsOff: about to add onResponseListener");
         args.putSerializable("onResponseListener",this);
         dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "notificationsOffDialog");
+        dialog.show(mContext.getSupportFragmentManager(), "NotificationsOffDialog");
     }
 
     @Override
     public void onNotificationsOn(Series series)
     {
-        progressBar.setVisibility(View.VISIBLE);
-        UpdateNotificationsOnAsync updateNotificationsOnAsync = new UpdateNotificationsOnAsync();
-        updateNotificationsOnAsync.setSelectedSeries(series);
-        updateNotificationsOnAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            UpdateNotificationsOnAsync updateNotificationsOnAsync = new UpdateNotificationsOnAsync();
+            updateNotificationsOnAsync.setSelectedSeries(series);
+            updateNotificationsOnAsync.execute();
+            Log.d(TAG, "update notifications on has connection");
+        }
+        else
+        {
+            Log.d(TAG, "update notifications on: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "getTable request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "update notifications on request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     @Override
@@ -457,28 +459,10 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onErrorWrongAirDate(Series series)
     {
-        doOnSeriesError(series);
+       doOnSeriesError(series);
     }
 
-    private void doOnSeriesError(Series series)
-    {
-        IncorrectAirDateDialog dialog = new IncorrectAirDateDialog();
-        Bundle args = new Bundle();
-        Log.d(TAG, "onErrorWrongAirDate: about to add incorrect air date listener");
-        args.putSerializable("incorrectAirDateListener", ListFragment.this);
-        args.putSerializable("series", series);
-        dialog.setArguments(args);
-        dialog.show(mContext.getSupportFragmentManager(), "incorrectAirDateDialog");
-    }
-
-    @Override
-    public void OnChangeTimeZoneClick()
-    {
-        mNavController.navigate(R.id.action_dialog_change_time_zone);
-    }
-
-    @Override
-    public void OnChangeAirDateClick(Series series)
+    void doOnSeriesError(Series series)
     {
         // If series has an air date
         if(!series.getAir_date().equals(""))
@@ -495,26 +479,47 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onYesClickListener(Series series)
     {
-        progressBar.setVisibility(View.VISIBLE);
-        UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
-        updateNotificationsOffAsync.setSelectedSeries(series);
-        updateNotificationsOffAsync.execute();
-    }
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
+            updateNotificationsOffAsync.setSelectedSeries(series);
+            updateNotificationsOffAsync.execute();
+            Log.d(TAG, "update notifications off has internet");
+        }
+        else
+        {
+            Log.d(TAG, "updateNotificationsOff: NO INTERNET");
 
-    // Main Activity -> List Fragment communication
-    public static ListFragment getInstance()
-    {
-        return new ListFragment();
-    }
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
 
-    public void OnIncorrectAirDateAction(Series series)
-    {
-        doOnSeriesError(series);
-    }
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "updateNotificationsOff request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "updateNotificationsOff request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
 
-    public void OnNotificationsOffAction(Series series)
-    {
-        doOnNotificationsOff(series);
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     private void setNotificationsForAllSeriesInList()
@@ -532,7 +537,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         String air_date = series.getAir_date();
         Log.d(TAG, "adjustAndSetNotifications: air date " + air_date);
 
-        AdjustAirDate adjustAirDate = new AdjustAirDate(series, getContext());
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
         Calendar calendar = adjustAirDate.getCalendar();
 
         // If calendar returned it means all is good and notifications can be set
@@ -546,17 +551,16 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     }
 
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
-    public class MySQLConnection extends AsyncTask<Void, Void, Void>
+    public class GettingTableAsync extends AsyncTask<Void, Void, Void>
     {
-        private boolean wasRequestSuccessful;
         private ArrayList<Series> tempList;
+        private SelectTable selectTable;
 
         @Override
         protected Void doInBackground(Void... voids)
         {
-            SelectTable selectTable = new SelectTable(session, getContext());
+            selectTable = new SelectTable(session, getContext());
             tempList = selectTable.getSeriesList();
-            wasRequestSuccessful = selectTable.getWasRequestSuccessful();
 
             return null;
         }
@@ -564,6 +568,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         @Override
         protected void onPostExecute(Void aVoid)
         {
+
+
             // Hide loading
             progressBar.setVisibility(View.GONE);
 
@@ -583,24 +589,15 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 list.addAll(tempList);
             }
 
-            // Database connection dialog
-            if(wasRequestSuccessful)
-            {
 
-                adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mNavController);
+            adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mNavController);
 
-                initRecyclerView();
+            initRecyclerView();
 
-                // Get sort state from SharedPreferences
-                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-                int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
-                sortListAccordingToSelection(selection);
-            }
-            else
-            {
-                NoDatabaseDialog dialog = new NoDatabaseDialog();
-                dialog.show(mContext.getSupportFragmentManager(), "NoDatabaseDialog");
-            }
+            // Get sort state from SharedPreferences
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+            sortListAccordingToSelection(selection);
 
             super.onPostExecute(aVoid);
         }
@@ -678,7 +675,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 Toast.makeText(getContext(), "Failed to turn notifications on for \"" + title +"\", notifications are still off.", Toast.LENGTH_LONG).show();
             }
 
-            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries, getContext());
+            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries);
             Calendar calendar = adjustAirDate.getCalendar();
 
             if(calendar!=null)

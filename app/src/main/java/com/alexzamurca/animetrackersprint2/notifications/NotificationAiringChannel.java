@@ -38,8 +38,8 @@ public class NotificationAiringChannel
     private void constructUpdateCalendar(String air_date)
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        airDateCalendar = convertDateToCalendar.noTimeZoneConvert(air_date);
-        airDateCalendar.add(Calendar.MINUTE, 30);
+        airDateCalendar = convertDateToCalendar.convert(air_date);
+        airDateCalendar.add(Calendar.MINUTE, 1);
     }
 
     private void compareCalendars()
@@ -95,7 +95,7 @@ public class NotificationAiringChannel
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateAfterChangesCalendar.getTimeInMillis(), pendingIntent);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Log.d(TAG, "startNotificationAlarm: set notification alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.timeZoneReverseConvert(mContext, airDateAfterChangesCalendar));
+        Log.d(TAG, "startNotificationAlarm: set notification alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateAfterChangesCalendar));
     }
 
     private void setUpdateAlarm(Series series)
@@ -113,7 +113,7 @@ public class NotificationAiringChannel
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, airDateCalendar.getTimeInMillis(), pendingIntent);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-        Log.d(TAG, "startNotificationAlarm: set update series in DB alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.noTimeZoneReverseConvert(airDateCalendar));
+        Log.d(TAG, "startNotificationAlarm: set update series in DB alarm for \"" + series.getTitle() + "\" on date: " + convertDateToCalendar.reverseConvert(airDateCalendar));
     }
 
     // Will happen at log out, turning notifications off or changing air_date_change and notification_change

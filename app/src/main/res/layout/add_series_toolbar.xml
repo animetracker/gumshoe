@@ -5,8 +5,15 @@
     android:layout_height="?attr/actionBarSize"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/add_series_toolbar"
-    android:background="#ffffff"
-    app:title="Add a new Series"
-    android:theme="@style/ThemeOverlay.AppCompat.Light">
+    android:background="?attr/bgh">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:text="Add a new series"
+        android:textSize="20dp"
+        android:textColor="?attr/primaryTextColor"
+        android:gravity="center_vertical"
+        />
 
 </androidx.appcompat.widget.Toolbar>

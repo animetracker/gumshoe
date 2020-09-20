@@ -27,8 +27,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.Database.UpdateNotificationChange;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -333,7 +337,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         if(!air_date_change.equals(""))
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(getContext(), air_date);
+            Calendar calendar = convertDateToCalendar.convert(air_date);
 
             // get sign, hours, minutes from air_date change
             String[] signHoursMinutesArray  = air_date_change.split(":");
@@ -352,7 +356,7 @@ public class ChangeNotificationReminderFragment extends Fragment
                 calendar.add(Calendar.MINUTE, -minutes);
             }
 
-            newAirDate = convertDateToCalendar.timeZoneReverseConvert(getContext(), calendar);
+            newAirDate = convertDateToCalendar.reverseConvert(calendar);
         }
         else
         {
@@ -408,7 +412,7 @@ public class ChangeNotificationReminderFragment extends Fragment
     {
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         // Get date in calendar form (so we can change it)
-        Calendar calendar = convertDateToCalendar.timeZoneConvert(getContext(), getChangedAirDate());
+        Calendar calendar = convertDateToCalendar.convert(getChangedAirDate());
 
         // Add minutes, hours, days
         if(beforeAfter.equals("before"))
@@ -443,7 +447,7 @@ public class ChangeNotificationReminderFragment extends Fragment
         }
 
         // Update text
-        String newDate = convertDateToCalendar.timeZoneReverseConvert(getContext(), calendar);
+        String newDate = convertDateToCalendar.reverseConvert(calendar);
         String notificationChange = quantity + " " + metric + " " + beforeAfter + "\nMeaning you will be notified on: " + newDate;
         newChangeTV.setText(notificationChange);
 
@@ -451,8 +455,45 @@ public class ChangeNotificationReminderFragment extends Fragment
 
     private void updateNotificationChangeDB()
     {
-        UpdateNotificationReminderAsync updateNotificationReminderAsync = new UpdateNotificationReminderAsync();
-        updateNotificationReminderAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(requireContext());
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            UpdateNotificationReminderAsync updateNotificationReminderAsync = new UpdateNotificationReminderAsync();
+            updateNotificationReminderAsync.execute();
+            Log.d(TAG, "update notification reminder has internet");
+        }
+        else
+        {
+            Log.d(TAG, "update notification reminder: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "update notification reminder request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(requireActivity().getSupportFragmentManager(), "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "update notification reminder request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     private class UpdateNotificationReminderAsync extends AsyncTask<Void, Void, Void>

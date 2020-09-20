@@ -15,11 +15,11 @@ import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
+import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
-import com.alexzamurca.animetrackersprint2.series.dialog.IncorrectAirDateDialog;
-import com.alexzamurca.animetrackersprint2.series.dialog.NotificationsOffDialog;
-import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity
     String URL = "https://gumshoe.digital15.net/series/findTitle/";
     SharedPreferences sharedPreferences;
     Boolean firstTime;
-    ListFragment listFragmentInstance;
 
     private NavController navController;
     @Override
@@ -40,8 +39,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        listFragmentInstance  = ListFragment.getInstance();
+        checkDarkMode();
+        checkIfUpdateDBPending();
 
         Intent intent = getIntent();
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
@@ -69,13 +68,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        performNotificationButtonCheck();
-    }
-
     private void initBottomNavigation()
     {
         // add a check to see if logged in or not before opening main activity
@@ -91,39 +83,37 @@ public class MainActivity extends AppCompatActivity
         return super.onSupportNavigateUp();
     }
 
-    private void performNotificationButtonCheck()
+    private void checkDarkMode()
     {
-        Log.d(TAG, "performNotificationButtonCheck: is intent from MainActivity null?:" + (getIntent() != null));
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        boolean darkModeOn = sharedPreferences.getBoolean("dark_mode_on", false);
+        if(darkModeOn) setTheme(R.style.AppThemeDark);
+        else setTheme(R.style.AppThemeLight);
+    }
 
-        // Try get notifications off bundle
-        Bundle notificationsOffBundle = getIntent().getBundleExtra("bundle_notifications_off");
-        if(notificationsOffBundle!=null)
+    private void checkIfUpdateDBPending()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
+        boolean needDBUpdate = sharedPreferences.getBoolean("offline", false);
+        if(needDBUpdate)
         {
-            Log.d(TAG, "performNotificationButtonCheck: received a notification off bundle, meaning a notification's \"turn notifications off\" button was pressed");
-            boolean notificationsOff = notificationsOffBundle.getBoolean("notifications_off");
-            if(notificationsOff)
+            CheckConnection checkConnection = new CheckConnection(this);
+            boolean isConnected = checkConnection.isConnected();
+            if(isConnected)
             {
-                Log.d(TAG, "performNotificationButtonCheck: notifications off boolean is true");
-                Series series = (Series) notificationsOffBundle.getSerializable("series");
-                listFragmentInstance.OnNotificationsOffAction(series);
+                UpdateDB updateDB = new UpdateDB(this);
+                updateDB.run();
             }
-        }
-
-        // Try get notifications off bundle
-        Bundle incorrectAirDateBundle = getIntent().getBundleExtra("bundle_incorrect_air_date");
-        if(incorrectAirDateBundle!=null)
-        {
-            Log.d(TAG, "performNotificationButtonCheck: received a incorrect air date bundle, meaning a notification's \"incorrect air date\" button was pressed");
-            boolean incorrectAirDate = incorrectAirDateBundle.getBoolean("incorrect_air_date");
-            if(incorrectAirDate)
+            else
             {
-                Log.d(TAG, "performNotificationButtonCheck: incorrect air date boolean is true");
-                Series series = (Series) incorrectAirDateBundle.getSerializable("series");
-                listFragmentInstance.OnIncorrectAirDateAction(series);
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(getSupportFragmentManager(), "NoConnectionDialog");
             }
         }
     }
-
 
     private void checkLoggedInState()
     {
@@ -160,12 +150,20 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
     private void checkIfSessionExpired()
     {
-        CheckSessionAsync checkSessionAsync = new CheckSessionAsync();
-        checkSessionAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(this);
+        boolean isConnected = checkConnection.isConnected();
+        if(isConnected)
+        {
+            Log.d(TAG, "checkIfSessionExpired: checking as have internet connection");
+            CheckSessionAsync checkSessionAsync = new CheckSessionAsync();
+            checkSessionAsync.execute();
+        }
+        else
+        {
+            Log.d(TAG, "checkIfSessionExpired: no internet connection to check session");
+        }
     }
 
 

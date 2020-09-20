@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/bg">
 
     <include
         layout="@layout/change_notification_reminder_toolbar"
@@ -19,8 +22,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/change_notification_reminder_toolbar_object">
+        android:layout_height="match_parent"
+        android:layout_below="@id/change_notification_reminder_toolbar_object"
+        android:background="?attr/bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,14 +34,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/change_notification_reminder_layout"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="?attr/bg">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/change_notification_reminder_change_title"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical" />
@@ -61,7 +66,7 @@
                 android:text="@string/do_you_wish_to_change_this"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="?attr/primaryTextColor"
                 android:layout_below="@id/change_notification_reminder_layout"
                 android:layout_centerInParent="true"/>
 
@@ -72,7 +77,8 @@
                 android:orientation="horizontal"
                 android:layout_below="@id/change_notification_reminder_question"
                 android:layout_centerInParent="true"
-                style="?attr/buttonBarButtonStyle">
+                style="?attr/buttonBarButtonStyle"
+                android:background="?attr/bg">
 
                 <Button
                     android:layout_width="80dp"
@@ -104,53 +110,58 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_below="@id/button_layout"
-                android:id="@+id/change_notification_reminder_hidden_layout">
+                android:id="@+id/change_notification_reminder_hidden_layout"
+                android:background="?attr/bg">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:text="@string/please_specify_your_new_notification_change"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/bg">
 
                     <TextView
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#000000"
+                        android:textColor="?attr/primaryTextColor"
                         android:layout_margin="10dp"
                         android:gravity="center_vertical"
                         android:text="@string/quantity"/>
 
                     <EditText
+                        android:id="@+id/change_notification_reminder_quantity"
                         android:layout_width="130dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/change_notification_reminder_quantity"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
                         android:autofillHints="positive num"
-                        android:inputType="number"
                         android:digits="0123456789"
                         android:hint="@string/positive_num"
-                        android:layout_marginEnd="10dp"/>
+                        android:inputType="number"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/primaryTextColor" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/bg">
 
                     <TextView
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#000000"
+                        android:textColor="?attr/primaryTextColor"
                         android:layout_margin="10dp"
                         android:gravity="center_vertical"
                         android:text="@string/metric"/>
@@ -162,19 +173,22 @@
                         android:layout_alignParentEnd="true"
                         android:entries="@array/metric_spinner_options"
                         android:layout_marginEnd="10dp"
+                        android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/bg">
 
                     <TextView
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#000000"
+                        android:textColor="?attr/primaryTextColor"
                         android:layout_margin="10dp"
                         android:gravity="center_vertical"
                         android:text="@string/before_after"/>
@@ -186,6 +200,8 @@
                         android:layout_alignParentEnd="true"
                         android:entries="@array/before_after_spinner_options"
                         android:layout_marginEnd="10dp"
+                        android:popupBackground="?attr/dropdownbg"
+                        android:background="?attr/dropdownbg"
                         />
                 </RelativeLayout>
 
@@ -193,14 +209,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/change_notification_reminder_error_layout"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?attr/bg">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/minutes_warning"
                         android:orientation="horizontal"
-                        android:layout_marginVertical="5dp">
+                        android:layout_marginVertical="5dp"
+                        android:background="?attr/bg">
 
                         <ImageView
                             android:layout_width="30dp"
@@ -227,7 +245,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/hours_warning"
                         android:orientation="horizontal"
-                        android:layout_marginVertical="5dp">
+                        android:layout_marginVertical="5dp"
+                        android:background="?attr/bg">
 
                         <ImageView
                             android:layout_width="30dp"
@@ -254,7 +273,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/days_warning"
                         android:orientation="horizontal"
-                        android:layout_marginVertical="5dp">
+                        android:layout_marginVertical="5dp"
+                        android:background="?attr/bg">
 
                         <ImageView
                             android:layout_width="30dp"
@@ -283,7 +303,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/change_notification_reminder_change_new_title"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_margin="10dp"
                     android:gravity="center_vertical" />
 
@@ -301,7 +321,7 @@
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/primaryTextColor"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
                     android:textStyle="italic"
@@ -310,9 +330,4 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-
-
-
-
-
 </RelativeLayout>

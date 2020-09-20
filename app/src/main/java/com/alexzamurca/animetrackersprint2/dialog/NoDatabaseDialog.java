@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.series.dialog;
+package com.alexzamurca.animetrackersprint2.dialog;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.alexzamurca.animetrackersprint2.R;
-import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
 
 public class NoDatabaseDialog extends DialogFragment
 {
@@ -29,7 +28,7 @@ public class NoDatabaseDialog extends DialogFragment
                 {
                     dialog_report_bug dialogReportBug = new dialog_report_bug();
                     dialogReportBug.show(requireActivity().getSupportFragmentManager(), "dialog_report_button");
-                    //openDiscord();
+                    openDiscord();
                 }
 
         );

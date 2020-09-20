@@ -3,10 +3,17 @@ package com.alexzamurca.animetrackersprint2.notifications;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
+
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 
 import com.alexzamurca.animetrackersprint2.Database.SelectTable;
+import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import java.util.Calendar;
 import java.util.List;
@@ -54,8 +61,45 @@ public class SetNewNotification
 
     private void setList()
     {
-        GetSeriesListAsync getSeriesListAsync = new GetSeriesListAsync();
-        getSeriesListAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(context);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            GetSeriesListAsync getSeriesListAsync = new GetSeriesListAsync();
+            getSeriesListAsync.execute();
+            Log.d(TAG, "get table has internet");
+        }
+        else
+        {
+            Log.d(TAG, "get table: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(context);
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "get table request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "get table request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     private Series findSeriesInList(Series series)
@@ -83,8 +127,8 @@ public class SetNewNotification
         if(!air_date.equals("") && notificationsOn)
         {
             ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
-            Calendar calendar = convertDateToCalendar.timeZoneConvert(context, air_date);
-            Log.d(TAG, "adjustAirDate: calendar before changes for " + series.getTitle() + " is " + convertDateToCalendar.timeZoneReverseConvert(context, calendar));
+            Calendar calendar = convertDateToCalendar.convert(air_date);
+            Log.d(TAG, "adjustAirDate: calendar before changes for " + series.getTitle() + " is " + convertDateToCalendar.reverseConvert(calendar));
 
             String air_date_change = series.getAir_date_change();
             String notification_change = series.getNotification_change();
@@ -150,7 +194,7 @@ public class SetNewNotification
                     }
                 }
             }
-            Log.d(TAG, "adjustAirDate: calendar after changes for " + series.getTitle() + " is " + convertDateToCalendar.timeZoneReverseConvert(context, calendar));
+            Log.d(TAG, "adjustAirDate: calendar after changes for " + series.getTitle() + " is " + convertDateToCalendar.reverseConvert(calendar));
             return calendar;
 
         }

@@ -4,8 +4,10 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
+
 public class App extends Application
 {
+    
     public static final String SERIES_AIRING_REMINDER_ID = "series_airing_reminder";
     public static final String SETTINGS_ID = "settings";
 
@@ -44,4 +46,6 @@ public class App extends Application
         notificationManager.createNotificationChannel(seriesAiringReminderChannel);
         notificationManager.createNotificationChannel(settingsChannel);
     }
+
+
 }

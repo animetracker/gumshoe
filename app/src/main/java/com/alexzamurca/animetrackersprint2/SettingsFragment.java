@@ -1,5 +1,7 @@
 package com.alexzamurca.animetrackersprint2;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,13 +29,26 @@ import androidx.navigation.Navigation;
 import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
-import com.alexzamurca.animetrackersprint2.settings.dialog_report_bug;
+import com.alexzamurca.animetrackersprint2.dialog.dialog_report_bug;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
     private Button darkMode;
     private NavController navController;
     private FragmentActivity mContext;
+    RewardedAd rewardedAd;
+    RewardedAd tempLoadedAd;
+    TextView textView;
+    Button button;
+    int value=0;
 
     @Override
     public void onAttach(@NonNull Context context)
@@ -74,18 +90,17 @@ public class SettingsFragment extends Fragment
             navController.navigate(R.id.action_settingsFragment_to_tutorialActivity);
         });
 
-        Button changeTimeZone = view.findViewById(R.id.settings_change_time_zone_button);
-        changeTimeZone.setOnClickListener(view1 ->
-
-            navController.navigate(R.id.action_change_time_zone)
-        );
-
         Button logOut = view.findViewById(R.id.settings_logout);
         logOut.setOnClickListener(view14 ->
             openLogin()
         );
 
-        // This method is used to create the dark mode using the switch
+        Button store = view.findViewById(R.id.settings_store);
+        store.setOnClickListener(view15 ->
+            navController.navigate(R.id.action_to_store)
+        );
+
+        // This method is used to create the dark mode using the button
         darkMode= view.findViewById(R.id.settings_dark_mode_button);
         darkMode.setOnClickListener(view15 ->
             {
@@ -98,7 +113,7 @@ public class SettingsFragment extends Fragment
                     String darkModeOffString = "Dark Mode: Off";
                     darkMode.setText(darkModeOffString);
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
-
+                    mContext.setTheme(R.style.AppThemeLight);
                     editor.putBoolean("dark_mode_on", false);
                 }
                 else
@@ -107,14 +122,97 @@ public class SettingsFragment extends Fragment
                     String darkModeOnString = "Dark Mode: On";
                     darkMode.setText(darkModeOnString);
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark));
-
+                    mContext.setTheme(R.style.AppThemeDark);
                     editor.putBoolean("dark_mode_on", true);
                 }
                 editor.apply();
+                navController.navigate(R.id.settingsFragment);
             }
         );
 
+        //RewardAd
+        MobileAds.initialize(mContext, initializationStatus -> {
+        });
+        rewardedAd = new RewardedAd(mContext,
+                "ca-app-pub-3940256099942544/5224354917");
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+
+        textView=view.findViewById(R.id.text_view);
+        button =view.findViewById(R.id.settings_ads);
+
+        button.setOnClickListener(v ->
+        {
+            if (rewardedAd.isLoaded())
+            {
+                Activity activityContext = mContext;
+                RewardedAdCallback adCallback = new RewardedAdCallback() {
+                    @Override
+                    public void onRewardedAdOpened()
+                    {
+                        // Ad opened.
+                        tempLoadedAd = createAndLoadRewardedAd();
+                    }
+
+                    @Override
+                    public void onRewardedAdClosed()
+                    {
+                        // Ad closed.
+                        if(tempLoadedAd!=null)
+                        {
+                            rewardedAd = tempLoadedAd;
+                            tempLoadedAd = null;
+                        }
+                    }
+
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
+                        value=value+50;
+                        textView.setText(""+value);
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToShow(AdError adError) {
+                        // Ad failed to display.
+                    }
+                };
+                rewardedAd.show(activityContext, adCallback);
+            }
+            else {
+                Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+            }
+        });
         return view;
+    }
+
+    public RewardedAd createAndLoadRewardedAd() {
+        RewardedAd rewardedAd = new RewardedAd(mContext,
+                "ca-app-pub-3940256099942544/5224354917");
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+        return rewardedAd;
     }
 
     @Override
@@ -144,8 +242,6 @@ public class SettingsFragment extends Fragment
             Intent myIntent = new Intent(Intent.ACTION_SEND);
             myIntent.setType("text/plain");
             String shareBody = "Your body here";
-           // String shareSub = "Your Subject here";
-           // myIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
             myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
             startActivity((Intent.createChooser(myIntent, "Share using")));
         }

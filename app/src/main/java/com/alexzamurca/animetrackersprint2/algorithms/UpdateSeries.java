@@ -3,12 +3,18 @@ package com.alexzamurca.animetrackersprint2.algorithms;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+
+import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.SetNewNotification;
+import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
 import com.alexzamurca.animetrackersprint2.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
@@ -68,18 +74,90 @@ public class UpdateSeries
 
     private void updateAirDate(Series series, String air_date, String status, int episode_number)
     {
-        Log.d(TAG, "updateAirDate: initiating updateAirDateSync");
-        UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
-        airDateAsync.setVariables(series, air_date, status, episode_number);
-        airDateAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(mContext);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            Log.d(TAG, "updateAirDate: has internet");
+            UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
+            airDateAsync.setVariables(series, air_date, status, episode_number);
+            airDateAsync.execute();
+        }
+        else
+        {
+            Log.d(TAG, "updateAirDate: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(mContext);
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "updateAirDate request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(((FragmentActivity)mContext).getSupportFragmentManager(), "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "updateAirDate request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(mContext);
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     public void setSeriesInfo(boolean set_new_notification)
     {
-        Log.d(TAG, "getSeriesInfoMethod: initialising getSeriesInfoAsync");
-        GetSeriesInfoAsync getSeriesInfoAsync = new GetSeriesInfoAsync();
-        this.set_new_notification = set_new_notification;
-        getSeriesInfoAsync.execute();
+        CheckConnection checkConnection = new CheckConnection(mContext);
+        boolean isConnectedToInternet = checkConnection.isConnected();
+        if (isConnectedToInternet)
+        {
+            Log.d(TAG, "getSeriesInfoMethod: has internet");
+            GetSeriesInfoAsync getSeriesInfoAsync = new GetSeriesInfoAsync();
+            this.set_new_notification = set_new_notification;
+            getSeriesInfoAsync.execute();
+        }
+        else
+        {
+            Log.d(TAG, "getSeriesInfo: NO INTERNET");
+
+            AppGround appGround = new AppGround();
+            boolean isAppOnForeground = appGround.isAppOnForeground(mContext);
+
+            if(isAppOnForeground)
+            {
+                Log.d(TAG, "Ani-list getSeriesInfo request app in foreground");
+                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("update_db", true);
+                noConnectionDialog.setArguments(bundle);
+                noConnectionDialog.show(((FragmentActivity)mContext).getSupportFragmentManager(), "NoConnectionDialog");
+            }
+            else
+            {
+                Log.d(TAG, "Ani-list getSeriesInfo request app in background");
+                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(mContext);
+                updateFailedNotification.showNotification();
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putBoolean("offline", true);
+                Log.d(TAG, "insert: app set to offline mode");
+                editor.apply();
+            }
+        }
+
     }
 
     private void setNewNotification()
