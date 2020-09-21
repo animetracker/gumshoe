@@ -1,13 +1,16 @@
 package com.alexzamurca.animetrackersprint2.notifications;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
@@ -44,11 +47,18 @@ public class SeriesFinishedNotification
             text = "Series has now been removed from your list as it has been cancelled!";
         }
 
+        // Intent to reopen app on notification click
+        Intent activityIntent = new Intent(mContext, MainActivity.class);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 2, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         return new  NotificationCompat.Builder(mContext, SERIES_AIRING_REMINDER_ID)
                 .setSmallIcon(R.drawable.ic_gumshoe_notification_fill_icon)
                 .setColor(ContextCompat.getColor(mContext, R.color.pleasantBlue))
                 .setContentTitle(series.getTitle())
                 .setContentText(text)
+                .setAutoCancel(true)
+                .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .build();

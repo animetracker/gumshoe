@@ -64,11 +64,10 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     private String session;
 
     private SeriesRecyclerViewAdapter adapter;
-    private TextView emptyListTV;
-    private ImageView emptyListImage;
     private LinearLayout emptyListLayout;
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
 
     private View mView;
     private NavController mNavController;
@@ -87,12 +86,18 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         setHasOptionsMenu(true);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
-        emptyListTV = mView.findViewById(R.id.series_empty_list);
-        emptyListImage = mView.findViewById(R.id.series_empty_list_image);
+        TextView emptyListTV = mView.findViewById(R.id.series_empty_list);
+        ImageView emptyListImage = mView.findViewById(R.id.series_empty_list_image);
         emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
+        emptyListTV.setText(" Your Series List is empty!\nAdd any airing series or\nseries soon to be aired\nby tapping the + button below.");
+        emptyListLayout.setBackgroundResource(R.drawable.button);
+        emptyListImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
+        emptyListLayout.setVisibility(View.GONE);
 
         progressBar = mView.findViewById(R.id.series_progress_bar);
         progressBar.setVisibility(View.GONE);
+
+        recyclerView = mView.findViewById(R.id.series_recycler_view);
 
         swipeRefreshLayout = mView.findViewById(R.id.series_swipe_refresh_layout);
 
@@ -322,10 +327,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     private void initRecyclerView()
     {
-        RecyclerView recyclerView = requireView().findViewById(R.id.series_recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 
     private void initList()
@@ -568,8 +571,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         @Override
         protected void onPostExecute(Void aVoid)
         {
-
-
             // Hide loading
             progressBar.setVisibility(View.GONE);
 
@@ -579,12 +580,13 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             // Empty List
             if(tempList.size() == 0)
             {
-                emptyListTV.setText(" Your Series List is empty!\nAdd any airing series or\nseries soon to be aired\nby tapping the + button below.");
-                emptyListLayout.setBackgroundResource(R.drawable.button);
-                emptyListImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
+                emptyListLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             }
             else
             {
+                emptyListLayout.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 list.clear();
                 list.addAll(tempList);
             }
