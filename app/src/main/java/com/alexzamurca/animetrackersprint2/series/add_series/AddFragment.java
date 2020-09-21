@@ -1,6 +1,5 @@
 package com.alexzamurca.animetrackersprint2.series.add_series;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -36,7 +34,6 @@ import java.util.Calendar;
 public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.RowClickListener {
 
     private static final String TAG = "SearchActivity";
-    private FragmentActivity mContext;
     private NavController navController;
 
     private ArrayList<SearchResult> list = new ArrayList<>();
@@ -122,13 +119,6 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context)
-    {
-        mContext = (FragmentActivity)context;
-        super.onAttach(context);
     }
 
     @Override

@@ -95,7 +95,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         emptyListLayout.setVisibility(View.GONE);
 
         progressBar = mView.findViewById(R.id.series_progress_bar);
-        progressBar.setVisibility(View.GONE);
 
         recyclerView = mView.findViewById(R.id.series_recycler_view);
 
@@ -111,11 +110,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             changeToAddFragment()
         );
 
-        FloatingActionButton setNotificationButton = mView.findViewById(R.id.series_list_floating_set_notification_button);
-        // Search button
-        setNotificationButton.setOnClickListener(v ->
-                setNotificationsForAllSeriesInList()
-        );
         return mView;
     }
 
@@ -130,6 +124,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = Navigation.findNavController(view);
+        hideKeyboard();
     }
 
     @Override
@@ -188,6 +183,13 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             popup.show();
         }
         return true;
+    }
+
+    private void hideKeyboard()
+    {
+        // Hide keyboard
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mView.findViewById(R.id.series_list_layout).getWindowToken(), 0);
     }
 
     private void setupDropDownOnClick(PopupMenu popup)
@@ -298,9 +300,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             {
                 adapter.getFilter().filter(query);
 
-                // Hide keyboard
-                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mView.findViewById(R.id.series_list_layout).getWindowToken(), 0);
+                hideKeyboard();
 
                 return true;
             }
@@ -525,34 +525,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     }
 
-    private void setNotificationsForAllSeriesInList()
-    {
-        List<Series> currentList = adapter.getList();
-        for(int i = 0; i < currentList.size(); i++)
-        {
-            Log.d(TAG, "onSuccessfulAdd: adjusting and setting notifications for \"" + currentList.get(i).getTitle() + "\"");
-            adjustAndSetNotifications(currentList.get(i));
-        }
-    }
-
-    private void adjustAndSetNotifications(Series series)
-    {
-        String air_date = series.getAir_date();
-        Log.d(TAG, "adjustAndSetNotifications: air date " + air_date);
-
-        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
-        Calendar calendar = adjustAirDate.getCalendar();
-
-        // If calendar returned it means all is good and notifications can be set
-        if(calendar!=null)
-        {
-            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
-            notificationAiringChannel.setNotification(series, calendar);
-        }
-
-        Log.d(TAG, "onSuccessfulAdd: set notification for \"" + series.getTitle() + "\"");
-    }
-
     // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
     public class GettingTableAsync extends AsyncTask<Void, Void, Void>
     {
@@ -581,12 +553,12 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             if(tempList.size() == 0)
             {
                 emptyListLayout.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
+                swipeRefreshLayout.setVisibility(View.GONE);
             }
             else
             {
                 emptyListLayout.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
                 list.clear();
                 list.addAll(tempList);
             }
