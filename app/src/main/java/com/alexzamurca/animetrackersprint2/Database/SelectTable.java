@@ -3,7 +3,6 @@ package com.alexzamurca.animetrackersprint2.Database;
 import android.content.Context;
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
@@ -41,9 +40,6 @@ public class SelectTable
         try
         {
             String response = get.sendRequest();
-
-            SessionCheck sessionCheck = new SessionCheck(response, context);
-            sessionCheck.check();
 
             Log.d(TAG, "getSeriesList: " + response);
             jsonResponse = new JSONArray(response);

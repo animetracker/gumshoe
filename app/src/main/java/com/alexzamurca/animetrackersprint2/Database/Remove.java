@@ -2,7 +2,6 @@ package com.alexzamurca.animetrackersprint2.Database;
 
 import android.content.Context;
 
-import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.POST;
 
 public class Remove
@@ -27,12 +26,6 @@ public class Remove
     public boolean remove()
     {
         POST request = new POST(URL, context);
-        boolean isRequest200 = request.sendSimpleRequest();
-
-        String response = request.getResponse();
-        SessionCheck sessionCheck = new SessionCheck(response, context);
-        sessionCheck.check();
-
-        return isRequest200;
+        return request.sendSimpleRequest();
     }
 }

@@ -8,10 +8,8 @@ import androidx.navigation.ui.NavigationUI;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
@@ -19,17 +17,11 @@ import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
-import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = "MainActivity";
-    String URL = "https://gumshoe.digital15.net/series/findTitle/";
     SharedPreferences sharedPreferences;
     Boolean firstTime;
 
@@ -39,12 +31,15 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         checkDarkMode();
         checkIfUpdateDBPending();
 
         Intent intent = getIntent();
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
         {
+            Log.d(TAG, "onCreate: reset alarm because of reboot");
+
             ResetAlarmForUpdateDB resetAlarmForUpdateDB = new ResetAlarmForUpdateDB(this);
             resetAlarmForUpdateDB.reset();
         }
@@ -61,6 +56,7 @@ public class MainActivity extends AppCompatActivity
             Intent tutorialIntent = new Intent(MainActivity.this, TutorialActivity.class);
             tutorialIntent.putExtra("first_time", true);
             startActivity(tutorialIntent);
+            MainActivity.this.finish();
         }
         else
         {
@@ -128,7 +124,6 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            checkIfSessionExpired();
             initBottomNavigation();
         }
     }
@@ -149,76 +144,6 @@ public class MainActivity extends AppCompatActivity
         {
             SetAlarmsForList setAlarmsForList = new SetAlarmsForList(this);
             setAlarmsForList.run();
-        }
-    }
-
-    private void checkIfSessionExpired()
-    {
-        CheckConnection checkConnection = new CheckConnection(this);
-        boolean isConnected = checkConnection.isConnected();
-        if(isConnected)
-        {
-            Log.d(TAG, "checkIfSessionExpired: checking as have internet connection");
-            CheckSessionAsync checkSessionAsync = new CheckSessionAsync();
-            checkSessionAsync.execute();
-        }
-        else
-        {
-            Log.d(TAG, "checkIfSessionExpired: no internet connection to check session");
-        }
-    }
-
-
-    private class CheckSessionAsync extends AsyncTask<Void, Void, Void>
-    {
-        private boolean hasSessionExpired;
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            SharedPreferences sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
-            String session = sharedPreferences.getString("session", "");
-
-            GET get = new GET(URL + session + "/" + "gumshoethisisasessiontest", MainActivity.this);
-            String responseString = get.sendRequest();
-            // Means session is fine
-            if(responseString.equals(""))
-            {
-                hasSessionExpired = false;
-            }
-            else
-            {
-                // try get a JSON
-                try
-                {
-                    JSONObject response = new JSONObject(responseString);
-                    hasSessionExpired = response.getBoolean("error");
-                }
-                catch(JSONException e)
-                {
-                    Log.d(TAG, "doInBackground: trying to get response from get request to check session has not returned a json (JSONException)");
-                    hasSessionExpired = true;
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
-            boolean connection_error = sharedPreferences.getBoolean("db_connect_problem", false);
-            if(!connection_error)
-            {
-                if(hasSessionExpired)
-                {
-                    Toast.makeText(MainActivity.this, "Your session has expired, you need to re-login!", Toast.LENGTH_LONG).show();
-                    openLoginActivity();
-                }
-            }
-
-            super.onPostExecute(aVoid);
         }
     }
 }

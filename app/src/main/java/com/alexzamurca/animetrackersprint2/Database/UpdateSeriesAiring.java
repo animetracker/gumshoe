@@ -3,7 +3,6 @@ package com.alexzamurca.animetrackersprint2.Database;
 import android.content.Context;
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.POST;
 import com.alexzamurca.animetrackersprint2.series.JSON.Construct;
 
@@ -50,9 +49,6 @@ public class UpdateSeriesAiring
     {
         POST request = new POST(URL, context, json);
         String response = request.sendRequest();
-
-        SessionCheck sessionCheck = new SessionCheck(response, context);
-        sessionCheck.check();
 
         if(response.equals("Connection Error"))return 1;
         Log.d(TAG, "insert: updated notifications_on");

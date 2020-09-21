@@ -129,7 +129,8 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     Filter filter = new Filter()
     {
         @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
+        protected FilterResults performFiltering(CharSequence constraint)
+        {
 
             List<Series> filteredList = new ArrayList<>();
 

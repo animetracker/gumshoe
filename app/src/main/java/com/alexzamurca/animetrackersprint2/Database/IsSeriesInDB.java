@@ -3,7 +3,6 @@ package com.alexzamurca.animetrackersprint2.Database;
 import android.content.Context;
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.algorithms.SessionCheck;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;
 
 public class IsSeriesInDB
@@ -35,9 +34,6 @@ public class IsSeriesInDB
     public boolean isSeriesInDB()
     {
         String response = getTitleFromDB();
-
-        SessionCheck sessionCheck = new SessionCheck(response, context);
-        sessionCheck.check();
 
         Log.d(TAG, "isSeriesInDB: Comparing |" + filterName(response) + "| and |" + series_name + "|");
         // So if get request fails it means database is down and so we need to prevent a useless post request

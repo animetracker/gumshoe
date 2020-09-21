@@ -136,7 +136,8 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         holder.status.setText(status);
         holder.expandableLayout.setVisibility(View.GONE);
 
-        holder.show_trailer.setOnClickListener(v -> {
+        holder.show_trailer.setOnClickListener(v ->
+        {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(trailer_URL));
             context.startActivity(intent);

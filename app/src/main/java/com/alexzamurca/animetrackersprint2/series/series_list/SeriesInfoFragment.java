@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import com.alexzamurca.animetrackersprint2.R;
 import com.bumptech.glide.Glide;
@@ -49,7 +50,7 @@ public class SeriesInfoFragment extends Fragment
 
                 String title = selectedSeries.getTitle();
 
-                descriptionTV.setText(selectedSeries.getDescription());
+                descriptionTV.setText(HtmlCompat.fromHtml(selectedSeries.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
                 titleTV.setText(title);
 
                 String image_directory = selectedSeries.getCover_image();

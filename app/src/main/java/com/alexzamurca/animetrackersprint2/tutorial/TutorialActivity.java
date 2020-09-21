@@ -63,8 +63,8 @@ public class TutorialActivity extends AppCompatActivity {
         openMain();
     }
 
-    public void openMain() {
-
+    public void openMain()
+    {
         if(firstTime)
         {
             SharedPreferences sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
@@ -85,6 +85,7 @@ public class TutorialActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+        TutorialActivity.this.finish();
 
     }
 }
