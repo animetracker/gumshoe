@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
 import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.series.HTTPRequest.GET;

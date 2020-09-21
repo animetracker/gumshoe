@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 
 public class UpdateDBReceiver extends BroadcastReceiver
 {

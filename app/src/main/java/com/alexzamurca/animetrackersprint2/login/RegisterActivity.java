@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.Database.Register;
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 
 import org.json.JSONException;

@@ -12,7 +12,7 @@ import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 
 import com.alexzamurca.animetrackersprint2.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import java.util.Calendar;

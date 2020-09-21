@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
 import com.alexzamurca.animetrackersprint2.notifications.DBUpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;

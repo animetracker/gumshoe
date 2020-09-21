@@ -33,7 +33,7 @@ import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.bumptech.glide.Glide;
 

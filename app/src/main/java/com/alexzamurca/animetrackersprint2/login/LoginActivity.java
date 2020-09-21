@@ -20,9 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
-import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.Database.Login;
 

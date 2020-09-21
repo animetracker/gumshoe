@@ -1,9 +1,12 @@
 package com.alexzamurca.animetrackersprint2.dialog;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -24,6 +27,12 @@ public class NotificationsOffDialog extends DialogFragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_notifications_off, container, false);
         setCancelable(false);
+
+        Window window = requireDialog().getWindow();
+        if(window!=null)
+        {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
         assert getArguments() != null;
         Series series  = (Series) getArguments().getSerializable("series");

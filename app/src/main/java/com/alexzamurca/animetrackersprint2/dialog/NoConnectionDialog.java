@@ -2,11 +2,14 @@ package com.alexzamurca.animetrackersprint2.dialog;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 
@@ -29,6 +33,12 @@ public class NoConnectionDialog extends DialogFragment
     {
         View view = inflater.inflate(R.layout.dialog_no_connection, container, false);
         boolean needToUpdate = false;
+
+        Window window = requireDialog().getWindow();
+        if(window!=null)
+        {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
         // GET BOOLEAN IF TO UPDATE_DB
         Bundle args = getArguments();

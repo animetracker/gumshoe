@@ -1,11 +1,14 @@
 package com.alexzamurca.animetrackersprint2.dialog;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -23,10 +26,16 @@ public class NoDatabaseDialog extends DialogFragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_database_error, container, false);
 
+        Window window = requireDialog().getWindow();
+        if(window!=null)
+        {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
         Button reportBugButton = view.findViewById(R.id.report_bug_button);
         reportBugButton.setOnClickListener(v ->
                 {
-                    dialog_report_bug dialogReportBug = new dialog_report_bug();
+                    ReportBugFragment dialogReportBug = new ReportBugFragment();
                     dialogReportBug.show(requireActivity().getSupportFragmentManager(), "dialog_report_button");
                     openDiscord();
                 }

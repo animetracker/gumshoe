@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2.dialog;
+package com.alexzamurca.animetrackersprint2.algorithms;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

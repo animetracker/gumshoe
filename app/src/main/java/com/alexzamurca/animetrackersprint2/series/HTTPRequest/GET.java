@@ -2,14 +2,10 @@ package com.alexzamurca.animetrackersprint2.series.HTTPRequest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
-import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.dialog.NoDatabaseDialog;
 
 import java.io.BufferedReader;

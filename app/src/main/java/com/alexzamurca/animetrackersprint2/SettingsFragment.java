@@ -29,7 +29,7 @@ import androidx.navigation.Navigation;
 import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
-import com.alexzamurca.animetrackersprint2.dialog.dialog_report_bug;
+import com.alexzamurca.animetrackersprint2.dialog.ReportBugFragment;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
@@ -73,7 +73,7 @@ public class SettingsFragment extends Fragment
         reportBug.setOnClickListener(view1 ->
         {
            // navController.navigate(R.id.action_reporting_bug);
-            dialog_report_bug dialogReportBug = new dialog_report_bug();
+            ReportBugFragment dialogReportBug = new ReportBugFragment();
             dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
         });
 

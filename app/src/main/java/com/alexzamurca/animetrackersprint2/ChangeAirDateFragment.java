@@ -34,7 +34,7 @@ import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.Database.UpdateAirDateChange;
-import com.alexzamurca.animetrackersprint2.dialog.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
