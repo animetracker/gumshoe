@@ -97,13 +97,17 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
         // 1127 = how much text can fit on the screen with 30sp
         // 2400 = how much text can fit on the screen with 25sp
-        if(width>1127 && width<=2400)
+        if(width>1000 && width<=1700)
         {
             holder.title.setTextSize(25);
         }
-        else if(width>2400)
+        else if(width>1700 && width<= 2400)
         {
             holder.title.setTextSize(20);
+        }
+        else if(width>2400)
+        {
+            holder.title.setTextSize(15);
         }
 
         holder.next_episode.setText(next_episode);

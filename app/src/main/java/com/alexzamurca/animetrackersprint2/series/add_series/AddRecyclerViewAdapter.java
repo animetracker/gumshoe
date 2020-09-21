@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -100,7 +102,29 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 .into(holder.image);
 
         // Setting the text views
+
         holder.title.setText(title);
+        Rect bounds = new Rect();
+        Paint textPaint = holder.title.getPaint();
+        textPaint.getTextBounds(title, 0, title.length(), bounds);
+        int width = bounds.width();
+        Log.d(TAG, "onBindViewHolder: " + title + " width" + width);
+
+        // 1127 = how much text can fit on the screen with 30sp
+        // 2400 = how much text can fit on the screen with 25sp
+        if(width>1000 && width<=1700)
+        {
+            holder.title.setTextSize(25);
+        }
+        else if(width>1700 && width<= 2400)
+        {
+            holder.title.setTextSize(20);
+        }
+        else if(width>2400)
+        {
+            holder.title.setTextSize(15);
+        }
+
         holder.average.setText(HtmlCompat.fromHtml(rating, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.air_date.setText(HtmlCompat.fromHtml(air_date, HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.next_episode_number.setText(HtmlCompat.fromHtml(next_episode_number, HtmlCompat.FROM_HTML_MODE_LEGACY));
@@ -253,6 +277,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         if (isConnectedToInternet)
         {
             progressBar.setVisibility(View.VISIBLE);
+            noSearchResultsTV.setVisibility(View.GONE);
             AniListSearch aniListSearch = new AniListSearch();
             aniListSearch.execute();
             Log.d(TAG, "anilist search has connection");
@@ -308,7 +333,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             search.printList(list);
             list = search.getSearchResults();
             search.printList(list);
-            noSearchResultsTV.setText("");
             return null;
         }
 
@@ -318,6 +342,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
             notifyDataSetChanged();
             if(list.size() == 0)
             {
+                noSearchResultsTV.setVisibility(View.VISIBLE);
                 String text = "No search results for\"" + series_name + "\"";
                 noSearchResultsTV.setText(text);
             }

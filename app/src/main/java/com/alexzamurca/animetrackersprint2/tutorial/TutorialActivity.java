@@ -1,6 +1,8 @@
 package com.alexzamurca.animetrackersprint2.tutorial;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,12 +11,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 
 public class TutorialActivity extends AppCompatActivity {
 
     private ViewPager mSlideViewPager;
 
     int currentPosition;
+    boolean firstTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,8 @@ public class TutorialActivity extends AppCompatActivity {
         mSlideViewPager.setAdapter(sliderAdapter);
 
         mSlideViewPager.addOnPageChangeListener(viewListener);
+
+        firstTime = getIntent().getBooleanExtra("first_time", false);
     }
 
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
@@ -58,8 +64,27 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     public void openMain() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+
+        if(firstTime)
+        {
+            SharedPreferences sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putBoolean("logged_in", false);
+            editor.putString("session", "");
+            editor.putBoolean("has_session_expired", false);
+            editor.apply();
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
     }
 }

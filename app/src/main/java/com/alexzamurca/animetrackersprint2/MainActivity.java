@@ -52,12 +52,14 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getSharedPreferences("App", MODE_PRIVATE);
         firstTime = sharedPreferences.getBoolean("first_time", true);
 
-        if(firstTime) {
+        if(firstTime)
+        {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("first_time", false);
             editor.apply();
 
             Intent tutorialIntent = new Intent(MainActivity.this, TutorialActivity.class);
+            tutorialIntent.putExtra("first_time", true);
             startActivity(tutorialIntent);
         }
         else
