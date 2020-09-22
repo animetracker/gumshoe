@@ -3,13 +3,14 @@ package com.alexzamurca.animetrackersprint2.algorithms;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 
 public class CheckConnection
 {
-    private static final String TAG = "CheckConnection";
     private Context context;
 
     public CheckConnection(Context context) {
@@ -20,22 +21,20 @@ public class CheckConnection
     {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnected();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     private boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
         try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        }
-        catch (IOException | InterruptedException e)
-        {
-            Log.d(TAG, "isOnline: " + e.toString());
-        }
+            int timeoutMs = 1500;
+            Socket sock = new Socket();
+            SocketAddress sockAddress = new InetSocketAddress("8.8.8.8", 53);
 
-        return false;
+            sock.connect(sockAddress, timeoutMs);
+            sock.close();
+
+            return true;
+        } catch (IOException e) { return false; }
     }
 
     public boolean isConnected()

@@ -23,8 +23,6 @@ public class UpdateDB
     private String session;
     private boolean failed;
 
-    SharedPreferences.Editor editor;
-    CheckConnection checkConnection;
     UpdateFailedNotification updateFailedNotification;
 
 
@@ -34,9 +32,6 @@ public class UpdateDB
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
 
-        SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-        editor = appSharedPreferences.edit();
-        checkConnection = new CheckConnection(context);
         updateFailedNotification = new UpdateFailedNotification(context);
     }
 
@@ -54,7 +49,7 @@ public class UpdateDB
         for(int i = 0; i < list.size(); i++)
         {
             Series currentSeries = list.get(i);
-
+            CheckConnection checkConnection = new CheckConnection(context);
             if(checkConnection.isConnected())
             {
                 GetSeriesInfoAsync getSeriesInfoAsync = new GetSeriesInfoAsync();
@@ -66,6 +61,8 @@ public class UpdateDB
                 failed = true;
                 updateFailedNotification.showNotification();
 
+                SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = appSharedPreferences.edit();
                 editor.putBoolean("offline", true);
                 Log.d(TAG, "insert: app set to offline mode");
                 editor.apply();
@@ -127,6 +124,7 @@ public class UpdateDB
 
     private void updateAirDate(Series series, String air_date, String status, int episode_number)
     {
+        CheckConnection checkConnection = new CheckConnection(context);
         if(checkConnection.isConnected())
         {
             UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
@@ -138,6 +136,8 @@ public class UpdateDB
             Log.d(TAG, "updateAirDate: updating air date has no connection");
             updateFailedNotification.showNotification();
 
+            SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = appSharedPreferences.edit();
             editor.putBoolean("offline", true);
             Log.d(TAG, "insert: app set to offline mode");
             editor.apply();
@@ -214,6 +214,8 @@ public class UpdateDB
 
                 if(!failed)
                 {
+                    SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = appSharedPreferences.edit();
                     editor.putBoolean("offline", false);
                     Log.d(TAG, "insert: app set to online mode (not in need of update)");
                     editor.apply();

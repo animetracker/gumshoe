@@ -6,10 +6,10 @@ import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
-import org.apache.pig.impl.util.ObjectSerializer;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class LocalListStorage
 {
@@ -22,9 +22,11 @@ public class LocalListStorage
 
     public void store(ArrayList<Series> list)
     {
+        /*
         SharedPreferences.Editor editor = sharedPreferences.edit();
         try
         {
+            Set<String> stringSet = new HashSet<String>(list);
             editor.putString("list", ObjectSerializer.serialize(list));
             Log.d(TAG, "store: serialized series list");
         }
@@ -33,6 +35,8 @@ public class LocalListStorage
             Log.d(TAG, "store: IOException when trying to serialize list: " + e.toString());
         }
         editor.apply();
+
+         */
     }
 
     public ArrayList<Series> get()
@@ -45,6 +49,7 @@ public class LocalListStorage
             {
                 Log.d(TAG, "get: we got a list back");
 
+                /*
                 try
                 {
                     ArrayList<Series> storedList = (ArrayList<Series>) ObjectSerializer.deserialize(serializedList);
@@ -67,6 +72,7 @@ public class LocalListStorage
                 {
                     Log.d(TAG, "get: ClassNotFoundException when trying to get list: " + f.toString());
                 }
+                 */
 
             }
             else
