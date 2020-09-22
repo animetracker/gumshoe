@@ -78,6 +78,9 @@ dependencies {
 
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
+    // https://mvnrepository.com/artifact/org.apache.pig/pig
+    implementation group: 'org.apache.pig', name: 'pig', version: '0.17.0'
+
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'

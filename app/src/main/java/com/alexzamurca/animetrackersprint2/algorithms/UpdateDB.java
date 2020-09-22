@@ -10,7 +10,6 @@ import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChann
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
-import com.alexzamurca.animetrackersprint2.Database.SelectTable;
 import com.alexzamurca.animetrackersprint2.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
@@ -44,20 +43,9 @@ public class UpdateDB
     // Get table and update db
     public void run()
     {
-        if(checkConnection.isConnected())
-        {
-            GetTableAsync getTableAsync = new GetTableAsync();
-            getTableAsync.execute();
-        }
-        else
-        {
-            failed = true;
-            updateFailedNotification.showNotification();
-
-            editor.putBoolean("offline", true);
-            Log.d(TAG, "insert: app set to offline mode");
-            editor.apply();
-        }
+        LocalListStorage localListStorage = new LocalListStorage(context);
+        ArrayList<Series> list = localListStorage.get();
+        updateDB(list);
 
     }
 
@@ -147,40 +135,12 @@ public class UpdateDB
         }
         else
         {
+            Log.d(TAG, "updateAirDate: updating air date has no connection");
             updateFailedNotification.showNotification();
 
             editor.putBoolean("offline", true);
             Log.d(TAG, "insert: app set to offline mode");
             editor.apply();
-        }
-    }
-
-    private class GetTableAsync extends AsyncTask<Void, Void, Void>
-    {
-        private boolean wasRequestSuccessful;
-        private ArrayList<Series> list;
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-            String session = sharedPreferences.getString("session", "");
-            SelectTable selectTable = new SelectTable(session, context);
-            list = selectTable.getSeriesList();
-            wasRequestSuccessful = selectTable.getWasRequestSuccessful();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            if(wasRequestSuccessful)
-            {
-                updateDB(list);
-            }
-
-            super.onPostExecute(aVoid);
         }
     }
 

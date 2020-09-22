@@ -36,6 +36,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
+import com.alexzamurca.animetrackersprint2.algorithms.LocalListStorage;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.Database.SelectTable;
@@ -79,7 +80,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
         recyclerViewListener = this;
 
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
 
         Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
@@ -173,7 +174,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             popup.getMenuInflater().inflate(R.menu.series_sort_dropdown, popup.getMenu());
 
             // Get sort state from SharedPreferences
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
             int selection = sharedPreferences.getInt("selected_sort_option_index", 5);
 
             popup.getMenu().getItem(selection).setChecked(true);
@@ -202,7 +203,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
             sortListAccordingToSelection(itemIndex);
 
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putInt("selected_sort_option_index", itemIndex);
@@ -561,6 +562,9 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 swipeRefreshLayout.setVisibility(View.VISIBLE);
                 list.clear();
                 list.addAll(tempList);
+
+                LocalListStorage localListStorage = new LocalListStorage(requireContext());
+                localListStorage.store(list);
             }
 
 
@@ -569,7 +573,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             initRecyclerView();
 
             // Get sort state from SharedPreferences
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
             int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
             sortListAccordingToSelection(selection);
 
