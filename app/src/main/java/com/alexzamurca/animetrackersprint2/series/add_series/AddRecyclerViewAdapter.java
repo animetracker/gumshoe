@@ -52,6 +52,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     private Search search;
     private List<SearchResult> list;
     private String series_name;
+    private String session;
     private Context context;
     private RowClickListener rowClickListener;
     private TextView noSearchResultsTV;
@@ -68,6 +69,8 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         this.searchActivityView = searchActivityView;
         this.navController = navController;
         this.progressBar = progressBar;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+        session = sharedPreferences.getString("session", "");
     }
 
     @NonNull
@@ -261,8 +264,8 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                         SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                        editor.putBoolean("offline", true);
-                        Log.d(TAG, "insert: app set to offline mode");
+                        editor.putBoolean("need_to_update_db", true);
+                        Log.d(TAG, "insert: app set to need_to_update_db mode");
                         editor.apply();
                     }
                 }
@@ -368,9 +371,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-                String session = sharedPreferences.getString("session", "");
-
                 Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session, context);
                 request_success_rating = insert.insert();
             } catch (JSONException e) {

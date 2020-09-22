@@ -76,8 +76,8 @@ public class NoConnectionDialog extends DialogFragment
                     SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                    editor.putBoolean("offline", true);
-                    Log.d(TAG, "insert: app set to offline mode");
+                    editor.putBoolean("need_to_update_db", true);
+                    Log.d(TAG, "insert: app set to need_t mode");
                     editor.apply();
                 }
             }

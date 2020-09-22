@@ -59,6 +59,8 @@ public class ChangeAirDateFragment extends Fragment
     private LinearLayout hoursErrorLayout;
     private LinearLayout minutesErrorLayout;
 
+    private String session;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
@@ -69,6 +71,10 @@ public class ChangeAirDateFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
+        session = sharedPreferences.getString("session", "");
+
         initSeries();
         convertDateToCalendar = new ConvertDateToCalendar();
         navController = Navigation.findNavController(view);
@@ -440,8 +446,8 @@ public class ChangeAirDateFragment extends Fragment
                 SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -469,9 +475,6 @@ public class ChangeAirDateFragment extends Fragment
             {
                 change = getFormattedChange();
             }
-
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
-            String session = sharedPreferences.getString("session", "");
 
             UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(session, series.getAnilist_id(), change, getContext());
             isSuccessful = updateAirDateChange.update() == 0;

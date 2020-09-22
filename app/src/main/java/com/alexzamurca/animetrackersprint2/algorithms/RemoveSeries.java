@@ -19,9 +19,12 @@ public class RemoveSeries
 {
     private static final String TAG = "RemoveSeries";
     private Context context;
+    private String session;
 
     public RemoveSeries(Context context) {
         this.context = context;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+        session = sharedPreferences.getString("session", "");
     }
 
     public void remove(Series series)
@@ -61,8 +64,8 @@ public class RemoveSeries
             SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            editor.putBoolean("offline", true);
-            Log.d(TAG, "insert: app set to offline mode");
+            editor.putBoolean("need_to_update_db", true);
+            Log.d(TAG, "insert: app set to need_to_update_db mode");
             editor.apply();
         }
 
@@ -82,8 +85,6 @@ public class RemoveSeries
         @Override
         protected Void doInBackground(Void... voids)
         {
-            SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-            String session = sharedPreferences.getString("session", "");
             Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
             isSeriesRemoved = remove.remove();
             return null;
@@ -96,13 +97,13 @@ public class RemoveSeries
             if(isSeriesRemoved)
             {
                 Toast.makeText(context, "\"" + title +"\" is no longer in your series list.", Toast.LENGTH_SHORT).show();
+                // Cancel alarm
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+                notificationAiringChannel.cancel(selectedSeries);
             }
             else
             {
                 Toast.makeText(context, "Failed to remove \"" + title +"\", it is still in your series list.", Toast.LENGTH_SHORT).show();
-                // Cancel alarm
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
-                notificationAiringChannel.cancel(selectedSeries);
             }
             super.onPostExecute(aVoid);
         }

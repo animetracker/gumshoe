@@ -63,8 +63,8 @@ public class UpdateDB
 
                 SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = appSharedPreferences.edit();
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update mode");
                 editor.apply();
             }
 
@@ -138,8 +138,8 @@ public class UpdateDB
 
             SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = appSharedPreferences.edit();
-            editor.putBoolean("offline", true);
-            Log.d(TAG, "insert: app set to offline mode");
+            editor.putBoolean("need_to_update_db", true);
+            Log.d(TAG, "insert: app set to need_to_update_db mode");
             editor.apply();
         }
     }
@@ -216,8 +216,8 @@ public class UpdateDB
                 {
                     SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = appSharedPreferences.edit();
-                    editor.putBoolean("offline", false);
-                    Log.d(TAG, "insert: app set to online mode (not in need of update)");
+                    editor.putBoolean("need_to_update_db", false);
+                    Log.d(TAG, "insert: app set to need_to_update_db false mode");
                     editor.apply();
                 }
             }

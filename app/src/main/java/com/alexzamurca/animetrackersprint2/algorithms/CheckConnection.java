@@ -24,7 +24,8 @@ public class CheckConnection
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    private boolean isOnline() {
+    private boolean isOnline()
+    {
         try {
             int timeoutMs = 1500;
             Socket sock = new Socket();

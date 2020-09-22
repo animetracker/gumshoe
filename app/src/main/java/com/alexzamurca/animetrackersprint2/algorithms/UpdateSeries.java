@@ -107,8 +107,8 @@ public class UpdateSeries
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -151,8 +151,8 @@ public class UpdateSeries
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update_db mode");
                 editor.apply();
             }
         }

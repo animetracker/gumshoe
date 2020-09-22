@@ -33,7 +33,6 @@ public class UpdateSeriesReceiver extends BroadcastReceiver
 
                 UpdateSeries updateSeries = new UpdateSeries(series, context);
                 updateSeries.setSeriesInfo(set_new_notification);
-
             }
         }
     }

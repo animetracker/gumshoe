@@ -3,8 +3,6 @@ package com.alexzamurca.animetrackersprint2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -369,8 +366,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -439,8 +436,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -521,8 +518,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -571,7 +568,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             }
 
 
-            adapter = new SeriesRecyclerViewAdapter(getContext(), list, ListFragment.this, mNavController);
+            adapter = new SeriesRecyclerViewAdapter(requireContext(), list, ListFragment.this, mNavController);
 
             initRecyclerView();
 

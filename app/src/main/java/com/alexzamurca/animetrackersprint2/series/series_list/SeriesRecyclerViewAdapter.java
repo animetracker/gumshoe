@@ -43,6 +43,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     private transient Context context;
     private OnSeriesListener onSeriesListener;
     private transient NavController navController;
+    private String session;
 
     public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, NavController navController)
     {
@@ -50,6 +51,9 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         this.context = context;
         this.onSeriesListener = onSeriesListener;
         this.navController = navController;
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+        session = sharedPreferences.getString("session", "");
     }
 
     @NonNull
@@ -370,8 +374,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         @Override
         protected Void doInBackground(Void... voids)
         {
-            SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-            String session = sharedPreferences.getString("session", "");
             Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
             isSeriesRemoved = remove.remove();
             return null;

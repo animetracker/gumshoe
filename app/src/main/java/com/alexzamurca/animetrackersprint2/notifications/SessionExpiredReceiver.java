@@ -34,22 +34,18 @@ public class SessionExpiredReceiver extends BroadcastReceiver
             Log.d(TAG, "onReceive: in Foreground");
             openLoginActivity(context);
         }
-        else
-        {
-            Log.d(TAG, "onReceive: in Background");
-            SessionExpiredNotification sessionExpiredNotification = new SessionExpiredNotification(context);
-            sessionExpiredNotification.showNotification();
-        }
+        SessionExpiredNotification sessionExpiredNotification = new SessionExpiredNotification(context);
+        sessionExpiredNotification.showNotification();
     }
 
     private void openLoginActivity(Context context)
     {
-            Log.d(TAG, "openLoginActivity: opening LoginActivity from SessionExpiredReceiver because the session expired and app is in foreground");
-            Intent intent = new Intent(context, LoginActivity.class);
-            // makes sure you cant press back to get to the list screen
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            ((Activity)context).finish();
+        Log.d(TAG, "openLoginActivity: opening LoginActivity from SessionExpiredReceiver because the session expired and app is in foreground");
+        Intent intent = new Intent(context, LoginActivity.class);
+        // makes sure you cant press back to get to the list screen
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        ((Activity)context).finish();
 
     }
 }

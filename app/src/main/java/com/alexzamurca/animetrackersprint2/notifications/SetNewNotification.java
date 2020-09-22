@@ -26,12 +26,15 @@ public class SetNewNotification
     private Series series;
     private Series newSeries;
     private Calendar airDateAfterChangesCalendar = null;
+    private String session;
 
     private List<Series> list;
 
     public SetNewNotification(Context context, Series series)
     {
         this.context = context;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
+        session = sharedPreferences.getString("session", "");
         this.series = series;
     }
 
@@ -94,8 +97,8 @@ public class SetNewNotification
                 SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "insert: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -206,9 +209,6 @@ public class SetNewNotification
         @Override
         protected Void doInBackground(Void... voids)
         {
-            SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-            String session = sharedPreferences.getString("session", "");
-
             SelectTable selectTable = new SelectTable(session, context);
             list = selectTable.getSeriesList();
             

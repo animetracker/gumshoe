@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity
 
             ResetAlarmForUpdateDB resetAlarmForUpdateDB = new ResetAlarmForUpdateDB(this);
             resetAlarmForUpdateDB.reset();
+
+            SetAlarmsForList setAlarmsForList = new SetAlarmsForList(this);
+            setAlarmsForList.run();
         }
 
         sharedPreferences = getSharedPreferences("App", MODE_PRIVATE);
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity
     private void checkIfUpdateDBPending()
     {
         SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
-        boolean needDBUpdate = sharedPreferences.getBoolean("offline", false);
+        boolean needDBUpdate = sharedPreferences.getBoolean("need_to_update_db", false);
         if(needDBUpdate)
         {
             CheckConnection checkConnection = new CheckConnection(this);
