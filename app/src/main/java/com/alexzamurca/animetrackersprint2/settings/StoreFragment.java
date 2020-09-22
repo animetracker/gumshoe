@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,7 @@ public class StoreFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_store, container, false);
+        return (LinearLayout)inflater.inflate(R.layout.fragment_store, container, false);
     }
 
     @Override
@@ -28,9 +29,10 @@ public class StoreFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = view.findViewById(R.id.change_profile_toolbar_object);
+        //Toolbar toolbar = view.findViewById(R.id.change_profile_toolbar_object);
+
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
-        activity.setSupportActionBar(toolbar);
+        //activity.setSupportActionBar(toolbar);
         if(activity.getSupportActionBar()!=null)
         {
             activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);

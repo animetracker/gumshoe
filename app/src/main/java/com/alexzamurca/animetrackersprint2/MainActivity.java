@@ -26,6 +26,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = "MainActivity";
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         checkDarkMode();
         checkIfUpdateDBPending();
+
+
 
         Intent intent = getIntent();
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
