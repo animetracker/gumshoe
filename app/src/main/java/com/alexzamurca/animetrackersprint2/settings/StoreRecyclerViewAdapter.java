@@ -1,4 +1,4 @@
-package com.alexzamurca.animetrackersprint2;
+package com.alexzamurca.animetrackersprint2.settings;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,34 +10,32 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexzamurca.animetrackersprint2.R;
+import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
+
 import java.util.List;
 
 public class StoreRecyclerViewAdapter extends RecyclerView.Adapter<StoreRecyclerViewAdapter.MyViewHolder>{
 
-    private Context mContext;
     private List<Item> mData;
 
-    public StoreRecyclerViewAdapter(Context mContext, List<Item> mData) {
-        this.mContext = mContext;
+    public StoreRecyclerViewAdapter(List<Item> mData) {
         this.mData = mData;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view;
-        LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.store_item, parent, false);
-
-        return new MyViewHolder(view);
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.store_item, parent, false);
+        return new StoreRecyclerViewAdapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StoreRecyclerViewAdapter.MyViewHolder holder, int position) {
         holder.tv_icon_name.setText(mData.get(position).getIconName());
         holder.img_icon_image.setImageResource(mData.get(position).getIconImage());
-        holder.tv_icon_price.setText(mData.get(position).getIconPrice());
+        holder.tv_icon_price.setText(Integer.toString(mData.get(position).getIconPrice()));
     }
 
     @Override
@@ -54,9 +52,9 @@ public class StoreRecyclerViewAdapter extends RecyclerView.Adapter<StoreRecycler
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tv_icon_name = (TextView) itemView.findViewById(R.id.icon_name_id);
-            img_icon_image = (ImageView) itemView.findViewById(R.id.icon_image_id);
-            tv_icon_price = (TextView) itemView.findViewById(R.id.icon_price);
+            tv_icon_name = itemView.findViewById(R.id.icon_name_id);
+            img_icon_image =itemView.findViewById(R.id.icon_image_id);
+            tv_icon_price =  itemView.findViewById(R.id.icon_price);
 
         }
     }

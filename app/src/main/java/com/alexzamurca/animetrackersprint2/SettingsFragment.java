@@ -40,10 +40,6 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
@@ -103,26 +99,7 @@ public class SettingsFragment extends Fragment
 
         Button store = view.findViewById(R.id.settings_store);
         store.setOnClickListener(view15 ->
-                {
-                    List<Item> listItem;
-                    navController.navigate(R.id.action_to_store);
-                    listItem = new ArrayList<>();
-                    listItem.add(new Item("First Icon", R.drawable.ash, 5000));
-                    listItem.add(new Item("Second Icon", R.drawable.goku, 4696));
-                    listItem.add(new Item("Third Icon", R.drawable.luffy, 3696));
-                    listItem.add(new Item("Fourth Icon", R.drawable.naruto, 6969));
-                    listItem.add(new Item("Ran", R.drawable.ash, 5000));
-                    listItem.add(new Item("Out", R.drawable.ash, 5000));
-                    listItem.add(new Item("Of", R.drawable.ash, 5000));
-                    listItem.add(new Item("Images", R.drawable.ash, 5000));
-                    listItem.add(new Item("Yeah", R.drawable.ash, 5000));
-
-                    //WARNING BELOW IS REALLY BAD PRACTICE AND WILL MESS UP THE CODE
-                    RecyclerView myRV = (RecyclerView) getActivity().findViewById(R.id.store_recyclerview_id);
-                    StoreRecyclerViewAdapter myAdapter = new StoreRecyclerViewAdapter(getActivity(), listItem);
-                    myRV.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-
-                }
+                navController.navigate(R.id.action_to_store)
         );
 
         // This method is used to create the dark mode using the button

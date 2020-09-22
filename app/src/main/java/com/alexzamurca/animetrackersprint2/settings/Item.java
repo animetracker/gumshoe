@@ -1,13 +1,9 @@
-package com.alexzamurca.animetrackersprint2;
+package com.alexzamurca.animetrackersprint2.settings;
 
 public class Item {
     private String IconName;
     private int IconImage;
     private int IconPrice;
-
-    public Item() {
-
-    }
 
     public Item(String iconName, int iconImage, int iconPrice) {
         IconName = iconName;
@@ -25,17 +21,5 @@ public class Item {
 
     public int getIconPrice() {
         return IconPrice;
-    }
-
-    public void setIconName(String iconName) {
-        IconName = iconName;
-    }
-
-    public void setIconImage(int iconImage) {
-        IconImage = iconImage;
-    }
-
-    public void setIconPrice(int iconPrice) {
-        IconPrice = iconPrice;
     }
 }

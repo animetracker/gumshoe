@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/bg"
     >
+
+    <include layout="@layout/store_toolbar"
+        android:id="@+id/store_toolbar_object"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/store_recyclerview_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/store_toolbar_object">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-</LinearLayout>
+</RelativeLayout>
