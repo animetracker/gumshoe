@@ -29,7 +29,7 @@ public class SessionAlarm
         Intent intent = new Intent(mContext, SessionExpiredReceiver.class);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MILLISECOND, session_duration);
+        calendar.add(Calendar.SECOND, session_duration);
 
         ConvertDateToCalendar convertDateToCalendar = new ConvertDateToCalendar();
         Log.d(TAG, "setAlarm: alarm set for: " + convertDateToCalendar.reverseConvert(calendar));
