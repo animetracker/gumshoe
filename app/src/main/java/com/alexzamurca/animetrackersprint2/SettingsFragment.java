@@ -273,6 +273,7 @@ public class SettingsFragment extends Fragment
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putBoolean("logged_in", false);
+        editor.putString("session", "");
         editor.putBoolean("has_session_expired", false);
         editor.apply();
 

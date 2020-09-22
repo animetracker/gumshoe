@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,74 +14,54 @@ public class LocalListStorage
 {
     private static final String TAG = "StoreListLocally";
     private SharedPreferences sharedPreferences;
+    ListJSONConversion listJSONConversion;
 
     public LocalListStorage(Context mContext) {
         sharedPreferences = mContext.getSharedPreferences("Series List", Context.MODE_PRIVATE);
+        listJSONConversion = new ListJSONConversion();
     }
 
     public void store(ArrayList<Series> list)
     {
-        /*
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        try
-        {
-            Set<String> stringSet = new HashSet<String>(list);
-            editor.putString("list", ObjectSerializer.serialize(list));
-            Log.d(TAG, "store: serialized series list");
-        }
-        catch(IOException e)
-        {
-            Log.d(TAG, "store: IOException when trying to serialize list: " + e.toString());
-        }
-        editor.apply();
+        Set<String> stringSet = listJSONConversion.listToJSONSet(list);
+        editor.putStringSet("list", stringSet);
+        Log.d(TAG, "store: serialized series list");
 
-         */
+        editor.apply();
     }
 
     public ArrayList<Series> get()
     {
-        String serializedList = sharedPreferences.getString("list", "");
-        if(serializedList!=null)
+        Set<String> stringSet = sharedPreferences.getStringSet("list", new HashSet<>());
+        if(stringSet!=null)
         {
-            Log.d(TAG, "get: serializedList not null");
-            if(!serializedList.equals(""))
+            Log.d(TAG, "get: stringSet is not null");
+            if(stringSet.size()!=0)
             {
-                Log.d(TAG, "get: we got a list back");
+                Log.d(TAG, "get: stringSet not empty");
 
-                /*
-                try
+                ArrayList<Series> storedList = listJSONConversion.jsonSetToList(stringSet);
+                if(storedList!=null)
                 {
-                    ArrayList<Series> storedList = (ArrayList<Series>) ObjectSerializer.deserialize(serializedList);
-                    if(storedList!=null)
-                    {
-                        Log.d(TAG, "get: deserialize worked");
-                        return storedList;
-                    }
-                    else
-                    {
-                        Log.d(TAG, "get: deserialize didn't work");
-                    }
+                    Log.d(TAG, "get: stored series List not null");
+                    return storedList;
+                }
+                else
+                {
+                    Log.d(TAG, "get: stored series List null");
+                }
 
-                }
-                catch(IOException e)
-                {
-                    Log.d(TAG, "get: IOException when trying to get list: " + e.toString());
-                }
-                catch(ClassCastException f)
-                {
-                    Log.d(TAG, "get: ClassNotFoundException when trying to get list: " + f.toString());
-                }
-                 */
 
             }
             else
             {
-                Log.d(TAG, "get: we didn't get a list back");
+                Log.d(TAG, "get: stringSet is empty");
             }
         }
         else
         {
-            Log.d(TAG, "get: serializedlist null");
+            Log.d(TAG, "get: stringSet is null");
         }
        return new ArrayList<>();
     }

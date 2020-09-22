@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/series_list_layout">
+    android:id="@+id/series_list_layout"
+    android:background="?attr/bg">
 
     <include layout="@layout/series_list_toolbar"
         android:id="@+id/series_list_toolbar_object"/>

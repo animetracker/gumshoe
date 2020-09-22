@@ -39,7 +39,7 @@ public class CheckConnection
 
     public boolean isConnected()
     {
-        return isOnline() && hasNetworkConnection();
+        return hasNetworkConnection();
     }
 
 }
