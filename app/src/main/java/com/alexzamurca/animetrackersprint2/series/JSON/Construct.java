@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertMillisToDate;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -216,6 +217,54 @@ public class Construct
         catch(JSONException e)
         {
             Log.d(TAG, "constructRegisterJSON: JSONException error putting password");
+        }
+        return json;
+    }
+
+    public JSONObject constructSetSelectedIconJSON(String session, String icon)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("session", session);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructSetSelectedIconJSON: JSONException error putting session");
+        }
+
+        try
+        {
+            json.put("icon", icon);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructSetSelectedIconJSON: JSONException error putting icon");
+        }
+        return json;
+    }
+
+    public JSONObject constructAddIconJSON(String session, String icon)
+    {
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("session", session);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructAddIconJSON: JSONException error putting session");
+        }
+
+        try
+        {
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(icon);
+            json.put("icons", jsonArray);
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "constructAddIconJSON: JSONException error putting icon array");
         }
         return json;
     }

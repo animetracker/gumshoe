@@ -47,7 +47,6 @@ public class UpdateAirDateChange
         String response = request.sendRequest();
 
         if(response.equals("Connection Error"))return 1;
-        Log.d(TAG, "insert: updated air_date_change");
         return 0;
     }
 }
