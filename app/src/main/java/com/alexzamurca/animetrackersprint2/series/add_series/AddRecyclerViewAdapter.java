@@ -71,6 +71,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         this.progressBar = progressBar;
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "AddRecyclerViewAdapter: session: " + session);
     }
 
     @NonNull
@@ -265,7 +266,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                         SharedPreferences.Editor editor = sharedPreferences.edit();
 
                         editor.putBoolean("need_to_update_db", true);
-                        Log.d(TAG, "insert: app set to need_to_update_db mode");
+                        Log.d(TAG, "ViewHolder: app set to need_to_update_db mode");
                         editor.apply();
                     }
                 }
@@ -371,6 +372,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         @Override
         protected Void doInBackground(Void... voids) {
             try {
+                Log.d(TAG, "doInBackground: DatabaseInsert: session: "+ session);
                 Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session, context);
                 request_success_rating = insert.insert();
             } catch (JSONException e) {

@@ -31,6 +31,7 @@ public class UpdateSeries
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "UpdateSeries: session set to:" + session);
 
         this.series = series;
         this.mContext = mContext;
@@ -108,7 +109,7 @@ public class UpdateSeries
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update_db mode");
+                Log.d(TAG, "updateAirDate: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -152,7 +153,7 @@ public class UpdateSeries
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update_db mode");
+                Log.d(TAG, "setSeriesInfo: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -184,6 +185,7 @@ public class UpdateSeries
         @Override
         protected Void doInBackground(Void... voids)
         {
+            Log.d(TAG, "doInBackground: updateAirDateAsync session: " + session);
             UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status, mContext);
             isSuccessful = updateSeriesAiring.update() == 0;
 

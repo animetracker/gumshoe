@@ -54,6 +54,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "SeriesRecyclerViewAdapter: session: " + session);
     }
 
     @NonNull
@@ -374,6 +375,7 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         @Override
         protected Void doInBackground(Void... voids)
         {
+            Log.d(TAG, "doInBackground: RemoveAsync: session:" +session);
             Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
             isSeriesRemoved = remove.remove();
             return null;

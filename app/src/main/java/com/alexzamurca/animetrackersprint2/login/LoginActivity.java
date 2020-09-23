@@ -22,7 +22,6 @@ import com.alexzamurca.animetrackersprint2.MainActivity;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
-import com.alexzamurca.animetrackersprint2.notifications.SessionAlarm;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.Database.Login;
 
@@ -181,19 +180,17 @@ public class LoginActivity extends AppCompatActivity
                         SharedPreferences sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("session", session);
+                        Log.d(TAG, "onPostExecute: session set to: " + session);
 
                         Log.d(TAG, "onPostExecute: changed session to new one from login");
 
                         editor.putBoolean("logged_in", true);
-                        editor.putBoolean("has_session_expired", false);
+                        Log.d(TAG, "onPostExecute: logged_in set to true");
                         editor.apply();
 
                         setUpDatabaseCheckAlarm();
 
                         Toast.makeText(LoginActivity.this, "Welcome " + enterEmail.getText().toString() +"!", Toast.LENGTH_LONG).show();
-
-                        SessionAlarm sessionAlarm = new SessionAlarm(LoginActivity.this);
-                        sessionAlarm.setAlarm(session_duration);
 
                         openMainActivity();
                     }

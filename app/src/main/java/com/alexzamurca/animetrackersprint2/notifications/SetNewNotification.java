@@ -35,6 +35,7 @@ public class SetNewNotification
         this.context = context;
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "SetNewNotification: session set to: "+ session);
         this.series = series;
     }
 
@@ -209,6 +210,7 @@ public class SetNewNotification
         @Override
         protected Void doInBackground(Void... voids)
         {
+            Log.d(TAG, "doInBackground: GetSeriesListAsync: session: " + session);
             SelectTable selectTable = new SelectTable(session, context);
             list = selectTable.getSeriesList();
             

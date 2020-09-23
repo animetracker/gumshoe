@@ -25,6 +25,7 @@ public class RemoveSeries
         this.context = context;
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "RemoveSeries: session: " + session);
     }
 
     public void remove(Series series)
@@ -65,7 +66,7 @@ public class RemoveSeries
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putBoolean("need_to_update_db", true);
-            Log.d(TAG, "insert: app set to need_to_update_db mode");
+            Log.d(TAG, "remove: app set to need_to_update_db mode");
             editor.apply();
         }
 
@@ -85,6 +86,7 @@ public class RemoveSeries
         @Override
         protected Void doInBackground(Void... voids)
         {
+            Log.d(TAG, "doInBackground: using session in RemoveAsync: " + session);
             Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
             isSeriesRemoved = remove.remove();
             return null;

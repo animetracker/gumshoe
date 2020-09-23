@@ -82,6 +82,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "onCreateView: session: " + session);
 
         Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
         setHasOptionsMenu(true);
@@ -367,7 +368,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update_db mode");
+                Log.d(TAG, "initList: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -437,7 +438,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update_db mode");
+                Log.d(TAG, "OnNotificationsOn: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -519,7 +520,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update_db mode");
+                Log.d(TAG, "OnYesClickListener: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -574,7 +575,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
             // Get sort state from SharedPreferences
             SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-            int selection = sharedPreferences.getInt("selected_sort_option_index", -1);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", 5);
             sortListAccordingToSelection(selection);
 
             super.onPostExecute(aVoid);
@@ -594,6 +595,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         @Override
         protected Void doInBackground(Void... voids)
         {
+            Log.d(TAG, "doInBackground: UpdateNotificationsOffAsync: session: " + session);
             UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 0, getContext());
             isSuccessful = updateNotificationsOn.update() == 0;
             return null;
@@ -634,6 +636,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         @Override
         protected Void doInBackground(Void... voids)
         {
+            Log.d(TAG, "doInBackground: UpdateNotificationsOnAsync: session: " + session);
             UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 1, getContext());
             isSuccessful = updateNotificationsOn.update() == 0;
             return null;

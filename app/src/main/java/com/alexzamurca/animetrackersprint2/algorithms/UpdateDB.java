@@ -31,6 +31,7 @@ public class UpdateDB
         this.context = context;
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "UpdateDB: session: " + session);
 
         updateFailedNotification = new UpdateFailedNotification(context);
     }
@@ -192,6 +193,7 @@ public class UpdateDB
         @Override
         protected Void doInBackground(Void... voids)
         {
+            Log.d(TAG, "doInBackground: updating series airing in UpdateAirDateAsync with session: " + session);
             UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status, context);
             isSuccessful = updateSeriesAiring.update() == 0;
 

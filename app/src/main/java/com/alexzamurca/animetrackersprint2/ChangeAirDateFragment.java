@@ -74,6 +74,7 @@ public class ChangeAirDateFragment extends Fragment
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
+        Log.d(TAG, "onViewCreated: session: "+ session);
 
         initSeries();
         convertDateToCalendar = new ConvertDateToCalendar();
@@ -447,7 +448,7 @@ public class ChangeAirDateFragment extends Fragment
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update_db mode");
+                Log.d(TAG, "updateAirDateDB: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -476,6 +477,7 @@ public class ChangeAirDateFragment extends Fragment
                 change = getFormattedChange();
             }
 
+            Log.d(TAG, "doInBackground: UpdateAirDateAsync: session: "+ session);
             UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(session, series.getAnilist_id(), change, getContext());
             isSuccessful = updateAirDateChange.update() == 0;
             return null;

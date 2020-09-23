@@ -40,8 +40,6 @@ public class SelectTable
         try
         {
             String response = get.sendRequest();
-
-            Log.d(TAG, "getSeriesList: " + response);
             jsonResponse = new JSONArray(response);
         }
         catch(JSONException e)

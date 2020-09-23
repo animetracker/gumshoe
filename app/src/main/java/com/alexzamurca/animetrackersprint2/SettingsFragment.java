@@ -28,7 +28,6 @@ import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
-import com.alexzamurca.animetrackersprint2.notifications.SessionAlarm;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.dialog.ReportBugFragment;
 import com.google.android.gms.ads.AdError;
@@ -274,16 +273,11 @@ public class SettingsFragment extends Fragment
 
         editor.putBoolean("logged_in", false);
         editor.putString("session", "");
-        editor.putBoolean("has_session_expired", false);
         editor.apply();
 
         // Cancel series alarms
         CancelAllAlarms cancelAllAlarms = new CancelAllAlarms(getContext());
         cancelAllAlarms.run();
-
-        // Cancel session expired alarm
-        SessionAlarm sessionAlarm = new SessionAlarm(requireContext());
-        sessionAlarm.cancel();
 
         // Cancel update DB alarm
         cancelDatabaseCheckAlarm();

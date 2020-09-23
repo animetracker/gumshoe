@@ -77,7 +77,7 @@ public class NoConnectionDialog extends DialogFragment
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
                     editor.putBoolean("need_to_update_db", true);
-                    Log.d(TAG, "insert: app set to need_t mode");
+                    Log.d(TAG, "OnCreateView: app set to need_t mode");
                     editor.apply();
                 }
             }

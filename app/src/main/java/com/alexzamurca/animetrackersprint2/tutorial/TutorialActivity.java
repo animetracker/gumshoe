@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 
 public class TutorialActivity extends AppCompatActivity {
+    private static final String TAG = "TutorialActivity";
 
     private ViewPager mSlideViewPager;
 
@@ -72,7 +74,7 @@ public class TutorialActivity extends AppCompatActivity {
 
             editor.putBoolean("logged_in", false);
             editor.putString("session", "");
-            editor.putBoolean("has_session_expired", false);
+            Log.d(TAG, "openMain: logged_in fals, session to empty to false");
             editor.apply();
 
             Intent intent = new Intent(this, LoginActivity.class);

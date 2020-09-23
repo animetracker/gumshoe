@@ -488,8 +488,8 @@ public class ChangeNotificationReminderFragment extends Fragment
                 SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("offline", true);
-                Log.d(TAG, "insert: app set to offline mode");
+                editor.putBoolean("need_to_update_db", true);
+                Log.d(TAG, "updateNotificationChangeDB: app set to need_to_update_db mode");
                 editor.apply();
             }
         }
@@ -512,6 +512,7 @@ public class ChangeNotificationReminderFragment extends Fragment
 
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
             String session = sharedPreferences.getString("session", "");
+            Log.d(TAG, "doInBackground: UpdateNotificationsReminderAsync: session: " + session);
 
             UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(session, series.getAnilist_id(), change, getContext());
             isSuccessful = updateNotificationChange.update() == 0;
