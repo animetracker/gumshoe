@@ -47,13 +47,13 @@ public class AboutFragment extends Fragment {
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        RecyclerView recyclerView = listItemsView.findViewById(R.id.aboutRecyclerView);
+        //RecyclerView recyclerView = listItemsView.findViewById(R.id.aboutRecyclerView);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
+        //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        //recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerView.Adapter adapter = new RecyclerAdapter(names, contacts, initials, roles);
-        recyclerView.setAdapter(adapter);
+       // RecyclerView.Adapter adapter = new RecyclerAdapter(names, contacts, initials, roles);
+       // recyclerView.setAdapter(adapter);
 
         return listItemsView;
     }
