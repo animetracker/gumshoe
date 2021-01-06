@@ -27,6 +27,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
+import com.alexzamurca.animetrackersprint2.algorithms.LocalListStorage;
 import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.dialog.ReportBugFragment;
@@ -37,6 +38,8 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+
+import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment
 {
@@ -282,6 +285,9 @@ public class SettingsFragment extends Fragment
         // Cancel update DB alarm
         cancelDatabaseCheckAlarm();
 
+        // Clear local list
+        clearLocalSeriesList();
+
         Log.d(TAG, "openLogin: opening LoginActivity from SettingsFragment - logout button pressed");
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -289,10 +295,16 @@ public class SettingsFragment extends Fragment
         requireActivity().finish();
     }
 
-    private void cancelDatabaseCheckAlarm()
+    void cancelDatabaseCheckAlarm()
     {
         UpdatingDBChannel updatingDBChannel = new UpdatingDBChannel(getContext());
         updatingDBChannel.cancel();
+    }
+
+    void clearLocalSeriesList()
+    {
+        LocalListStorage localListStorage = new LocalListStorage(requireContext());
+        localListStorage.store(new ArrayList<>());
     }
 
 }

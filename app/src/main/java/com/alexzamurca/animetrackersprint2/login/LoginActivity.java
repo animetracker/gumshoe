@@ -175,7 +175,6 @@ public class LoginActivity extends AppCompatActivity
                     try
                     {
                         String session = response.getString("session");
-                        int session_duration = response.getInt("validFor");
 
                         SharedPreferences sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
