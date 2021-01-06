@@ -187,13 +187,13 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/settings_logout"
+                android:id="@+id/settings_clear_list"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/accountTitle"
                 android:background="@drawable/red_with_rounded_corners"
                 android:gravity="center"
-                android:text="Logout"
+                android:text="Clear Series List"
                 android:textColor="#ffffff"
                 android:textSize="15sp"
                 android:textStyle="bold"

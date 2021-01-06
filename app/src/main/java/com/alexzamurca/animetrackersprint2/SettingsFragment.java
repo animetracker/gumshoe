@@ -28,7 +28,6 @@ import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.algorithms.LocalListStorage;
-import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.dialog.ReportBugFragment;
 import com.google.android.gms.ads.AdError;
@@ -93,9 +92,9 @@ public class SettingsFragment extends Fragment
             navController.navigate(R.id.action_settingsFragment_to_tutorialActivity);
         });
 
-        Button logOut = view.findViewById(R.id.settings_logout);
-        logOut.setOnClickListener(view14 ->
-            openLogin()
+        Button clearList = view.findViewById(R.id.settings_clear_list);
+        clearList.setOnClickListener(view14 ->
+            clearLocalSeriesList()
         );
 
         Button store = view.findViewById(R.id.settings_store);
@@ -267,32 +266,6 @@ public class SettingsFragment extends Fragment
             darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
             darkMode.setText(darkModeOffString);
         }
-    }
-
-    public void openLogin()
-    {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putBoolean("logged_in", false);
-        editor.putString("session", "");
-        editor.apply();
-
-        // Cancel series alarms
-        CancelAllAlarms cancelAllAlarms = new CancelAllAlarms(getContext());
-        cancelAllAlarms.run();
-
-        // Cancel update DB alarm
-        cancelDatabaseCheckAlarm();
-
-        // Clear local list
-        clearLocalSeriesList();
-
-        Log.d(TAG, "openLogin: opening LoginActivity from SettingsFragment - logout button pressed");
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        requireActivity().finish();
     }
 
     void cancelDatabaseCheckAlarm()

@@ -16,7 +16,6 @@ import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
 import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
-import com.alexzamurca.animetrackersprint2.login.LoginActivity;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         checkDarkMode();
-        checkIfUpdateDBPending();
+        checkIfUpdateListPending();
 
         Intent intent = getIntent();
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
@@ -50,6 +49,8 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getSharedPreferences("App", MODE_PRIVATE);
         firstTime = sharedPreferences.getBoolean("first_time", true);
 
+        initBottomNavigation();
+
         if(firstTime)
         {
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -57,14 +58,8 @@ public class MainActivity extends AppCompatActivity
             editor.apply();
 
             Intent tutorialIntent = new Intent(MainActivity.this, TutorialActivity.class);
-            tutorialIntent.putExtra("first_time", true);
             startActivity(tutorialIntent);
             MainActivity.this.finish();
-        }
-        else
-        {
-            checkLoggedInState();
-            checkIfComingFromLogin();
         }
 
     }
@@ -92,10 +87,10 @@ public class MainActivity extends AppCompatActivity
         else setTheme(R.style.AppThemeLight);
     }
 
-    private void checkIfUpdateDBPending()
+    private void checkIfUpdateListPending()
     {
         SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
-        boolean needDBUpdate = sharedPreferences.getBoolean("need_to_update_db", false);
+        boolean needDBUpdate = sharedPreferences.getBoolean("need_to_update_list", false);
         if(needDBUpdate)
         {
             CheckConnection checkConnection = new CheckConnection(this);
@@ -109,44 +104,10 @@ public class MainActivity extends AppCompatActivity
             {
                 NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
+                bundle.putBoolean("update_list", true);
                 noConnectionDialog.setArguments(bundle);
                 noConnectionDialog.show(getSupportFragmentManager(), "NoConnectionDialog");
             }
-        }
-    }
-
-    private void checkLoggedInState()
-    {
-        sharedPreferences = getSharedPreferences("Account", Context.MODE_PRIVATE);
-
-        boolean loggedIn = sharedPreferences.getBoolean("logged_in", false);
-        if(!loggedIn)
-        {
-            openLoginActivity();
-        }
-        else
-        {
-            initBottomNavigation();
-        }
-    }
-
-    private void openLoginActivity()
-    {
-        Log.d(TAG, "openLoginActivity: started login activity from MainActivity");
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        MainActivity.this.finish();
-    }
-
-    private void checkIfComingFromLogin()
-    {
-        boolean comingFromLogin = getIntent().getBooleanExtra("coming_from_login", false);
-        if(comingFromLogin)
-        {
-            SetAlarmsForList setAlarmsForList = new SetAlarmsForList(this);
-            setAlarmsForList.run();
         }
     }
 }

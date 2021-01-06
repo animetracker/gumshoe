@@ -44,8 +44,8 @@ public class NoConnectionDialog extends DialogFragment
         Bundle args = getArguments();
         if(args!=null)
         {
-            needToUpdate = args.getBoolean("update_db");
-            Log.d(TAG, "onCreateView: try again listener needs to update db on click");
+            needToUpdate = args.getBoolean("update_list");
+            Log.d(TAG, "onCreateView: try again listener needs to update list on click");
         }
 
         Button tryAgainButton = view.findViewById(R.id.try_again_button);
@@ -76,8 +76,8 @@ public class NoConnectionDialog extends DialogFragment
                     SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                    editor.putBoolean("need_to_update_db", true);
-                    Log.d(TAG, "OnCreateView: app set to need_t mode");
+                    editor.putBoolean("need_to_update_list", true);
+                    Log.d(TAG, "OnCreateView: app set to need_to_update_list mode");
                     editor.apply();
                 }
             }
