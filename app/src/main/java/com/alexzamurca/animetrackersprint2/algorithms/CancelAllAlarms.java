@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.algorithms;
 import android.content.Context;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.localList.LocalListStorage;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 

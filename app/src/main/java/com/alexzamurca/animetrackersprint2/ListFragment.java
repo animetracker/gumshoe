@@ -3,7 +3,6 @@ package com.alexzamurca.animetrackersprint2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,18 +33,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
-import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
-import com.alexzamurca.animetrackersprint2.algorithms.LocalListStorage;
-import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.localList.LocalListStorage;
+import com.alexzamurca.animetrackersprint2.localList.UpdateNotificationsOn;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
-import com.alexzamurca.animetrackersprint2.Database.SelectTable;
-import com.alexzamurca.animetrackersprint2.Database.UpdateNotificationsOn;
 import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.algorithms.AlphabeticalSortList;
 import com.alexzamurca.animetrackersprint2.algorithms.DateSortSeriesList;
 import com.alexzamurca.animetrackersprint2.dialog.NotificationsOffDialog;
-import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -335,44 +329,30 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     private void initList()
     {
-        CheckConnection checkConnection = new CheckConnection(requireContext());
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
-        {
-            progressBar.setVisibility(View.VISIBLE);
+        // Get List from sharedPreferences
+        LocalListStorage localListStorage = new LocalListStorage(requireContext());
+        list = localListStorage.get();
 
-            GettingTableAsync gettingTableAsync = new GettingTableAsync();
-            gettingTableAsync.execute();
-            Log.d(TAG, "getting table has connection");
+        // Empty List
+        if(list.size() == 0)
+        {
+            emptyListLayout.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setVisibility(View.GONE);
         }
         else
         {
-            Log.d(TAG, "getting table: NO INTERNET");
-
-            AppGround appGround = new AppGround();
-            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
-
-            if(isAppOnForeground)
-            {
-                Log.d(TAG, "getTable request app in foreground");
-                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
-            }
-            else
-            {
-                Log.d(TAG, "getTable request app in background");
-                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
-                updateFailedNotification.showNotification();
-
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "initList: app set to need_to_update_db mode");
-                editor.apply();
-            }
+            emptyListLayout.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
         }
 
+        adapter = new SeriesRecyclerViewAdapter(requireContext(), list, ListFragment.this, mNavController);
+
+        initRecyclerView();
+
+        // Get sort state from SharedPreferences
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
+        int selection = sharedPreferences.getInt("selected_sort_option_index", 5);
+        sortListAccordingToSelection(selection);
     }
 
     @Override
@@ -402,47 +382,17 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onNotificationsOn(Series series)
     {
-        CheckConnection checkConnection = new CheckConnection(requireContext());
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
+        UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(series.getAnilist_id(), 1, requireContext());
+        updateNotificationsOn.update();
+
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
+        Calendar calendar = adjustAirDate.getCalendar();
+
+        if(calendar!=null)
         {
-            progressBar.setVisibility(View.VISIBLE);
-            UpdateNotificationsOnAsync updateNotificationsOnAsync = new UpdateNotificationsOnAsync();
-            updateNotificationsOnAsync.setSelectedSeries(series);
-            updateNotificationsOnAsync.execute();
-            Log.d(TAG, "update notifications on has connection");
+            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
+            notificationAiringChannel.setNotification(series, calendar);
         }
-        else
-        {
-            Log.d(TAG, "update notifications on: NO INTERNET");
-
-            AppGround appGround = new AppGround();
-            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
-
-            if(isAppOnForeground)
-            {
-                Log.d(TAG, "getTable request app in foreground");
-                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
-                noConnectionDialog.setArguments(bundle);
-                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
-            }
-            else
-            {
-                Log.d(TAG, "update notifications on request app in background");
-                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
-                updateFailedNotification.showNotification();
-
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "OnNotificationsOn: app set to need_to_update_db mode");
-                editor.apply();
-            }
-        }
-
     }
 
     @Override
@@ -484,192 +434,11 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     @Override
     public void onYesClickListener(Series series)
     {
-        CheckConnection checkConnection = new CheckConnection(requireContext());
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
-        {
-            progressBar.setVisibility(View.VISIBLE);
-            UpdateNotificationsOffAsync updateNotificationsOffAsync = new UpdateNotificationsOffAsync();
-            updateNotificationsOffAsync.setSelectedSeries(series);
-            updateNotificationsOffAsync.execute();
-            Log.d(TAG, "update notifications off has internet");
-        }
-        else
-        {
-            Log.d(TAG, "updateNotificationsOff: NO INTERNET");
+        UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(series.getAnilist_id(), 0, requireContext());
+        updateNotificationsOn.update();
 
-            AppGround appGround = new AppGround();
-            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
-
-            if(isAppOnForeground)
-            {
-                Log.d(TAG, "updateNotificationsOff request app in foreground");
-                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
-                noConnectionDialog.setArguments(bundle);
-                noConnectionDialog.show(mContext.getSupportFragmentManager() , "NoConnectionDialog");
-            }
-            else
-            {
-                Log.d(TAG, "updateNotificationsOff request app in background");
-                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
-                updateFailedNotification.showNotification();
-
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "OnYesClickListener: app set to need_to_update_db mode");
-                editor.apply();
-            }
-        }
-
+        NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
+        notificationAiringChannel.cancel(series);
     }
-
-    // Lesson: Don't set attributes of widgets like TextView/ImageView in the background
-    public class GettingTableAsync extends AsyncTask<Void, Void, Void>
-    {
-        private ArrayList<Series> tempList;
-        private SelectTable selectTable;
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            selectTable = new SelectTable(session, getContext());
-            tempList = selectTable.getSeriesList();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            // Hide loading
-            progressBar.setVisibility(View.GONE);
-
-            // Stop refreshing (need this in case swipe refresh is used)
-            swipeRefreshLayout.setRefreshing(false);
-
-            // Empty List
-            if(tempList.size() == 0)
-            {
-                emptyListLayout.setVisibility(View.VISIBLE);
-                swipeRefreshLayout.setVisibility(View.GONE);
-            }
-            else
-            {
-                emptyListLayout.setVisibility(View.GONE);
-                swipeRefreshLayout.setVisibility(View.VISIBLE);
-                list.clear();
-                list.addAll(tempList);
-
-                LocalListStorage localListStorage = new LocalListStorage(requireContext());
-                localListStorage.store(list);
-            }
-
-
-            adapter = new SeriesRecyclerViewAdapter(requireContext(), list, ListFragment.this, mNavController);
-
-            initRecyclerView();
-
-            // Get sort state from SharedPreferences
-            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-            int selection = sharedPreferences.getInt("selected_sort_option_index", 5);
-            sortListAccordingToSelection(selection);
-
-            super.onPostExecute(aVoid);
-        }
-    }
-
-    private class UpdateNotificationsOffAsync extends AsyncTask<Void, Void, Void>
-    {
-        private boolean isSuccessful;
-        private Series selectedSeries;
-
-        public void setSelectedSeries(Series selectedSeries)
-        {
-            this.selectedSeries = selectedSeries;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            Log.d(TAG, "doInBackground: UpdateNotificationsOffAsync: session: " + session);
-            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 0, getContext());
-            isSuccessful = updateNotificationsOn.update() == 0;
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            progressBar.setVisibility(View.GONE);
-            String title = selectedSeries.getTitle();
-            if(isSuccessful)
-            {
-                Toast.makeText(getContext(), "You will no longer receive notifications for \"" + title +"\"!", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Failed to turn notifications off for \"" + title +"\", notifications are still on.", Toast.LENGTH_LONG).show();
-            }
-
-            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
-            notificationAiringChannel.cancel(selectedSeries);
-
-            mNavController.navigate(R.id.listFragment);
-            super.onPostExecute(aVoid);
-        }
-    }
-
-    private class UpdateNotificationsOnAsync extends AsyncTask<Void, Void, Void>
-    {
-        private boolean isSuccessful;
-        private Series selectedSeries;
-
-        public void setSelectedSeries(Series selectedSeries)
-        {
-            this.selectedSeries = selectedSeries;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            Log.d(TAG, "doInBackground: UpdateNotificationsOnAsync: session: " + session);
-            UpdateNotificationsOn updateNotificationsOn = new UpdateNotificationsOn(session, selectedSeries.getAnilist_id(), 1, getContext());
-            isSuccessful = updateNotificationsOn.update() == 0;
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            progressBar.setVisibility(View.GONE);
-            String title = selectedSeries.getTitle();
-            if(isSuccessful)
-            {
-                Toast.makeText(getContext(), "You will now receive notifications for \"" + title +"\"!", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Failed to turn notifications on for \"" + title +"\", notifications are still off.", Toast.LENGTH_LONG).show();
-            }
-
-            AdjustAirDate adjustAirDate = new AdjustAirDate(selectedSeries);
-            Calendar calendar = adjustAirDate.getCalendar();
-
-            if(calendar!=null)
-            {
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
-                notificationAiringChannel.setNotification(selectedSeries, calendar);
-            }
-
-            mNavController.navigate(R.id.listFragment);
-            super.onPostExecute(aVoid);
-        }
-    }
-
-
 
 }

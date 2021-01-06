@@ -23,10 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.R;
-import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
-import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.localList.Remove;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
-import com.alexzamurca.animetrackersprint2.Database.Remove;
 import com.bumptech.glide.Glide;
 
 import java.io.Serializable;
@@ -324,32 +322,12 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
 
     public void removeSeries(Series series)
     {
-        CheckConnection checkConnection = new CheckConnection(context);
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
-        {
-            Log.d(TAG, "remove: we have internet");
-            RemoveAsync removeAsync = new RemoveAsync();
-            removeAsync.setSelectedSeries(series);
-            removeAsync.execute();
-            refreshSeriesList();
-        }
-        else
-        {
-            Log.d(TAG, "removeSeries: NO INTERNET");
+        Remove remove = new Remove(series.getAnilist_id(), context);
+        remove.remove();
 
-            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("update_db", true);
-            noConnectionDialog.setArguments(bundle);
-            noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
-
-        }
-    }
-
-    private void refreshSeriesList()
-    {
-        navController.navigate(R.id.listFragment);
+        // Cancel alarm
+        NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+        notificationAiringChannel.cancel(series);
     }
 
 
@@ -360,45 +338,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         void onNotificationsOn(Series series);
         void onChangeNotificationTime(Series series);
         void onErrorWrongAirDate(Series series);
-    }
-
-    private class RemoveAsync extends AsyncTask<Void, Void, Void>
-    {
-        private boolean isSeriesRemoved;
-        private Series selectedSeries;
-        
-        public void setSelectedSeries(Series selectedSeries)
-        {
-            this.selectedSeries = selectedSeries;
-        }
-        
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            Log.d(TAG, "doInBackground: RemoveAsync: session:" +session);
-            Remove remove = new Remove(session, selectedSeries.getAnilist_id(), context);
-            isSeriesRemoved = remove.remove();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) 
-        {
-            String title = selectedSeries.getTitle();
-            if(isSeriesRemoved)
-            {
-                Toast.makeText(context, "\"" + title +"\" is no longer in your series list.", Toast.LENGTH_SHORT).show();
-
-                // Cancel alarm
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
-                notificationAiringChannel.cancel(selectedSeries);
-            }
-            else
-            {
-                Toast.makeText(context, "Failed to remove \"" + title +"\", it is still in your series list.", Toast.LENGTH_SHORT).show();
-            }
-            super.onPostExecute(aVoid);
-        }
     }
     
 }

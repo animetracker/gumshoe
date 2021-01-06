@@ -30,9 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.localList.Insert;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
-import com.alexzamurca.animetrackersprint2.Database.Insert;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
@@ -299,10 +299,31 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
 
     public void insert(int position)
     {
-        progressBar.setVisibility(View.VISIBLE);
-        DatabaseInsert databaseInsert = new DatabaseInsert();
-        databaseInsert.setAdapter_position(position);
-        databaseInsert.execute();
+        try
+        {
+            JSONObject json = search.getSearchArray().getJSONObject(position);
+            Insert insert = new Insert(json, context);
+            int request_success_rating = insert.insert();
+            if(request_success_rating==0)
+            {
+                Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_LONG).show();
+            }
+            else if(request_success_rating == 1)
+            {
+                Toast.makeText(context, "\"" + title_content + "\" is already in your series list!", Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_LONG).show();
+            }
+
+            SearchResponseToString searchResponseToString = new SearchResponseToString();
+            rowClickListener.onSuccessfulClick(searchResponseToString.getSeries(json));
+        }
+        catch(JSONException e)
+        {
+            Log.d(TAG, "insert: failed to get search array element");
+        }
     }
 
     private void hideKeyboard()
@@ -356,61 +377,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 hideKeyboard();
             }
             progressBar.setVisibility(View.GONE);
-        }
-    }
-
-    // Network activity is done in the background
-    public class DatabaseInsert extends AsyncTask<Void, Void, Void> {
-
-        private int adapter_position;
-        private int request_success_rating;
-
-        public void setAdapter_position(int adapter_position)
-        {
-            this.adapter_position = adapter_position;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Log.d(TAG, "doInBackground: DatabaseInsert: session: "+ session);
-                Insert insert = new Insert(search.getSearchArray().getJSONObject(adapter_position), session, context);
-                request_success_rating = insert.insert();
-            } catch (JSONException e) {
-                Log.d(TAG, "DatabaseInsert: doInBackground: JSONException");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            progressBar.setVisibility(View.GONE);
-            if(request_success_rating == 0)
-            {
-                Toast.makeText(context, "\"" + title_content + "\" is now in your series list!", Toast.LENGTH_LONG).show();
-                try
-                {
-                    JSONObject json = search.getSearchArray().getJSONObject(adapter_position);
-                    SearchResponseToString searchResponseToString = new SearchResponseToString();
-                    rowClickListener.onSuccessfulClick(searchResponseToString.getSeries(json));
-                }
-                catch(JSONException e)
-                {
-                    Log.d(TAG, "onPostExecute: JSONException when trying to call RowOnClickListener.onSuccessfulClick interface - error getting series from search array");
-                }
-
-            }
-            else if(request_success_rating == 1)
-            {
-                Toast.makeText(context, "\"" + title_content + "\" is already in your series list!", Toast.LENGTH_LONG).show();
-            }
-            else if(request_success_rating == 2)
-            {
-                Toast.makeText(context, "\"" + title_content + "\" failed to be added your series list!", Toast.LENGTH_LONG).show();
-            }
-
-            navController.navigate(R.id.listFragment);
-            super.onPostExecute(aVoid);
         }
     }
 }

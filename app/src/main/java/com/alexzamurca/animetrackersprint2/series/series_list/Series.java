@@ -5,8 +5,8 @@ import java.io.Serializable;
 
 public class Series implements Serializable
 {
-    String title, cover_image, air_date, description, status, notification_change, air_date_change;
-    int anilist_id, next_episode_number, notifications_on;
+    private String title, cover_image, air_date, description, status, notification_change, air_date_change;
+    private int anilist_id, next_episode_number, notifications_on;
 
     public Series(String title, String cover_image, String air_date, String description, String status, String notification_change, String air_date_change, int anilist_id, int next_episode_number, int notifications_on) {
         this.title = title;
@@ -79,5 +79,9 @@ public class Series implements Serializable
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setNotifications_on(int notifications_on) {
+        this.notifications_on = notifications_on;
     }
 }

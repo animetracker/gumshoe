@@ -1,9 +1,10 @@
-package com.alexzamurca.animetrackersprint2.algorithms;
+package com.alexzamurca.animetrackersprint2.localList;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.alexzamurca.animetrackersprint2.algorithms.ListJSONConversion;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.ArrayList;

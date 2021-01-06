@@ -26,8 +26,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
-import com.alexzamurca.animetrackersprint2.algorithms.LocalListStorage;
+import com.alexzamurca.animetrackersprint2.localList.LocalListStorage;
 import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.dialog.ReportBugFragment;
 import com.google.android.gms.ads.AdError;

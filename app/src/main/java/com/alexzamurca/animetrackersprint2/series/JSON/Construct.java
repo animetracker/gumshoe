@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2.series.JSON;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertMillisToDate;
+import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,30 +14,31 @@ public class Construct
 {
     private static final String TAG = "Construct";
 
-    public JSONObject constructFormattedInsertJSON(JSONObject unformattedJson)
+    public Series constructSeriesFromInsertJSON(JSONObject unformattedJson)
     {
-        JSONObject json = new JSONObject();
+        String title, cover_image, air_date, description, status, notification_change, air_date_change;
+        int anilist_id, next_episode_number, notifications_on;
         try
         {
             try
             {
-                String title = unformattedJson.getJSONObject("title").getString("english");
-                if (title.equals("null"))
+                String temp_title = unformattedJson.getJSONObject("title").getString("english");
+                if (temp_title.equals("null"))
                 {
-                    title =  unformattedJson.getJSONObject("title").getString("romaji");
+                    temp_title =  unformattedJson.getJSONObject("title").getString("romaji");
                 }
-                json.put("title", title);
+                title = temp_title;
             }
             catch(JSONException e)
             {
-                json.put("title", unformattedJson.getJSONObject("title").getString("romaji"));
+                title = unformattedJson.getJSONObject("title").getString("romaji");
             }
 
-            json.put("anilist_id", unformattedJson.getInt("id"));
+            anilist_id =  unformattedJson.getInt("id");
 
             try
             {
-                json.put("next_episode_number", unformattedJson.getJSONObject("nextAiringEpisode").getInt("episode"));
+                next_episode_number =  unformattedJson.getJSONObject("nextAiringEpisode").getInt("episode");
             }
             catch(JSONException e)
             {
@@ -55,217 +57,39 @@ public class Construct
                 {
                     Log.d(TAG, "constructFormattedJSON: NumberFormatException when trying to convert string to number");
                 }
-                json.put("next_episode_number", episode_number);
+                next_episode_number =  episode_number;
             }
 
-            json.put("status", unformattedJson.getString("status"));
-            String air_date = "";
+            status =  unformattedJson.getString("status");
+            String temp_air_date = "";
             try
             {
                 ConvertMillisToDate convertMillisToDate = new ConvertMillisToDate(unformattedJson.getJSONObject("nextAiringEpisode").getInt("airingAt"));
-                air_date = convertMillisToDate.getDate();
+                temp_air_date = convertMillisToDate.getDate();
             }
             catch(JSONException j)
             {
                 Log.d(TAG, "constructFormattedJSON: JSONException when trying to get air date from JSON");
 
             }
-            json.put("air_date", air_date);
+            air_date = temp_air_date;
 
-            json.put("cover_image", unformattedJson.getJSONObject("coverImage").getString("large"));
+            cover_image =  unformattedJson.getJSONObject("coverImage").getString("large");
 
 
-            json.put("description", unformattedJson.getString("description"));
+           description = unformattedJson.getString("description");
 
-            json.put("notifications_on", 1);
-            json.put("notification_change" , "");
-            json.put("air_date_change" , "");
+            notifications_on =  1;
+            notification_change = "";
+            air_date_change = "";
 
+            return new Series(title, cover_image, air_date, description, status, notification_change, air_date_change, anilist_id, next_episode_number, notifications_on);
         }
         catch(JSONException e)
         {
             Log.d(TAG, "construct: JSONException");
         }
 
-        return json;
-    }
-
-    public JSONObject constructUpdateNotificationsOnJSON(int notifications_on)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("notifications_on", notifications_on);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructFormattedUpdateNotificationsOnJSON: JSONException");
-        }
-        return json;
-    }
-
-    public JSONObject constructUpdateNotificationChangeJSON(String notification_change)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("notification_change", notification_change);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException");
-        }
-        return json;
-    }
-
-    public JSONObject constructUpdateAirDateChangeJSON(String air_date_change)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("air_date_change", air_date_change);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructFormattedUpdateAirDateChangeJSON: JSONException");
-        }
-        return json;
-    }
-
-    public JSONObject constructUpdateSeriesAiringJSON(int next_episode_number, String air_date, String status)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("next_episode_number", next_episode_number);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, next episode number");
-        }
-
-        try
-        {
-            json.put("air_date", air_date);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, air_date");
-        }
-
-        try
-        {
-            json.put("status", status);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructFormattedUpdateNotificationChangeJSON: JSONException, status");
-        }
-        return json;
-    }
-
-    public JSONObject constructLoginJSON(String email_address, String password)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("email", email_address);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructLoginJSON: JSONException error putting email");
-        }
-
-        try
-        {
-            json.put("password", password);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructLoginJSON: JSONException error putting password");
-        }
-        return json;
-    }
-
-    public JSONObject constructRegisterJSON(String username, String email_address, String password)
-    {
-        JSONObject json = new JSONObject();
-
-        try
-        {
-            json.put("username", username);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructRegisterJSON: JSONException error putting username");
-        }
-
-
-        try
-        {
-            json.put("email", email_address);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructRegisterJSON: JSONException error putting email");
-        }
-
-        try
-        {
-            json.put("password", password);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructRegisterJSON: JSONException error putting password");
-        }
-        return json;
-    }
-
-    public JSONObject constructSetSelectedIconJSON(String session, String icon)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("session", session);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructSetSelectedIconJSON: JSONException error putting session");
-        }
-
-        try
-        {
-            json.put("icon", icon);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructSetSelectedIconJSON: JSONException error putting icon");
-        }
-        return json;
-    }
-
-    public JSONObject constructAddIconJSON(String session, String icon)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("session", session);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructAddIconJSON: JSONException error putting session");
-        }
-
-        try
-        {
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.put(icon);
-            json.put("icons", jsonArray);
-        }
-        catch(JSONException e)
-        {
-            Log.d(TAG, "constructAddIconJSON: JSONException error putting icon array");
-        }
-        return json;
+        return null;
     }
 }
