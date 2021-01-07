@@ -41,24 +41,11 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/settings_change_profile"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/settings_dark_mode_button"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/series_row_background_bottom"
-                android:textColor="?attr/primaryTextColor"
-                android:gravity="center"
-                android:text="Change Profile"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
             <TextView
                 android:id="@+id/settings_general_header"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/settings_change_profile"
+                android:layout_below="@id/settings_dark_mode_button"
                 android:gravity="center_vertical"
                 android:text="@string/general"
                 android:textColor="@android:color/holo_blue_dark"
@@ -104,47 +91,11 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/settings_store"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/settings_tutorial"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/series_row_background_bottom"
-                android:textColor="?attr/primaryTextColor"
-                android:gravity="center"
-                android:text="Store"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/settings_points"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_below="@id/settings_store"
-                android:gravity="center_vertical"
-                android:text="Total Points"
-                android:textColor="?attr/primaryTextColor"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/text_view"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-                android:layout_below="@+id/settings_store"
-                android:layout_alignParentEnd="true"
-                android:background="?attr/bg"
-                android:gravity="center_vertical"
-                android:text=""
-                android:textColor="?attr/primaryTextColor"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
             <TextView
                 android:id="@+id/settings_support_devs_header"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/text_view"
+                android:layout_below="@id/settings_tutorial"
                 android:gravity="center_vertical"
                 android:text="@string/support_devs"
                 android:textColor="@android:color/holo_blue_dark"
@@ -181,7 +132,7 @@
                 android:layout_height="50dp"
                 android:layout_below="@id/settings_ads"
                 android:gravity="center_vertical"
-                android:text="Account"
+                android:text="Series List"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="20sp"
                 android:textStyle="bold" />

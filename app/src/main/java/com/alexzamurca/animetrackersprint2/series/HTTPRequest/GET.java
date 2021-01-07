@@ -2,11 +2,12 @@ package com.alexzamurca.animetrackersprint2.series.HTTPRequest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.alexzamurca.animetrackersprint2.dialog.NoDatabaseDialog;
+import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -52,14 +53,11 @@ public class GET
         {
             Log.d(TAG, "sendRequest: " + e.toString());
 
-            SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            editor.putBoolean("db_connect_problem", true);
-            editor.apply();
-
-            NoDatabaseDialog dialog = new NoDatabaseDialog();
-            dialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoDatabaseDialog");
+            NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("update_list", true);
+            noConnectionDialog.setArguments(bundle);
+            noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
         }
         return "Response returned nothing";
     }

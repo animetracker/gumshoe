@@ -29,9 +29,9 @@ import androidx.navigation.Navigation;
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
-import com.alexzamurca.animetrackersprint2.Database.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.localList.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -455,91 +455,27 @@ public class ChangeNotificationReminderFragment extends Fragment
 
     private void updateNotificationChangeDB()
     {
-        CheckConnection checkConnection = new CheckConnection(requireContext());
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
+        String change;
+        if(quantity==0) change = "";
+        else
         {
-            UpdateNotificationReminderAsync updateNotificationReminderAsync = new UpdateNotificationReminderAsync();
-            updateNotificationReminderAsync.execute();
-            Log.d(TAG, "update notification reminder has internet");
+            change = quantity + " " + metric + " " + beforeAfter;
+        }
+
+        // Update Notification Change logic
+        UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(series.getAnilist_id(), change, requireContext());
+        updateNotificationChange.update();
+
+        String title = series.getTitle();
+        if(quantity==0)
+        {
+            Toast.makeText(getContext(), "You have changed to be reminded the moment a " + "\"" + title +"\" episode releases!", Toast.LENGTH_LONG).show();
         }
         else
         {
-            Log.d(TAG, "update notification reminder: NO INTERNET");
-
-            AppGround appGround = new AppGround();
-            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
-
-            if(isAppOnForeground)
-            {
-                Log.d(TAG, "update notification reminder request app in foreground");
-                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
-                noConnectionDialog.setArguments(bundle);
-                noConnectionDialog.show(requireActivity().getSupportFragmentManager(), "NoConnectionDialog");
-            }
-            else
-            {
-                Log.d(TAG, "update notification reminder request app in background");
-                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
-                updateFailedNotification.showNotification();
-
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "updateNotificationChangeDB: app set to need_to_update_db mode");
-                editor.apply();
-            }
+            Toast.makeText(getContext(), "You have changed to be reminded\n" + quantity + " " + metric + " " + beforeAfter +  "\n\"" + title +"\"'s air date!", Toast.LENGTH_LONG).show();
         }
 
-    }
-
-    private class UpdateNotificationReminderAsync extends AsyncTask<Void, Void, Void>
-    {
-        private boolean isSuccessful;
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            String change;
-            if(quantity==0) change = "";
-            else
-            {
-                change = quantity + " " + metric + " " + beforeAfter;
-            }
-
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
-            String session = sharedPreferences.getString("session", "");
-            Log.d(TAG, "doInBackground: UpdateNotificationsReminderAsync: session: " + session);
-
-            UpdateNotificationChange updateNotificationChange = new UpdateNotificationChange(session, series.getAnilist_id(), change, getContext());
-            isSuccessful = updateNotificationChange.update() == 0;
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            String title = series.getTitle();
-            if(isSuccessful)
-            {
-                if(quantity==0)
-                {
-                    Toast.makeText(getContext(), "You have changed to be reminded the moment a " + "\"" + title +"\" episode releases!", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(getContext(), "You have changed to be reminded\n" + quantity + " " + metric + " " + beforeAfter +  "\n\"" + title +"\"'s air date!", Toast.LENGTH_LONG).show();
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Failed to change notification reminder for \"" + title +"\", report this bug.", Toast.LENGTH_LONG).show();
-            }
-            navController.navigateUp();
-            super.onPostExecute(aVoid);
-        }
+        navController.navigateUp();
     }
 }

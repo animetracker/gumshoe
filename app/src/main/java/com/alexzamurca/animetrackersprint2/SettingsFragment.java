@@ -27,7 +27,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.localList.LocalListStorage;
-import com.alexzamurca.animetrackersprint2.notifications.UpdatingDBChannel;
 import com.alexzamurca.animetrackersprint2.dialog.ReportBugFragment;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
@@ -96,10 +95,6 @@ public class SettingsFragment extends Fragment
             clearLocalSeriesList()
         );
 
-        Button store = view.findViewById(R.id.settings_store);
-        store.setOnClickListener(view15 ->
-            navController.navigate(R.id.action_to_store)
-        );
 
         // This method is used to create the dark mode using the button
         darkMode= view.findViewById(R.id.settings_dark_mode_button);
@@ -150,7 +145,6 @@ public class SettingsFragment extends Fragment
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
 
-        textView=view.findViewById(R.id.text_view);
         button =view.findViewById(R.id.settings_ads);
 
         button.setOnClickListener(v ->
@@ -265,12 +259,6 @@ public class SettingsFragment extends Fragment
             darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
             darkMode.setText(darkModeOffString);
         }
-    }
-
-    void cancelDatabaseCheckAlarm()
-    {
-        UpdatingDBChannel updatingDBChannel = new UpdatingDBChannel(getContext());
-        updatingDBChannel.cancel();
     }
 
     void clearLocalSeriesList()

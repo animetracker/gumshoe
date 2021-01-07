@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForUpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
 import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
@@ -38,9 +37,6 @@ public class MainActivity extends AppCompatActivity
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
         {
             Log.d(TAG, "onCreate: reset alarm because of reboot");
-
-            ResetAlarmForUpdateDB resetAlarmForUpdateDB = new ResetAlarmForUpdateDB(this);
-            resetAlarmForUpdateDB.reset();
 
             SetAlarmsForList setAlarmsForList = new SetAlarmsForList(this);
             setAlarmsForList.run();

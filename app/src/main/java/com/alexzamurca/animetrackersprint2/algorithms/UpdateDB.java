@@ -6,12 +6,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.localList.LocalListStorage;
-import com.alexzamurca.animetrackersprint2.notifications.DBUpdateFailedNotification;
+import com.alexzamurca.animetrackersprint2.localList.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
-import com.alexzamurca.animetrackersprint2.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ public class UpdateDB
     public UpdateDB(Context context)
     {
         this.context = context;
-        SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-        session = sharedPreferences.getString("session", "");
-        Log.d(TAG, "UpdateDB: session: " + session);
 
         updateFailedNotification = new UpdateFailedNotification(context);
     }
@@ -43,7 +39,6 @@ public class UpdateDB
         LocalListStorage localListStorage = new LocalListStorage(context);
         ArrayList<Series> list = localListStorage.get();
         updateDB(list);
-
     }
 
     private void updateDB(List<Series> list)
@@ -81,13 +76,8 @@ public class UpdateDB
         String newStatus = getSeriesInfo.getStatus();
         Log.d(TAG, "update: series: " + series.getTitle() + " COMPARING oldStatus: " + oldStatus +" AND newStatus: " + newStatus);
 
-        // Error getting new status
-        if(newStatus.equals(""))
-        {
-            DBUpdateFailedNotification dbUpdateFailedNotification = new DBUpdateFailedNotification(context);
-            dbUpdateFailedNotification.showNotification();
-        }
-        else if(oldStatus.equals(newStatus))
+
+        if(oldStatus.equals(newStatus))
         {
             int episode_number = getSeriesInfo.getEpisode_number();
             String air_date = getSeriesInfo.getAir_date();
@@ -126,24 +116,16 @@ public class UpdateDB
 
     private void updateAirDate(Series series, String air_date, String status, int episode_number)
     {
-        CheckConnection checkConnection = new CheckConnection(context);
-        if(checkConnection.isConnected())
-        {
-            UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
-            airDateAsync.setVariables(series, air_date, status, episode_number);
-            airDateAsync.execute();
-        }
-        else
-        {
-            Log.d(TAG, "updateAirDate: updating air date has no connection");
-            updateFailedNotification.showNotification();
+        UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(series.getAnilist_id(), episode_number, air_date, status, context);
+        updateSeriesAiring.update();
 
-            SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = appSharedPreferences.edit();
-            editor.putBoolean("need_to_update_db", true);
-            Log.d(TAG, "insert: app set to need_to_update_db mode");
-            editor.apply();
-        }
+        series.setAir_date(air_date);
+        series.setStatus(status);
+        series.setNext_episode_number(episode_number);
+
+        NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+        AdjustAirDate adjustAirDate = new AdjustAirDate(series);
+        notificationAiringChannel.setNotification(series, adjustAirDate.getCalendar());
     }
 
     private class GetSeriesInfoAsync extends AsyncTask<Void, Void, Void>
@@ -171,63 +153,6 @@ public class UpdateDB
         protected void onPostExecute(Void aVoid)
         {
             update(series, getSeriesInfo);
-            super.onPostExecute(aVoid);
-        }
-    }
-
-    private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
-    {
-        private Series series;
-        private String air_date, status;
-        private int episode_number;
-        private boolean isSuccessful;
-
-
-        public void setVariables(Series series, String air_date, String status, int episode_number)
-        {
-            this.series = series;
-            this.air_date = air_date;
-            this.status = status;
-            this.episode_number = episode_number;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            Log.d(TAG, "doInBackground: updating series airing in UpdateAirDateAsync with session: " + session);
-            UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status, context);
-            isSuccessful = updateSeriesAiring.update() == 0;
-
-            Log.d(TAG, "doInBackground: series:" + series.getTitle() + "was update request successful?:" + isSuccessful);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            if(isSuccessful)
-            {
-                series.setAir_date(air_date);
-                series.setStatus(status);
-                series.setNext_episode_number(episode_number);
-
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
-                AdjustAirDate adjustAirDate = new AdjustAirDate(series);
-                notificationAiringChannel.setNotification(series, adjustAirDate.getCalendar());
-
-                if(!failed)
-                {
-                    SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = appSharedPreferences.edit();
-                    editor.putBoolean("need_to_update_db", false);
-                    Log.d(TAG, "insert: app set to need_to_update_db false mode");
-                    editor.apply();
-                }
-            }
-            else
-            {
-                Log.d(TAG, "onPostExecute: " + "\"" + series.getTitle() +"\" has failed to update!");
-            }
             super.onPostExecute(aVoid);
         }
     }

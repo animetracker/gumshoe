@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,11 +55,9 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
     public SeriesRecyclerViewAdapter.OnSeriesListener recyclerViewListener;
 
     private ArrayList<Series> list = new ArrayList<>();
-    private String session;
 
     private SeriesRecyclerViewAdapter adapter;
     private LinearLayout emptyListLayout;
-    private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
 
@@ -74,10 +71,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         mView = inflater.inflate(R.layout.fragment_series_list, container, false);
         recyclerViewListener = this;
 
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Account", Context.MODE_PRIVATE);
-        session = sharedPreferences.getString("session", "");
-        Log.d(TAG, "onCreateView: session: " + session);
-
         Toolbar toolbar = mView.findViewById(R.id.series_list_toolbar_object);
         setHasOptionsMenu(true);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
@@ -89,8 +82,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         emptyListLayout.setBackgroundResource(R.drawable.button);
         emptyListImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
         emptyListLayout.setVisibility(View.GONE);
-
-        progressBar = mView.findViewById(R.id.series_progress_bar);
 
         recyclerView = mView.findViewById(R.id.series_recycler_view);
 

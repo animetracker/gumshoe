@@ -71,13 +71,6 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:id="@+id/series_progress_bar"
-            android:indeterminateDrawable="@drawable/progress"
-            android:layout_centerInParent="true"/>
-
     </RelativeLayout>
 
 
