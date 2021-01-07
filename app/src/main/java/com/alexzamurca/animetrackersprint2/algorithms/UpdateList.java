@@ -16,32 +16,30 @@ import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateDB
+public class UpdateList
 {
     private static final String TAG = "UpdateDB";
     private Context context;
-    private String session;
-    private boolean failed;
 
     UpdateFailedNotification updateFailedNotification;
 
 
-    public UpdateDB(Context context)
+    public UpdateList(Context context)
     {
         this.context = context;
 
         updateFailedNotification = new UpdateFailedNotification(context);
     }
 
-    // Get table and update db
+    // Get list and update it
     public void run()
     {
         LocalListStorage localListStorage = new LocalListStorage(context);
         ArrayList<Series> list = localListStorage.get();
-        updateDB(list);
+        updateList(list);
     }
 
-    private void updateDB(List<Series> list)
+    private void updateList(List<Series> list)
     {
         for(int i = 0; i < list.size(); i++)
         {
@@ -55,13 +53,12 @@ public class UpdateDB
             }
             else
             {
-                failed = true;
                 updateFailedNotification.showNotification();
 
                 SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = appSharedPreferences.edit();
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update mode");
+                editor.putBoolean("need_to_update_list", true);
+                Log.d(TAG, "updateList: app set to need_to_update mode");
                 editor.apply();
             }
 

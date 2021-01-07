@@ -19,7 +19,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
-import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
+import com.alexzamurca.animetrackersprint2.algorithms.UpdateList;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 
 public class NoConnectionDialog extends DialogFragment
@@ -58,8 +58,8 @@ public class NoConnectionDialog extends DialogFragment
                 Toast.makeText(getContext(), "Network connection is now available", Toast.LENGTH_SHORT).show();
                 if(finalNeedToUpdate)
                 {
-                    UpdateDB updateDB = new UpdateDB(requireContext());
-                    updateDB.run();
+                    UpdateList updateList = new UpdateList(requireContext());
+                    updateList.run();
                 }
 
                 requireDialog().dismiss();

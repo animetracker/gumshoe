@@ -103,7 +103,7 @@ public class UpdateSeries
                 Log.d(TAG, "Ani-list getSeriesInfo request app in foreground");
                 NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
+                bundle.putBoolean("update_list", true);
                 noConnectionDialog.setArguments(bundle);
                 noConnectionDialog.show(((FragmentActivity)mContext).getSupportFragmentManager(), "NoConnectionDialog");
             }
@@ -116,8 +116,8 @@ public class UpdateSeries
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("App", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "setSeriesInfo: app set to need_to_update_db mode");
+                editor.putBoolean("need_to_update_list", true);
+                Log.d(TAG, "setSeriesInfo: app set to need_to_update_list mode");
                 editor.apply();
             }
         }

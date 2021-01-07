@@ -1,11 +1,8 @@
 package com.alexzamurca.animetrackersprint2.series.series_list;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +11,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +36,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
     private transient Context context;
     private OnSeriesListener onSeriesListener;
     private transient NavController navController;
-    private String session;
 
     public SeriesRecyclerViewAdapter(Context context, List<Series> list, OnSeriesListener onSeriesListener, NavController navController)
     {
@@ -49,10 +43,6 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
         this.context = context;
         this.onSeriesListener = onSeriesListener;
         this.navController = navController;
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-        session = sharedPreferences.getString("session", "");
-        Log.d(TAG, "SeriesRecyclerViewAdapter: session: " + session);
     }
 
     @NonNull

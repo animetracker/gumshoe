@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.algorithms.SetAlarmsForList;
-import com.alexzamurca.animetrackersprint2.algorithms.UpdateDB;
+import com.alexzamurca.animetrackersprint2.algorithms.UpdateList;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.tutorial.TutorialActivity;
@@ -86,15 +86,15 @@ public class MainActivity extends AppCompatActivity
     private void checkIfUpdateListPending()
     {
         SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
-        boolean needDBUpdate = sharedPreferences.getBoolean("need_to_update_list", false);
-        if(needDBUpdate)
+        boolean needUpdate = sharedPreferences.getBoolean("need_to_update_list", false);
+        if(needUpdate)
         {
             CheckConnection checkConnection = new CheckConnection(this);
             boolean isConnected = checkConnection.isConnected();
             if(isConnected)
             {
-                UpdateDB updateDB = new UpdateDB(this);
-                updateDB.run();
+                UpdateList updateList = new UpdateList(this);
+                updateList.run();
             }
             else
             {

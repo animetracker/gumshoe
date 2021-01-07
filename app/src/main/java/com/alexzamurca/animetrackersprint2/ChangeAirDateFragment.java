@@ -1,10 +1,7 @@
 package com.alexzamurca.animetrackersprint2;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,12 +28,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
-import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
-import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
-import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.localList.UpdateAirDateChange;
-import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -59,8 +52,6 @@ public class ChangeAirDateFragment extends Fragment
     private LinearLayout hoursErrorLayout;
     private LinearLayout minutesErrorLayout;
 
-    private String session;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
@@ -71,10 +62,6 @@ public class ChangeAirDateFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Account", Context.MODE_PRIVATE);
-        session = sharedPreferences.getString("session", "");
-        Log.d(TAG, "onViewCreated: session: "+ session);
 
         initSeries();
         convertDateToCalendar = new ConvertDateToCalendar();

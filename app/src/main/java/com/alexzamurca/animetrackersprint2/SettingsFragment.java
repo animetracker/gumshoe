@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.alexzamurca.animetrackersprint2.algorithms.CancelAllAlarms;
 import com.alexzamurca.animetrackersprint2.localList.LocalListStorage;
 import com.alexzamurca.animetrackersprint2.dialog.ReportBugFragment;
 import com.google.android.gms.ads.AdError;
@@ -265,6 +266,9 @@ public class SettingsFragment extends Fragment
     {
         LocalListStorage localListStorage = new LocalListStorage(requireContext());
         localListStorage.store(new ArrayList<>());
+
+        CancelAllAlarms cancelAllAlarms = new CancelAllAlarms(requireContext());
+        cancelAllAlarms.run();
     }
 
 }

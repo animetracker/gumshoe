@@ -1,7 +1,6 @@
 package com.alexzamurca.animetrackersprint2.notifications;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
@@ -19,16 +18,12 @@ public class SetNewNotification
     private Series series;
     private Series newSeries;
     private Calendar airDateAfterChangesCalendar = null;
-    private String session;
 
     private List<Series> list;
 
     public SetNewNotification(Context context, Series series)
     {
         this.context = context;
-        SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
-        session = sharedPreferences.getString("session", "");
-        Log.d(TAG, "SetNewNotification: session set to: "+ session);
         this.series = series;
     }
 

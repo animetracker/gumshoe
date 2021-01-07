@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +27,8 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
-import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
 import com.alexzamurca.animetrackersprint2.localList.Insert;
-import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.Search;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.JSON.SearchResponseToString;
@@ -233,43 +230,9 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 title_content = list.get(getAdapterPosition()).getTitle();
                 Log.d(TAG, "onClick: clicked on: " + title_content);
 
-                CheckConnection checkConnection = new CheckConnection(context);
-                boolean isConnectedToInternet = checkConnection.isConnected();
-                if (isConnectedToInternet)
-                {
-                    insert(getAdapterPosition());
-                    Log.d(TAG, "ViewHolder: selected result is stored");
-                }
-                else
-                {
-                    Log.d(TAG, "insert: NO INTERNET");
+                insert(getAdapterPosition());
+                Log.d(TAG, "ViewHolder: selected result is stored");
 
-                    AppGround appGround = new AppGround();
-                    boolean isAppOnForeground = appGround.isAppOnForeground(context);
-
-                    if(isAppOnForeground)
-                    {
-                        Log.d(TAG, "ViewHolder: insert request app in foreground");
-                        NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean("update_db", true);
-                        noConnectionDialog.setArguments(bundle);
-                        noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
-                    }
-                    else
-                    {
-                        Log.d(TAG, "ViewHolder: insert request app in background");
-                        UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
-                        updateFailedNotification.showNotification();
-
-                        SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                        editor.putBoolean("need_to_update_db", true);
-                        Log.d(TAG, "ViewHolder: app set to need_to_update_db mode");
-                        editor.apply();
-                    }
-                }
             });
         }
     }
