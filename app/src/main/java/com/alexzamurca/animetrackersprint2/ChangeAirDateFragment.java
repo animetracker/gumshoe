@@ -35,6 +35,7 @@ import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
 import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.localList.UpdateAirDateChange;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -413,45 +414,25 @@ public class ChangeAirDateFragment extends Fragment
 
     private void updateAirDateDB()
     {
-        CheckConnection checkConnection = new CheckConnection(requireContext());
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
+        String change;
+        if(hours_to_change==0 && minutes_to_change==0) change = "";
+        else
         {
-            UpdateAirDateAsync updateAirDateAsync = new UpdateAirDateAsync();
-            updateAirDateAsync.execute();
-            Log.d(TAG, "update air date has connection");
+            change = getFormattedChange();
+        }
+
+        UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(series.getAnilist_id(), change, requireContext());
+        updateAirDateChange.update();
+
+        if(hours_to_change==0 && minutes_to_change==0)
+        {
+            Toast.makeText(getContext(), "You have changed to use the air date provided by AniList for " + "\"" + series.getTitle() +"\"!", Toast.LENGTH_LONG).show();
         }
         else
         {
-            Log.d(TAG, "update air date no internet");
-
-            AppGround appGround = new AppGround();
-            boolean isAppOnForeground = appGround.isAppOnForeground(requireContext());
-
-            if(isAppOnForeground)
-            {
-                Log.d(TAG, "update air date change request app in foreground");
-                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
-                noConnectionDialog.setArguments(bundle);
-                noConnectionDialog.show(requireActivity().getSupportFragmentManager(), "NoConnectionDialog");
-            }
-            else
-            {
-                Log.d(TAG, "update air date change request app in background");
-                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(requireContext());
-                updateFailedNotification.showNotification();
-
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "updateAirDateDB: app set to need_to_update_db mode");
-                editor.apply();
-            }
+            Toast.makeText(getContext(), "You have changed the air date of" +  "\n\"" + series.getTitle() +"\"!", Toast.LENGTH_LONG).show();
         }
-
+        navController.navigateUp();
     }
 
     private String getFormattedChange()
@@ -460,49 +441,5 @@ public class ChangeAirDateFragment extends Fragment
         if(isSignNegative) sign = "-";
         else sign = "+";
         return sign + hours_to_change + ":"  + minutes_to_change;
-    }
-
-    private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
-    {
-        private boolean isSuccessful;
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            String change;
-            if(hours_to_change==0 && minutes_to_change==0) change = "";
-            else
-            {
-                change = getFormattedChange();
-            }
-
-            Log.d(TAG, "doInBackground: UpdateAirDateAsync: session: "+ session);
-            UpdateAirDateChange updateAirDateChange = new UpdateAirDateChange(session, series.getAnilist_id(), change, getContext());
-            isSuccessful = updateAirDateChange.update() == 0;
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            String title = series.getTitle();
-            if(isSuccessful)
-            {
-                if(hours_to_change==0 && minutes_to_change==0)
-                {
-                    Toast.makeText(getContext(), "You have changed to use the air date provided by AniList for " + "\"" + title +"\"!", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(getContext(), "You have changed the air date of" +  "\n\"" + title +"\"!", Toast.LENGTH_LONG).show();
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Failed to change air date for \"" + title +"\", report this bug.", Toast.LENGTH_LONG).show();
-            }
-            navController.navigateUp();
-            super.onPostExecute(aVoid);
-        }
     }
 }

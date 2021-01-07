@@ -10,12 +10,12 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 
 import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.localList.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.alexzamurca.animetrackersprint2.notifications.SeriesFinishedNotification;
 import com.alexzamurca.animetrackersprint2.notifications.SetNewNotification;
 import com.alexzamurca.animetrackersprint2.notifications.UpdateFailedNotification;
 import com.alexzamurca.animetrackersprint2.series.AniList.GetSeriesInfo;
-import com.alexzamurca.animetrackersprint2.Database.UpdateSeriesAiring;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
 public class UpdateSeries
@@ -23,16 +23,11 @@ public class UpdateSeries
     private static final String TAG = "UpdateSeries";
 
     private final Series series;
-    private Context mContext;
-    private String session;
+    private final Context mContext;
     private boolean set_new_notification;
 
     public UpdateSeries(Series series, Context mContext)
     {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("Account", Context.MODE_PRIVATE);
-        session = sharedPreferences.getString("session", "");
-        Log.d(TAG, "UpdateSeries: session set to:" + session);
-
         this.series = series;
         this.mContext = mContext;
     }
@@ -74,46 +69,15 @@ public class UpdateSeries
 
     private void updateAirDate(Series series, String air_date, String status, int episode_number)
     {
-        CheckConnection checkConnection = new CheckConnection(mContext);
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
+        UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(series.getAnilist_id(), episode_number, air_date, status, mContext);
+        updateSeriesAiring.update();
+
+        Toast.makeText(mContext, "\"" + series.getTitle() +"\" has been updated!", Toast.LENGTH_LONG).show();
+        if(set_new_notification)
         {
-            Log.d(TAG, "updateAirDate: has internet");
-            UpdateAirDateAsync airDateAsync = new UpdateAirDateAsync();
-            airDateAsync.setVariables(series, air_date, status, episode_number);
-            airDateAsync.execute();
+            Log.d(TAG, "updateAirDate: updating finished and setting new notification");
+            setNewNotification();
         }
-        else
-        {
-            Log.d(TAG, "updateAirDate: NO INTERNET");
-
-            AppGround appGround = new AppGround();
-            boolean isAppOnForeground = appGround.isAppOnForeground(mContext);
-
-            if(isAppOnForeground)
-            {
-                Log.d(TAG, "updateAirDate request app in foreground");
-                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
-                noConnectionDialog.setArguments(bundle);
-                noConnectionDialog.show(((FragmentActivity)mContext).getSupportFragmentManager(), "NoConnectionDialog");
-            }
-            else
-            {
-                Log.d(TAG, "updateAirDate request app in background");
-                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(mContext);
-                updateFailedNotification.showNotification();
-
-                SharedPreferences sharedPreferences = mContext.getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "updateAirDate: app set to need_to_update_db mode");
-                editor.apply();
-            }
-        }
-
     }
 
     public void setSeriesInfo(boolean set_new_notification)
@@ -164,57 +128,6 @@ public class UpdateSeries
     {
         SetNewNotification setNewNotification = new SetNewNotification(mContext, series);
         setNewNotification.setNotification();
-    }
-
-    private class UpdateAirDateAsync extends AsyncTask<Void, Void, Void>
-    {
-        private Series series;
-        private String air_date, status;
-        private int episode_number;
-        private boolean isSuccessful;
-
-
-        public void setVariables(Series series, String air_date, String status, int episode_number)
-        {
-            this.series = series;
-            this.air_date = air_date;
-            this.status = status;
-            this.episode_number = episode_number;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            Log.d(TAG, "doInBackground: updateAirDateAsync session: " + session);
-            UpdateSeriesAiring updateSeriesAiring = new UpdateSeriesAiring(session, series.getAnilist_id(), episode_number, air_date, status, mContext);
-            isSuccessful = updateSeriesAiring.update() == 0;
-
-            Log.d(TAG, "doInBackground: series:" + series.getTitle() + "was update request successful?:" + isSuccessful);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            String title = series.getTitle();
-            if(isSuccessful)
-            {
-                Toast.makeText(mContext, "\"" + title +"\" has been updated!", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onPostExecute: " + "\"" + title +"\" has been updated!");
-            }
-            else
-            {
-                Toast.makeText(mContext, "\"" + title +"\" has failed to update!", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onPostExecute: " + "\"" + title +"\" has failed to update!");
-            }
-            
-            if(set_new_notification)
-            {
-                Log.d(TAG, "onPostExecute: updating finished and setting new notification");
-                setNewNotification();
-            }
-            super.onPostExecute(aVoid);
-        }
     }
 
     private class GetSeriesInfoAsync extends AsyncTask<Void, Void, Void>

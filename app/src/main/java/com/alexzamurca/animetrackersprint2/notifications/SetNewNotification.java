@@ -2,18 +2,11 @@ package com.alexzamurca.animetrackersprint2.notifications;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
-
-import androidx.fragment.app.FragmentActivity;
 
 import com.alexzamurca.animetrackersprint2.Date.ConvertDateToCalendar;
 
-import com.alexzamurca.animetrackersprint2.Database.SelectTable;
-import com.alexzamurca.animetrackersprint2.algorithms.AppGround;
-import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
-import com.alexzamurca.animetrackersprint2.dialog.NoConnectionDialog;
+import com.alexzamurca.animetrackersprint2.localList.LocalListStorage;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import java.util.Calendar;
 import java.util.List;
@@ -65,45 +58,25 @@ public class SetNewNotification
 
     private void setList()
     {
-        CheckConnection checkConnection = new CheckConnection(context);
-        boolean isConnectedToInternet = checkConnection.isConnected();
-        if (isConnectedToInternet)
+        LocalListStorage localListStorage = new LocalListStorage(context);
+        list = localListStorage.get();
+
+        constructCalendar();
+        if(airDateAfterChangesCalendar != null)
         {
-            GetSeriesListAsync getSeriesListAsync = new GetSeriesListAsync();
-            getSeriesListAsync.execute();
-            Log.d(TAG, "get table has internet");
+            if(newSeries!=null)
+            {
+                Log.d(TAG, "onPostExecute: calendar, listener and newSeries are not null, so setting new notification for \"" + newSeries.getTitle() + "\"");
+                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+                notificationAiringChannel.setNotification(newSeries, airDateAfterChangesCalendar);
+            }
+
+            Log.d(TAG, "onPostExecute: New notification set");
         }
         else
         {
-            Log.d(TAG, "get table: NO INTERNET");
-
-            AppGround appGround = new AppGround();
-            boolean isAppOnForeground = appGround.isAppOnForeground(context);
-
-            if(isAppOnForeground)
-            {
-                Log.d(TAG, "get table request app in foreground");
-                NoConnectionDialog noConnectionDialog = new NoConnectionDialog();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("update_db", true);
-                noConnectionDialog.setArguments(bundle);
-                noConnectionDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "NoConnectionDialog");
-            }
-            else
-            {
-                Log.d(TAG, "get table request app in background");
-                UpdateFailedNotification updateFailedNotification = new UpdateFailedNotification(context);
-                updateFailedNotification.showNotification();
-
-                SharedPreferences sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putBoolean("need_to_update_db", true);
-                Log.d(TAG, "insert: app set to need_to_update_db mode");
-                editor.apply();
-            }
+            Log.d(TAG, "onPostExecute: airDateChangesCalendar is null");
         }
-
     }
 
     private Series findSeriesInList(Series series)
@@ -203,50 +176,5 @@ public class SetNewNotification
 
         }
         return null;
-    }
-
-    public class GetSeriesListAsync extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            Log.d(TAG, "doInBackground: GetSeriesListAsync: session: " + session);
-            SelectTable selectTable = new SelectTable(session, context);
-            list = selectTable.getSeriesList();
-            
-            if(list != null)
-            {
-                Log.d(TAG, "doInBackground: got table from db and not null");
-            }
-            else
-            {
-                Log.d(TAG, "doInBackground: got table from db and is null");
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            constructCalendar();
-            if(airDateAfterChangesCalendar != null)
-            {
-                if(newSeries!=null)
-                {
-                    Log.d(TAG, "onPostExecute: calendar, listener and newSeries are not null, so setting new notification for \"" + newSeries.getTitle() + "\"");
-                    NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
-                    notificationAiringChannel.setNotification(newSeries, airDateAfterChangesCalendar);
-                }
-
-                Log.d(TAG, "onPostExecute: New notification set");
-            }
-            else
-            {
-                Log.d(TAG, "onPostExecute: airDateChangesCalendar is null");
-            }
-
-            super.onPostExecute(aVoid);
-        }
     }
 }
