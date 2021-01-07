@@ -344,6 +344,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
         int selection = sharedPreferences.getInt("selected_sort_option_index", 5);
         sortListAccordingToSelection(selection);
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
