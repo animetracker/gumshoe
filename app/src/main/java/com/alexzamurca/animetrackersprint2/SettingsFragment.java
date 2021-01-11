@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +38,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -110,6 +113,23 @@ public class SettingsFragment extends Fragment
                     String darkModeOffString = "Dark Mode: Off";
                     darkMode.setText(darkModeOffString);
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
+                    BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
+                    bottomNavigationView.setBackgroundResource(R.color.colorWhite);
+                    int[][] states = new int[][] {
+                            new int[] { android.R.attr.state_enabled}, // enabled
+                            new int[] {-android.R.attr.state_enabled}, // disabled
+                            new int[] {-android.R.attr.state_checked}, // unchecked
+                            new int[] { android.R.attr.state_pressed}  // pressed
+                    };
+
+                    int[] colors = new int[] {
+                            Color.BLACK,
+                            Color.RED,
+                            Color.GREEN,
+                            Color.BLUE
+                    };
+                    ColorStateList myList = new ColorStateList(states, colors);
+                    bottomNavigationView.setItemIconTintList(myList);
                     mContext.setTheme(R.style.AppThemeLight);
                     editor.putBoolean("dark_mode_on", false);
                 }
@@ -119,6 +139,23 @@ public class SettingsFragment extends Fragment
                     String darkModeOnString = "Dark Mode: On";
                     darkMode.setText(darkModeOnString);
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark));
+                    BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
+                    bottomNavigationView.setBackgroundResource(R.color.darkmode);
+                    int[][] states = new int[][] {
+                            new int[] { android.R.attr.state_enabled}, // enabled
+                            new int[] {-android.R.attr.state_enabled}, // disabled
+                            new int[] {-android.R.attr.state_checked}, // unchecked
+                            new int[] { android.R.attr.state_pressed}  // pressed
+                    };
+
+                    int[] colors = new int[] {
+                            Color.WHITE,
+                            Color.RED,
+                            Color.GREEN,
+                            Color.BLUE
+                    };
+                    ColorStateList myList = new ColorStateList(states, colors);
+                    bottomNavigationView.setItemIconTintList(myList);
                     mContext.setTheme(R.style.AppThemeDark);
                     editor.putBoolean("dark_mode_on", true);
                 }

@@ -8,6 +8,8 @@ import androidx.navigation.ui.NavigationUI;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     SharedPreferences sharedPreferences;
     Boolean firstTime;
+    BottomNavigationView bottomNavigationView;
 
     private NavController navController;
     @Override
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        initBottomNavigation();
         checkDarkMode();
         checkIfUpdateListPending();
 
@@ -44,8 +47,6 @@ public class MainActivity extends AppCompatActivity
 
         sharedPreferences = getSharedPreferences("App", MODE_PRIVATE);
         firstTime = sharedPreferences.getBoolean("first_time", true);
-
-        initBottomNavigation();
 
         if(firstTime)
         {
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     private void initBottomNavigation()
     {
         // add a check to see if logged in or not before opening main activity
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
+        bottomNavigationView = findViewById(R.id.bottom_nav_view);
         navController = Navigation.findNavController(this, R.id.fragment_container);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
@@ -79,8 +80,46 @@ public class MainActivity extends AppCompatActivity
     {
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         boolean darkModeOn = sharedPreferences.getBoolean("dark_mode_on", false);
-        if(darkModeOn) setTheme(R.style.AppThemeDark);
-        else setTheme(R.style.AppThemeLight);
+        if(darkModeOn)
+        {
+            setTheme(R.style.AppThemeDark);
+            bottomNavigationView.setBackgroundResource(R.color.darkerGrey);
+            int[][] states = new int[][] {
+                    new int[] { android.R.attr.state_enabled}, // enabled
+                    new int[] {-android.R.attr.state_enabled}, // disabled
+                    new int[] {-android.R.attr.state_checked}, // unchecked
+                    new int[] { android.R.attr.state_pressed}  // pressed
+            };
+
+            int[] colors = new int[] {
+                    Color.WHITE,
+                    Color.RED,
+                    Color.GREEN,
+                    Color.BLUE
+            };
+            ColorStateList myList = new ColorStateList(states, colors);
+            bottomNavigationView.setItemIconTintList(myList);
+        }
+        else
+        {
+            setTheme(R.style.AppThemeLight);
+            bottomNavigationView.setBackgroundResource(R.color.colorWhite);
+            int[][] states = new int[][] {
+                    new int[] { android.R.attr.state_enabled}, // enabled
+                    new int[] {-android.R.attr.state_enabled}, // disabled
+                    new int[] {-android.R.attr.state_checked}, // unchecked
+                    new int[] { android.R.attr.state_pressed}  // pressed
+            };
+
+            int[] colors = new int[] {
+                    Color.BLACK,
+                    Color.RED,
+                    Color.GREEN,
+                    Color.BLUE
+            };
+            ColorStateList myList = new ColorStateList(states, colors);
+            bottomNavigationView.setItemIconTintList(myList);
+        }
     }
 
     private void checkIfUpdateListPending()
