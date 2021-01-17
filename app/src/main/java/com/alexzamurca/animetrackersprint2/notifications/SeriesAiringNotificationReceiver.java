@@ -52,10 +52,8 @@ public class SeriesAiringNotificationReceiver extends BroadcastReceiver
                 // Setting new Notification
                 if(set_new_notification)
                 {
-
                     setNewNotification(context, series);
                 }
-
             }
         }
     }

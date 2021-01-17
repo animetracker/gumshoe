@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initBottomNavigation();
-        checkDarkMode();
         checkIfUpdateListPending();
 
         Intent intent = getIntent();
@@ -67,6 +66,8 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
         navController = Navigation.findNavController(this, R.id.fragment_container);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        checkDarkMode();
     }
 
     @Override
@@ -82,8 +83,9 @@ public class MainActivity extends AppCompatActivity
         boolean darkModeOn = sharedPreferences.getBoolean("dark_mode_on", false);
         if(darkModeOn)
         {
+            Log.d(TAG, "checkDarkMode: dark mode is ON");
             setTheme(R.style.AppThemeDark);
-            bottomNavigationView.setBackgroundResource(R.color.darkerGrey);
+            bottomNavigationView.setBackgroundResource(R.color.darkmode);
             int[][] states = new int[][] {
                     new int[] { android.R.attr.state_enabled}, // enabled
                     new int[] {-android.R.attr.state_enabled}, // disabled
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
+            Log.d(TAG, "checkDarkMode: dark mode is OFF");
             setTheme(R.style.AppThemeLight);
             bottomNavigationView.setBackgroundResource(R.color.colorWhite);
             int[][] states = new int[][] {

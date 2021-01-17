@@ -29,22 +29,8 @@ public class SetNewNotification
 
     private void constructCalendar()
     {
-        Series tempSeries = findSeriesInList(series);
-        if(tempSeries!=null)
-        {
-            Log.d(TAG, "constructCalendar: found series " + series.getTitle() + " in series list");
-            newSeries = tempSeries;
-            Calendar tempCalendar =  adjustAirDate(newSeries);
-            if(tempCalendar!= null)
-            {
-                Log.d(TAG, "constructCalendar: airDateAfterChangesCalendar is not null");
-                airDateAfterChangesCalendar = tempCalendar;
-            }
-            else
-            {
-                Log.d(TAG, "constructCalendar: airDateAfterChangesCalendar is null");
-            }
-        }
+        newSeries = findSeriesInList();
+        if(newSeries!=null)airDateAfterChangesCalendar =  adjustAirDate(newSeries);
         else
         {
             Log.d(TAG, "constructCalendar: haven't found series " + series.getTitle() + " in series list");
@@ -57,24 +43,19 @@ public class SetNewNotification
         list = localListStorage.get();
 
         constructCalendar();
-        if(airDateAfterChangesCalendar != null)
+        if(airDateAfterChangesCalendar != null && newSeries!=null)
         {
-            if(newSeries!=null)
-            {
-                Log.d(TAG, "onPostExecute: calendar, listener and newSeries are not null, so setting new notification for \"" + newSeries.getTitle() + "\"");
-                NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
-                notificationAiringChannel.setNotification(newSeries, airDateAfterChangesCalendar);
-            }
-
-            Log.d(TAG, "onPostExecute: New notification set");
+            Log.d(TAG, "onPostExecute: calendar, listener and newSeries are not null, so setting new notification for \"" + newSeries.getTitle() + "\"");
+            NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(context);
+            notificationAiringChannel.setNotification(newSeries, airDateAfterChangesCalendar);
         }
         else
         {
-            Log.d(TAG, "onPostExecute: airDateChangesCalendar is null");
+            Log.d(TAG, "setList: airDateChangesCalendar is null");
         }
     }
 
-    private Series findSeriesInList(Series series)
+    private Series findSeriesInList()
     {
         for(int i = 0; i < list.size(); i++)
         {

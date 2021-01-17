@@ -132,6 +132,7 @@ public class SettingsFragment extends Fragment
                     bottomNavigationView.setItemIconTintList(myList);
                     mContext.setTheme(R.style.AppThemeLight);
                     editor.putBoolean("dark_mode_on", false);
+                    editor.apply();
                 }
                 else
                 {
@@ -158,8 +159,9 @@ public class SettingsFragment extends Fragment
                     bottomNavigationView.setItemIconTintList(myList);
                     mContext.setTheme(R.style.AppThemeDark);
                     editor.putBoolean("dark_mode_on", true);
+                    editor.apply();
                 }
-                editor.apply();
+
                 navController.navigate(R.id.settingsFragment);
             }
         );

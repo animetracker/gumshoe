@@ -18,7 +18,7 @@ import java.util.List;
 
 public class UpdateList
 {
-    private static final String TAG = "UpdateDB";
+    private static final String TAG = "UpdateList";
     private Context context;
 
     UpdateFailedNotification updateFailedNotification;
@@ -41,6 +41,9 @@ public class UpdateList
 
     private void updateList(List<Series> list)
     {
+        SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = appSharedPreferences.edit();
+
         for(int i = 0; i < list.size(); i++)
         {
             Series currentSeries = list.get(i);
@@ -54,15 +57,14 @@ public class UpdateList
             else
             {
                 updateFailedNotification.showNotification();
-
-                SharedPreferences appSharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = appSharedPreferences.edit();
                 editor.putBoolean("need_to_update_list", true);
+
                 Log.d(TAG, "updateList: app set to need_to_update mode");
                 editor.apply();
             }
 
         }
+        editor.putBoolean("need_to_update_list", false);
     }
 
     private void update(Series series, GetSeriesInfo getSeriesInfo)
