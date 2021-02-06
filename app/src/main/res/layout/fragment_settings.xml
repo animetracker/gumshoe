@@ -41,11 +41,37 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/settings_change_profile"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@id/settings_dark_mode_button"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/series_row_background_bottom"
+                android:textColor="?attr/primaryTextColor"
+                android:gravity="center"
+                android:text="Change Profile"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/settings_store"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/settings_change_profile"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/series_row_background_bottom"
+                android:textColor="?attr/primaryTextColor"
+                android:gravity="center"
+                android:text="Profile Icons Store"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/settings_general_header"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/settings_dark_mode_button"
+                android:layout_below="@id/settings_store"
                 android:gravity="center_vertical"
                 android:text="@string/general"
                 android:textColor="@android:color/holo_blue_dark"
@@ -122,15 +148,25 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/series_row_background_bottom"
                 android:textColor="?attr/primaryTextColor"
-                android:text="@string/watch_an_ad"
+                android:text="@string/watch_ads_gain_points"
                 android:textSize="15sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/settings_points"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@id/settings_ads"
+                android:gravity="center_vertical"
+                android:text="Gumshoe Points: 0"
+                android:textColor="?attr/primaryTextColor"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/accountTitle"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/settings_ads"
+                android:layout_below="@id/settings_points"
                 android:gravity="center_vertical"
                 android:text="Series List"
                 android:textColor="@android:color/holo_blue_dark"

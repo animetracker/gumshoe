@@ -50,8 +50,8 @@ public class SettingsFragment extends Fragment
     private FragmentActivity mContext;
     RewardedAd rewardedAd;
     RewardedAd tempLoadedAd;
-    TextView textView;
-    Button button;
+    TextView pointsText;
+    Button adButton;
     int value=0;
 
     @Override
@@ -97,6 +97,11 @@ public class SettingsFragment extends Fragment
         Button clearList = view.findViewById(R.id.settings_clear_list);
         clearList.setOnClickListener(view14 ->
             clearLocalSeriesList()
+        );
+
+        Button store = view.findViewById(R.id.settings_store);
+        store.setOnClickListener(view15 ->
+                navController.navigate(R.id.action_to_store)
         );
 
 
@@ -185,9 +190,10 @@ public class SettingsFragment extends Fragment
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
 
-        button =view.findViewById(R.id.settings_ads);
+        pointsText = view.findViewById(R.id.settings_points);
+        adButton =view.findViewById(R.id.settings_ads);
 
-        button.setOnClickListener(v ->
+        adButton.setOnClickListener(v ->
         {
             if (rewardedAd.isLoaded())
             {
@@ -215,7 +221,7 @@ public class SettingsFragment extends Fragment
                     @Override
                     public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
                         value=value+50;
-                        textView.setText(""+value);
+                        pointsText.setText("Gumshoe Points: "+value);
                     }
 
                     @Override
