@@ -16,24 +16,30 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.dialog.ProfileIconChangeConfirmationDialog;
+import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.io.Serializable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChangeProfileIconFragment extends Fragment
+public class ChangeProfileIconFragment extends Fragment implements ProfileIconChangeConfirmationDialog.OnResponseListener
 {
     private Button[] cardButtons;
     private transient FragmentActivity mContext;
+    private NavController navController;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_change_profile_icon, container, false);
+        return  inflater.inflate(R.layout.fragment_change_profile_icon, container, false);
     }
 
     @Override
@@ -47,6 +53,8 @@ public class ChangeProfileIconFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         cardButtons = new Button[]{view.findViewById(R.id.default_button), view.findViewById(R.id.ash_button), view.findViewById(R.id.goku_button), view.findViewById(R.id.naruto_button), view.findViewById(R.id.luffy_button), view.findViewById(R.id.eren_button)};
+
+        navController = Navigation.findNavController(view);
 
         Toolbar toolbar = view.findViewById(R.id.change_profile_toolbar_object);
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
@@ -116,8 +124,8 @@ public class ChangeProfileIconFragment extends Fragment
                     ProfileIconChangeConfirmationDialog dialog = new ProfileIconChangeConfirmationDialog();
                     Bundle args = new Bundle();
                     args.putInt("index", finalJ);
-
                     args.putInt("state", state);
+                    args.putSerializable("onResponseListener", this);
                     dialog.setArguments(args);
                     dialog.show(mContext.getSupportFragmentManager(), "ProfileIconChangeConfirmationDialog");
                 }
@@ -129,5 +137,11 @@ public class ChangeProfileIconFragment extends Fragment
             }
             );
         }
+    }
+
+    @Override
+    public void onYesClickListener()
+    {
+        navController.navigateUp();
     }
 }

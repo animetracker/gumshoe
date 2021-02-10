@@ -19,11 +19,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.alexzamurca.animetrackersprint2.R;
-import com.google.android.material.snackbar.Snackbar;
+
+import java.io.Serializable;
 
 public class ProfileIconChangeConfirmationDialog  extends DialogFragment
 {
     private static final String TAG = "ProfileIconChangeConfirmationDialog";
+    private OnResponseListener onResponseListener;
 
     String[] cardNames = new String[]{"Default", "Ash", "Goku", "Naruto", "Luffy", "Eren"};
     int[] cardPrices = new int[]{0, 500, 500, 750, 1000, 1000};
@@ -43,6 +45,7 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
         assert getArguments() != null;
         int index  = getArguments().getInt("index");
         int state  = getArguments().getInt("state");
+        onResponseListener = (OnResponseListener)getArguments().getSerializable("onResponseListener");
 
         TextView explanation = view.findViewById(R.id.profile_icon_change_confirmation_explanation);
         String question = "";
@@ -52,14 +55,14 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
         }
         else if(state == 0)
         {
-            question = "Do you want to spend "+  Integer.toString(cardPrices[index]) + " Gumshoe Points to purchase the "+ cardNames[index] + " Profile Icon?";
+            question = "Do you want to spend " + cardPrices[index] + " Gumshoe Points to purchase the "+ cardNames[index] + " Profile Icon?";
         }
         explanation.setText(question);
 
         Button yesButton = view.findViewById(R.id.profile_icon_change_confirmation_yes_button);
         yesButton.setOnClickListener(v ->
         {
-            yesLogic(index, state, view);
+            yesLogic(index, state);
             dismiss();
         });
 
@@ -71,7 +74,7 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
         return view;
     }
 
-    private void yesLogic(int index, int state, View view)
+    private void yesLogic(int index, int state)
     {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -97,20 +100,22 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
         else if (state == 1)
         {
             // for loop through shared preferences of icons, if in state 0,1, do nothing, if in state 2 then change to state 1
-            for(int i = 0; i < cardNames.length; i++)
-            {
-                int temp_state = sharedPreferences.getInt(cardNames[i], 0);
-                if(temp_state == 2)
-                {
-                    editor.putInt(cardNames[i], 1);
+            for (String cardName : cardNames) {
+                int temp_state = sharedPreferences.getInt(cardName, 0);
+                if (temp_state == 2) {
+                    editor.putInt(cardName, 1);
                     editor.apply();
                 }
             }
             // change shared preferences for that index from 1 to 2
             editor.putInt(cardNames[index], 2);
             editor.apply();
-
-            // change profile icon logic
         }
+
+        onResponseListener.onYesClickListener();
+    }
+
+    public interface OnResponseListener extends Serializable {
+        void onYesClickListener();
     }
 }

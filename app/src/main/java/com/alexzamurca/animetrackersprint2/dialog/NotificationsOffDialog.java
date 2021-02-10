@@ -18,6 +18,8 @@ import androidx.fragment.app.DialogFragment;
 import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 
+import java.io.Serializable;
+
 public class NotificationsOffDialog extends DialogFragment
 {
     private OnResponseListener onResponseListener;
@@ -66,7 +68,7 @@ public class NotificationsOffDialog extends DialogFragment
         return "It appears, you do not want to receive notifications for when a \"" + series.getTitle() + "\"  episode is airing! Notifications can be turned back on in the future.";
     }
 
-    public interface OnResponseListener
+    public interface OnResponseListener extends Serializable
     {
         void onYesClickListener(Series series);
     }

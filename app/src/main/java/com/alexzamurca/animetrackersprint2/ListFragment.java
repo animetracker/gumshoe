@@ -385,6 +385,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
     private void doOnNotificationsOff(Series series)
     {
+
         NotificationsOffDialog dialog = new NotificationsOffDialog();
         // need to pass series
         Bundle args = new Bundle();
