@@ -52,7 +52,6 @@ public class SettingsFragment extends Fragment
     RewardedAd tempLoadedAd;
     TextView pointsText;
     Button adButton;
-    int value=0;
 
     @Override
     public void onAttach(@NonNull Context context)
@@ -99,8 +98,8 @@ public class SettingsFragment extends Fragment
             clearLocalSeriesList()
         );
 
-        Button store = view.findViewById(R.id.settings_store);
-        store.setOnClickListener(view15 ->
+        Button changeProfile = view.findViewById(R.id.settings_change_profile);
+        changeProfile.setOnClickListener(view15 ->
                 navController.navigate(R.id.action_to_store)
         );
 
@@ -220,8 +219,12 @@ public class SettingsFragment extends Fragment
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
-                        value=value+50;
-                        pointsText.setText("Gumshoe Points: "+value);
+                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        int points = sharedPreferences.getInt("points", 0);
+                        editor.putInt("points", points+50);
+                        editor.apply();
+                        pointsText.setText("GUMSHOE Points: "+ (points + 50));
                     }
 
                     @Override

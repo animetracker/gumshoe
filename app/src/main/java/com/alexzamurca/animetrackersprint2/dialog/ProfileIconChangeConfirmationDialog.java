@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.alexzamurca.animetrackersprint2.R;
+import com.google.android.material.snackbar.Snackbar;
 
 public class ProfileIconChangeConfirmationDialog  extends DialogFragment
 {
@@ -58,7 +59,7 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
         Button yesButton = view.findViewById(R.id.profile_icon_change_confirmation_yes_button);
         yesButton.setOnClickListener(v ->
         {
-            yesLogic(index, state);
+            yesLogic(index, state, view);
             dismiss();
         });
 
@@ -70,7 +71,7 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
         return view;
     }
 
-    private void yesLogic(int index, int state)
+    private void yesLogic(int index, int state, View view)
     {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -89,7 +90,7 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
             }
             else
             {
-                Log.d(TAG, "yesLogic: not enought money to get this icon");
+                Log.d(TAG, "yesLogic: not enough money to get this icon");
             }
         }
         // if selecting the icon

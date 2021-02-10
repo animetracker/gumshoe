@@ -120,7 +120,7 @@ public class ChangeProfileIconFragment extends Fragment
                 }
                 else if(points < cardPrices[finalJ])
                 {
-                    Snackbar.make(view, "You do not have enough points to buy this icon!", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "You do not have enough GUMSHOE points to buy this icon!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             }
