@@ -3,6 +3,7 @@ package com.alexzamurca.animetrackersprint2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +49,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.OnSeriesListener, NotificationsOffDialog.OnResponseListener{
     private static final String TAG = "ListFragment";
     private transient FragmentActivity mContext;
@@ -75,6 +78,10 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         setHasOptionsMenu(true);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
+        CircleImageView toolbarIcon = mView.findViewById(R.id.series_list_profile_image);
+        Drawable profileIcon = getProfileIcon();
+        toolbarIcon.setImageDrawable(profileIcon);
+
         TextView emptyListTV = mView.findViewById(R.id.series_empty_list);
         ImageView emptyListImage = mView.findViewById(R.id.series_empty_list_image);
         emptyListLayout = mView.findViewById(R.id.series_empty_list_linear_layout);
@@ -98,6 +105,22 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         );
 
         return mView;
+    }
+
+    private Drawable getProfileIcon()
+    {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
+        String[] cardNames = new String[]{"Default", "Ash", "Goku", "Naruto", "Luffy", "Eren"};
+        int[] profileIconsDirectories = new int[]{R.drawable.ic_profile, R.drawable.ash, R.drawable.goku, R.drawable.naruto, R.drawable.luffy, R.drawable.eren};
+        for(int i = 0; i < cardNames.length; i++)
+        {
+            int temp_state = sharedPreferences.getInt(cardNames[i], 0);
+            if(temp_state == 2)
+            {
+                return ContextCompat.getDrawable(requireContext(), profileIconsDirectories[i]);
+            }
+        }
+        return ContextCompat.getDrawable(requireContext(), R.drawable.ic_profile);
     }
 
     @Override

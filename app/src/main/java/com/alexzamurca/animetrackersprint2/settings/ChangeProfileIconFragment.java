@@ -2,6 +2,7 @@ package com.alexzamurca.animetrackersprint2.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.dialog.ProfileIconChangeConfirmationDialog;
 import com.google.android.material.snackbar.Snackbar;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChangeProfileIconFragment extends Fragment
 {

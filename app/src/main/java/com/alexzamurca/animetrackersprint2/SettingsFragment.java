@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class SettingsFragment extends Fragment
 {
     private static final String TAG = "SettingsFragment";
@@ -66,10 +69,14 @@ public class SettingsFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+
         Toolbar toolbar = view.findViewById(R.id.settings_toolbar_object);
         setHasOptionsMenu(true);
-
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+
+        CircleImageView toolbarIcon = view.findViewById(R.id.settings_profile_image);
+        Drawable profileIcon = getProfileIcon();
+        toolbarIcon.setImageDrawable(profileIcon);
 
 
         Button reportBug = view.findViewById(R.id.settings_report_bug);
@@ -239,6 +246,22 @@ public class SettingsFragment extends Fragment
             }
         });
         return view;
+    }
+
+    private Drawable getProfileIcon()
+    {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
+        String[] cardNames = new String[]{"Default", "Ash", "Goku", "Naruto", "Luffy", "Eren"};
+        int[] profileIconsDirectories = new int[]{R.drawable.ic_profile, R.drawable.ash, R.drawable.goku, R.drawable.naruto, R.drawable.luffy, R.drawable.eren};
+        for(int i = 0; i < cardNames.length; i++)
+        {
+            int temp_state = sharedPreferences.getInt(cardNames[i], 0);
+            if(temp_state == 2)
+            {
+                return ContextCompat.getDrawable(requireContext(), profileIconsDirectories[i]);
+            }
+        }
+        return ContextCompat.getDrawable(requireContext(), R.drawable.ic_profile);
     }
 
     public RewardedAd createAndLoadRewardedAd() {

@@ -112,7 +112,5 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
 
             // change profile icon logic
         }
-
-        // update list
     }
 }
