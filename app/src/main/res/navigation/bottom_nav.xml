@@ -123,9 +123,9 @@
     </activity>
     <fragment
         android:id="@+id/storeFragment"
-        android:name="com.alexzamurca.animetrackersprint2.settings.StoreFragment"
+        android:name="com.alexzamurca.animetrackersprint2.settings.ChangeProfileIconFragment"
         android:label="StoreFragment"
-        tools:layout="@layout/fragment_store"/>
+        tools:layout="@layout/fragment_change_profile_icon"/>
 
 
 </navigation>

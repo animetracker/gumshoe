@@ -6,7 +6,7 @@
     >
 
     <include
-        layout="@layout/store_toolbar"
+        layout="@layout/change_profile_icon_toolbar"
         android:id="@+id/change_profile_toolbar_object"/>
 
     <GridLayout

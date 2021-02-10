@@ -11,7 +11,7 @@
     <TextView
         android:layout_height="match_parent"
         android:layout_width="fill_parent"
-        android:text="Store"
+        android:text="Change Profile Icon"
         android:textSize="20dp"
         android:paddingLeft="10dp"
         android:textColor="?attr/primaryTextColor"
