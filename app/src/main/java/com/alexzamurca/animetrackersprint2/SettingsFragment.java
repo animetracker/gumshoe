@@ -69,7 +69,6 @@ public class SettingsFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-
         Toolbar toolbar = view.findViewById(R.id.settings_toolbar_object);
         setHasOptionsMenu(true);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
@@ -78,11 +77,9 @@ public class SettingsFragment extends Fragment
         Drawable profileIcon = getProfileIcon();
         toolbarIcon.setImageDrawable(profileIcon);
 
-
         Button reportBug = view.findViewById(R.id.settings_report_bug);
         reportBug.setOnClickListener(view1 ->
         {
-           // navController.navigate(R.id.action_reporting_bug);
             ReportBugFragment dialogReportBug = new ReportBugFragment();
             dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
         });
@@ -110,14 +107,19 @@ public class SettingsFragment extends Fragment
                 navController.navigate(R.id.action_to_store)
         );
 
+        pointsText = view.findViewById(R.id.settings_points);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
+        int points = sharedPreferences.getInt("points", 0);
+        pointsText.setText("GUMSHOE Points: " + points);
+
 
         // This method is used to create the dark mode using the button
         darkMode= view.findViewById(R.id.settings_dark_mode_button);
         darkMode.setOnClickListener(view15 ->
             {
-                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                boolean darkModeOn = sharedPreferences.getBoolean("dark_mode_on", false);
+                SharedPreferences settingsSharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settingsSharedPreferences.edit();
+                boolean darkModeOn = settingsSharedPreferences.getBoolean("dark_mode_on", false);
                 if(darkModeOn)
                 {
                     darkMode.setBackgroundResource(R.drawable.dark_fill_light_border);
@@ -229,7 +231,7 @@ public class SettingsFragment extends Fragment
                         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         int points = sharedPreferences.getInt("points", 0);
-                        editor.putInt("points", points+50);
+                        editor.putInt("points", points + 50);
                         editor.apply();
                         pointsText.setText("GUMSHOE Points: "+ (points + 50));
                     }
