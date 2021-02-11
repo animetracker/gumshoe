@@ -21,6 +21,7 @@ import com.alexzamurca.animetrackersprint2.R;
 import com.alexzamurca.animetrackersprint2.localList.Remove;
 import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChannel;
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -291,6 +292,8 @@ public class SeriesRecyclerViewAdapter extends RecyclerView.Adapter<SeriesRecycl
             remove.setOnClickListener(v ->
                 {
                     removeSeries(list.get(getAdapterPosition()));
+                    Snackbar.make(itemView, "Refresh the list, to see changes", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
             );
 

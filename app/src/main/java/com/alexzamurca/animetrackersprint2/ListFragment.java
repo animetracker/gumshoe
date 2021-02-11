@@ -410,6 +410,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
             NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
             notificationAiringChannel.setNotification(series, calendar);
         }
+        mNavController.navigate(R.id.listFragment);
     }
 
     @Override
@@ -456,6 +457,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
         NotificationAiringChannel notificationAiringChannel = new NotificationAiringChannel(getContext());
         notificationAiringChannel.cancel(series);
+        mNavController.navigate(R.id.listFragment);
     }
 
 }

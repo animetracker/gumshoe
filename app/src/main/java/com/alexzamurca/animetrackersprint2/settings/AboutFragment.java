@@ -24,7 +24,7 @@ public class AboutFragment extends Fragment {
     private String[] names = {"Safin Ahmed", "Jivraj Dhamija", "Henry Eason", "Vedant Nemane","Carlston Rebelo", "Alex Zamurca"};
     private String[] contacts = {"ec19235@qmul.ac.uk", "jd2158@bath.ac.uk", "he328@bath.ac.uk", "vn295@bath.ac.uk", "notslrac3@gmail.com", "az506@bath.ac.uk"};
     private Integer[] initials = {R.drawable.sa, R.drawable.jd, R.drawable.he, R.drawable.vn, R.drawable.cr, R.drawable.az};
-    private Integer[] roles = {R.drawable.frontenddev, R.drawable.frontenddev, R.drawable.backenddev, R.drawable.admin, R.drawable.artist, R.drawable.backenddev};
+    private Integer[] roles = {R.drawable.front_end_dev, R.drawable.front_end_dev, R.drawable.henry, R.drawable.vedant, R.drawable.carlston, R.drawable.front_end_dev};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
