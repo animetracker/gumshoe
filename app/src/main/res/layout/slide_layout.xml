@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/scImage"
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="40dp"
         tools:srcCompat="@tools:sample/avatars"
@@ -18,10 +18,9 @@
     <TextView
         android:id="@+id/tutorialText"
         android:layout_width="350dp"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/scImage"
         android:layout_marginTop="9dp"
-        android:text="TextView"
         android:textSize="15sp"
         android:layout_centerInParent="true"/>
 </RelativeLayout>

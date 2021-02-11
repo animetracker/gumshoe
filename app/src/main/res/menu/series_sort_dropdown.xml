@@ -22,14 +22,4 @@
         android:title="@string/air_date_down"
         android:checkable="true"/>
 
-    <item
-        android:id="@+id/sort_latest_add"
-        android:title="@string/add_date_up"
-        android:checkable="true"/>
-
-    <item
-        android:id="@+id/sort_oldest_add"
-        android:title="@string/add_date_down"
-        android:checkable="true"/>
-
 </menu>

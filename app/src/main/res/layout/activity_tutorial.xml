@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,53 +10,52 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/slideViewPager"
-        android:layout_width="587dp"
-        android:layout_height="558dp"
-        android:layout_alignParentEnd="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/middleButton"
+        android:layout_marginBottom="20dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:backgroundTint="@color/pleasantBlue"
         android:onClick="goForward"
         android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.06"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slideViewPager" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="15dp"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/forwardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:backgroundTint="@color/pleasantBlue"
         android:onClick="goBack"
         android:rotation="-180"
         android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.94"
-        app:layout_constraintStart_toEndOf="@+id/backButton"
-        app:layout_constraintTop_toBottomOf="@+id/slideViewPager" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="15dp"/>
 
     <Button
-        android:id="@+id/finishButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/middleButton"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
         android:text="Finish"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/forwardButton"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toEndOf="@+id/backButton"
-        app:layout_constraintTop_toBottomOf="@+id/slideViewPager"
-        android:background="@color/pleasantBlue"
+        android:textSize="25sp"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@id/forwardButton"
+        android:layout_toEndOf="@id/backButton"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/blue_with_rounded_corners"
         android:onClick="finish"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

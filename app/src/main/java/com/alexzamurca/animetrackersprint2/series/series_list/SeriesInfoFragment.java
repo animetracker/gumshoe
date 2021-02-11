@@ -20,6 +20,9 @@ public class SeriesInfoFragment extends Fragment
 {
     TextView descriptionTV;
     TextView titleTV;
+    TextView notificationsOnTV;
+    TextView notificationChangeTV;
+    TextView airDateChangeTV;
     ImageView coverImage;
 
     @Nullable
@@ -47,10 +50,20 @@ public class SeriesInfoFragment extends Fragment
                 descriptionTV = view.findViewById(R.id.individual_series_description);
                 titleTV = view.findViewById(R.id.individual_series_title);
                 coverImage = view.findViewById(R.id.individual_series_cover_image);
+                notificationsOnTV = view.findViewById(R.id.individual_series_notifications_on);
+                notificationChangeTV = view.findViewById(R.id.individual_series_notification_change);
+                airDateChangeTV = view.findViewById(R.id.individual_series_air_date_change);
 
                 String title = selectedSeries.getTitle();
+                int notifications_on = selectedSeries.getNotifications_on();
+                String notification_change = selectedSeries.getNotification_change();
+                String air_date_change = selectedSeries.getAir_date_change();
+                air_date_change = stringifyAirDateChange(air_date_change);
 
                 descriptionTV.setText(HtmlCompat.fromHtml(selectedSeries.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+                notificationsOnTV.setText(notifications_on == 0 ? "No" : "Yes");
+                notificationChangeTV.setText(notification_change.equals("") ? "You will be notified immediately when the series airs!" : "You will be notified " + notification_change + " the series airs");
+                airDateChangeTV.setText(air_date_change);
                 titleTV.setText(title);
 
                 String image_directory = selectedSeries.getCover_image();
@@ -65,5 +78,19 @@ public class SeriesInfoFragment extends Fragment
         
         
         return view;
+    }
+
+    private String stringifyAirDateChange(String air_date_change)
+    {
+        if(air_date_change.equals("")) return "You are using the air date provided by AniChart, you do not want to adjust to when your streaming service airs this series!";
+        char signChar = air_date_change.toCharArray()[0];
+        int hoursInt = Integer.parseInt(air_date_change.substring(1, air_date_change.indexOf(':')));
+        int minutesInt = Integer.parseInt(air_date_change.substring(air_date_change.indexOf(':') + 1));
+
+        String sign = signChar=='+' ? "added on" : "taken away";
+        String hours = hoursInt==0 ? "" : + hoursInt + " hours";
+        String minutes = minutesInt==0 ? "" : minutesInt + " minutes";
+
+        return "You have " + sign + " " + hours + ( (!minutes.equals("") && !hours.equals("")) ? " and " : "") + minutes + (signChar=='+' ? " to" : " from") + " the air date provided by AniChart.";
     }
 }

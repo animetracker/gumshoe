@@ -21,11 +21,10 @@
 
             <ImageView
                 android:id="@+id/individual_series_cover_image"
-                android:layout_width="150dp"
-                android:layout_height="250dp"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:id="@+id/individual_series_title"
@@ -42,14 +41,83 @@
                 />
 
             <TextView
+                android:id="@+id/individual_series_notifications_on_header"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Are Notifications On?"
+                android:layout_below="@id/individual_series_title"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/individual_series_notifications_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_below="@id/individual_series_notifications_on_header"
+                android:textColor="?attr/primaryTextColor"/>
+
+            <TextView
+                android:id="@+id/individual_series_notification_change_header"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Notification Change"
+                android:layout_below="@id/individual_series_notifications_on"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/individual_series_notification_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_below="@id/individual_series_notification_change_header"
+                android:textColor="?attr/primaryTextColor"/>
+
+            <TextView
+                android:id="@+id/individual_series_air_date_change_header"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Air Date Change"
+                android:layout_below="@id/individual_series_notification_change"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/individual_series_air_date_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_below="@id/individual_series_air_date_change_header"
+                android:textColor="?attr/primaryTextColor"/>
+
+            <TextView
+                android:id="@+id/individual_series_description_header"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Description"
+                android:layout_below="@id/individual_series_air_date_change"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
                 android:id="@+id/individual_series_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginHorizontal="10dp"
-                android:gravity="center_horizontal"
-                android:layout_below="@id/individual_series_title"
+                android:layout_marginHorizontal="20dp"
+                android:layout_below="@id/individual_series_description_header"
                 android:textColor="?attr/primaryTextColor"/>
         </RelativeLayout>
 

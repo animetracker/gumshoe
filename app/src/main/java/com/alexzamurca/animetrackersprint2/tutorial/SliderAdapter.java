@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.alexzamurca.animetrackersprint2.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class SliderAdapter extends PagerAdapter {
 

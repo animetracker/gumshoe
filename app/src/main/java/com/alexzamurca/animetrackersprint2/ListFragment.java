@@ -184,7 +184,7 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
             // Get sort state from SharedPreferences
             SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Series List", Context.MODE_PRIVATE);
-            int selection = sharedPreferences.getInt("selected_sort_option_index", 5);
+            int selection = sharedPreferences.getInt("selected_sort_option_index", 2);
 
             popup.getMenu().getItem(selection).setChecked(true);
 
@@ -244,8 +244,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
 
         // Then check the selected item
         item.setChecked(true);
-
-
     }
 
     private void sortListAccordingToSelection(int selection)
@@ -285,18 +283,6 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 Log.d(TAG, "setupDropDownOnClick: sort Oldest clicked");
                 sortedList = dateSortSeriesList.sortLeastRecent();
                 adapter.restoreFromList(sortedList);
-                return;
-
-                // Add Date up
-            case 4:
-                Log.d(TAG, "setupDropDownOnClick: sort air date up clicked");
-                Collections.reverse(listFromAdapter);
-                adapter.restoreFromList(listFromAdapter);
-                return;
-
-            // Add Date down
-            case 5:
-                Log.d(TAG, "setupDropDownOnClick: sort air date down clicked");
         }
     }
 

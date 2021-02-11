@@ -131,18 +131,23 @@ public class ChangeAirDateFragment extends Fragment
         changeTitle.setText(oldTitle);
 
         String change = series.getAir_date_change();
-        String changeText;
-        if(change.equals(""))
-        {
-            changeText = "There is currently no air date change set for this series, you will be notified at the time specified by AniList!";
-        }
-        else
-        {
-            changeText = change;
-        }
         TextView changeTV = view.findViewById(R.id.change_air_date_change);
-        changeTV.setText(changeText);
+        changeTV.setText(stringifyAirDateChange(change));
 
+    }
+
+    private String stringifyAirDateChange(String air_date_change)
+    {
+        if(air_date_change.equals("")) return "You are using the air date provided by AniChart, you do not want to adjust to when your streaming service airs this series!";
+        char signChar = air_date_change.toCharArray()[0];
+        int hoursInt = Integer.parseInt(air_date_change.substring(1, air_date_change.indexOf(':')));
+        int minutesInt = Integer.parseInt(air_date_change.substring(air_date_change.indexOf(':') + 1));
+
+        String sign = signChar=='+' ? "added on" : "taken away";
+        String hours = hoursInt==0 ? "" : + hoursInt + " hours";
+        String minutes = minutesInt==0 ? "" : minutesInt + " minutes";
+
+        return "You have " + sign + " " + hours + ( (!minutes.equals("") && !hours.equals("")) ? " and " : "") + minutes + (signChar=='+' ? " to" : " from") + " the air date provided by AniChart.";
     }
 
     private void initSeries()
