@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,10 +42,10 @@ import com.alexzamurca.animetrackersprint2.dialog.NotificationsOffDialog;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.alexzamurca.animetrackersprint2.series.series_list.SeriesRecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -154,7 +153,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
                 }
                 else
                 {
-                    Toast.makeText(getContext(), "Can't search when list is empty!", Toast.LENGTH_LONG).show();
+                    Snackbar.make(mView, "Can't search when list is empty!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
                 return false;
             }
@@ -410,7 +410,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         }
         else
         {
-            Toast.makeText(getContext(), "You cannot change notification reminder time for series with unknown air date!", Toast.LENGTH_LONG).show();
+            Snackbar.make(mView, "You cannot change notification reminder time for series with unknown air date!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
 
     }
@@ -431,7 +432,8 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         }
         else
         {
-            Toast.makeText(getContext(), "You cannot change the air date for series with unknown air date!", Toast.LENGTH_LONG).show();
+            Snackbar.make(mView, "You cannot change the air date for series with unknown air date!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 

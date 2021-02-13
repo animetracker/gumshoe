@@ -28,6 +28,7 @@ import com.alexzamurca.animetrackersprint2.algorithms.ResetAlarmForSeries;
 import com.alexzamurca.animetrackersprint2.localList.UpdateNotificationChange;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 
@@ -66,7 +67,8 @@ public class ChangeNotificationReminderFragment extends Fragment
         initSeries();
         setVariables();
         navController = Navigation.findNavController(view);
-        Toast.makeText(getContext(), "Any changes made will not change the air date shown in the series list screen.", Toast.LENGTH_LONG).show();
+        Snackbar.make(view, "Any changes made will not change the air date shown in the series list screen.", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
         setupToolbar(view);
         setupErrorLayouts(view);
         setupSaveButton(view);

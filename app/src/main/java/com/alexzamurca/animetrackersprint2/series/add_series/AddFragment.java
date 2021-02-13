@@ -1,5 +1,6 @@
 package com.alexzamurca.animetrackersprint2.series.add_series;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,9 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.alexzamurca.animetrackersprint2.notifications.NotificationAiringChann
 import com.alexzamurca.animetrackersprint2.algorithms.AdjustAirDate;
 import com.alexzamurca.animetrackersprint2.algorithms.CheckConnection;
 import com.alexzamurca.animetrackersprint2.series.series_list.Series;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -83,26 +85,28 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home)
-        {
-            Toast.makeText(getContext(), "BugTest: go series_row_background_top clicked!", Toast.LENGTH_LONG).show();
-        }
         return super.onOptionsItemSelected(item);
     }
 
     private void searchProcess()
     {
+        // Hide keyboard
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(globalView.findViewById(R.id.search_layout).getWindowToken(), 0);
+
         CheckConnection checkConnection = new CheckConnection(getContext());
         boolean isConnected = checkConnection.isConnected();
         if (isConnected)
         {
             String seriesName = editText.getText().toString();
-            Toast.makeText(getContext(), "Searching for \"" + seriesName + "\"", Toast.LENGTH_SHORT).show();
+            Snackbar.make(globalView, "Searching for \"" + seriesName + "\"", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             adapter.searchName(seriesName);
         }
         else
         {
-            Toast.makeText(getContext(), "Cannot connect to the internet, check internet connection!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(globalView, "Cannot connect to the internet, check internet connection!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 
@@ -115,7 +119,7 @@ public class AddFragment extends Fragment implements  AddRecyclerViewAdapter.Row
     {
         Log.d(TAG, "initRecyclerView: initialising");
         RecyclerView recyclerView = globalView.findViewById(R.id.search_recycler_view);
-        adapter = new AddRecyclerViewAdapter(list, getContext(), this, globalView.findViewById(R.id.no_search_results_text), globalView.findViewById(R.id.search_layout), navController, progressBar);
+        adapter = new AddRecyclerViewAdapter(list, getContext(), this, globalView.findViewById(R.id.no_search_results_text), progressBar);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));

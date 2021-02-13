@@ -53,18 +53,14 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
     private Context context;
     private RowClickListener rowClickListener;
     private TextView noSearchResultsTV;
-    private View searchActivityView;
     public String title_content;
-    private NavController navController;
     private ProgressBar progressBar;
 
-    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, TextView noSearchResultsTV, View searchActivityView, NavController navController, ProgressBar progressBar) {
+    public AddRecyclerViewAdapter(List<SearchResult> list, Context context, RowClickListener rowClickListener, TextView noSearchResultsTV, ProgressBar progressBar) {
         this.list = list;
         this.context = context;
         this.rowClickListener = rowClickListener;
         this.noSearchResultsTV = noSearchResultsTV;
-        this.searchActivityView = searchActivityView;
-        this.navController = navController;
         this.progressBar = progressBar;
         SharedPreferences sharedPreferences = context.getSharedPreferences("Account", Context.MODE_PRIVATE);
         session = sharedPreferences.getString("session", "");
@@ -289,11 +285,7 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
         }
     }
 
-    private void hideKeyboard()
-    {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchActivityView.getWindowToken(), 0);
-    }
+
 
     String airDateConvert(String air_date)
     {
@@ -334,10 +326,6 @@ public class AddRecyclerViewAdapter extends RecyclerView.Adapter<AddRecyclerView
                 noSearchResultsTV.setVisibility(View.VISIBLE);
                 String text = "No search results for\"" + series_name + "\"";
                 noSearchResultsTV.setText(text);
-            }
-            else
-            {
-                hideKeyboard();
             }
             progressBar.setVisibility(View.GONE);
         }
