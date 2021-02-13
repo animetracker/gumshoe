@@ -74,6 +74,9 @@ public class SettingsFragment extends Fragment
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
         CircleImageView toolbarIcon = view.findViewById(R.id.settings_profile_image);
+        toolbarIcon.setOnClickListener(v->
+                navController.navigate(R.id.storeFragment)
+        );
         Drawable profileIcon = getProfileIcon();
         toolbarIcon.setImageDrawable(profileIcon);
 

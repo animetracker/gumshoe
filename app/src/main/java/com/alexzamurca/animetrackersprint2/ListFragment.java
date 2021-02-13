@@ -78,6 +78,9 @@ public class ListFragment extends Fragment implements SeriesRecyclerViewAdapter.
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
         CircleImageView toolbarIcon = mView.findViewById(R.id.series_list_profile_image);
+        toolbarIcon.setOnClickListener(v->
+                mNavController.navigate(R.id.storeFragment)
+        );
         Drawable profileIcon = getProfileIcon();
         toolbarIcon.setImageDrawable(profileIcon);
 
