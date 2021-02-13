@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChangeProfileIconFragment extends Fragment implements ProfileIconChangeConfirmationDialog.OnResponseListener
 {
+    private static final String TAG = "ChangeProfileIconFragment";
     private Button[] cardButtons;
     private transient FragmentActivity mContext;
     private NavController navController;
@@ -74,12 +76,16 @@ public class ChangeProfileIconFragment extends Fragment implements ProfileIconCh
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
         String[] sharedPreferencesKeys = new String[]{"Default", "Ash", "Goku", "Naruto", "Luffy", "Eren"};
         String[] cardPrices = new String[]{"0 Points", "500 Points", "500 Points", "750 Points", "1000 Points", "1000 Points"};
-        for (int i = 0; i < sharedPreferencesKeys.length; i++)
+        boolean hasA2Yet = false;
+        for (int i = sharedPreferencesKeys.length-1; i >= 0; i--)
         {
             String key = sharedPreferencesKeys[i];
             int defaultValue = 0;
-            if(i==0) defaultValue = 2;
+            if(i==0 && !hasA2Yet) defaultValue = 2;
+            else if(i==0) defaultValue = 1;
             int state = sharedPreferences.getInt(key, defaultValue);
+            if(state==2) hasA2Yet = true;
+            Log.d(TAG, "initCardView: [" +  key + "]:{state}[" + state +"]");
             // Alter button according to state
             Button button = cardButtons[i];
             switch(state)
@@ -106,17 +112,20 @@ public class ChangeProfileIconFragment extends Fragment implements ProfileIconCh
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
         String[] sharedPreferencesKeys = new String[]{"Default", "Ash", "Goku", "Naruto", "Luffy", "Eren"};
         int[] cardPrices = new int[]{0, 500, 500, 750, 1000, 1000};
-
-        for(int j = 0; j < cardButtons.length; j++)
+        boolean hasA2Yet = false;
+        for(int j = cardButtons.length - 1; j >= 0; j--)
         {
             Button button = cardButtons[j];
             int finalJ = j;
             int defaultValue = 0;
-            if(finalJ ==0) defaultValue = 2;
+            if(j==0 && !hasA2Yet) defaultValue = 2;
+            else if(j==0) defaultValue = 1;
             int state = sharedPreferences.getInt(sharedPreferencesKeys[finalJ], defaultValue);
+            if(state==2) hasA2Yet = true;
             int points = sharedPreferences.getInt("points", 0);
             button.setOnClickListener(v ->
             {
+                Log.d(TAG, "manageOnClicks: " + button.toString() + " state: " + state);
                 // if buying and have money or in state 1
                 if(((state == 0) && (points >= cardPrices[finalJ])) || (state == 1))
                 {

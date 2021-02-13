@@ -74,6 +74,7 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
 
     private void yesLogic(int index, int state)
     {
+        Log.d(TAG, "yesLogic: state being passed: " + state);
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         // if buying the icon
@@ -100,10 +101,13 @@ public class ProfileIconChangeConfirmationDialog  extends DialogFragment
             // for loop through shared preferences of icons, if in state 0,1, do nothing, if in state 2 then change to state 1
             for (String cardName : cardNames) {
                 int temp_state = sharedPreferences.getInt(cardName, 0);
+                Log.d(TAG, "yesLogic: BEFORECHANGE[" +  cardName + "]:{state}[" + temp_state +"]");
                 if (temp_state == 2) {
+                    Log.d(TAG, "yesLogic: [" +  cardName + "has state 2, and is being changed to state 1");
                     editor.putInt(cardName, 1);
                     editor.apply();
                 }
+                Log.d(TAG, "yesLogic: AFTERCHANGE[" +  cardName + "]:{state}[" + state +"]");
             }
             // change shared preferences for that index from 1 to 2
             editor.putInt(cardNames[index], 2);
