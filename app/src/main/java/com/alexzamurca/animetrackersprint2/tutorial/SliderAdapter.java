@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.alexzamurca.animetrackersprint2.R;
@@ -22,23 +23,29 @@ public class SliderAdapter extends PagerAdapter {
 
     // insert screenshots here
     public int[] slide_images = {
-            R.drawable.screenshot1,
-            R.drawable.screenshot2,
-            R.drawable.screenshot3,
-            R.drawable.screenshot4,
-            R.drawable.screenshot5,
-            R.drawable.screenshot6,
-            R.drawable.screenshot6
+            R.drawable.tutorial_list_empty,
+            R.drawable.tutorial_search,
+            R.drawable.tutorial_search_expand,
+            R.drawable.tutorial_list_added,
+            R.drawable.tutorial_list_added,
+            R.drawable.tutorial_list_added,
+            R.drawable.tutorial_list_added,
+            R.drawable.tutorial_settings,
+            R.drawable.tutorial_settings,
+            R.drawable.tutorial_settings
     };
 
     public String[] slide_text = {
-            "By pressing the blue plus button, you can see when YOUR favourite episodes release! You can easily add any airing anime to your own custom list to see when they’ll release their next episode! You'll also get notifications for when your favourite animes next episode is airing.",
-            "Once you press the plus button, you can search for any anime you want! You can add this anime to your list by clicking on it, or you can view additional information by pressing the arrow.",
-            "Includes the thumbnail, next episode date and more! Your friend tell you about a “good” anime? Find out what it’s really about with a glance! You’ll even see ratings by critics and users so you can make the best choice!",
-            "Once you have added your favourite animes to your list, you can do several actions with them. By pressing the first button, you can turn off notifications for that anime. The second button allows you to remove that anime from your list. The third button allows you to choose when you want to be notified for when the next episode is released. The last button allows you to tell us if the release date or time is incorrect.",
-            "Overly obsessive with order? Sort your animes in any and EVERY way that YOU want by pressing the sort button in the top right! We even have a favourites bar for those which you can’t miss!",
-            "The settings tab gives you a variety of features. Under the customisation tab, you can change to dark mode, change your time zone and alert delay.",
-            "Under the general tab, you can report a bug or view our about page, which gives you the contact details of our developers! If you would like to donate to us, you can also do so here. Furthermore, if you enjoy using our app, then you can share it with your friends and family using the share button in the top right."
+            "<h3>Press the blue plus button to search for series</h3>",
+            "Search for an anime that is <u>currently airing</u> (or soon to be released)<h3>Click on the anime to add it</h3>",
+            "<h3>Press the down arrow</h3>to get more info about the anime.",
+            "<h3>Press the bell icon</h3>to turn <u>notifications on or off</u> for that anime (by default notifications are on).",
+            "<h3>Press the bin icon</h3>to <u>remove</u> that anime from the list.",
+            "<h3>Press the hourglass icon</h3>to <u>change when you want to be notified</u> (for example, be notified 30 minutes before the next episode releases).",
+            "<h3>Press the error icon</h3>if the suggested <u>air date is different</u> to when your streaming services releases this anime (you manually change the air date).",
+            "<h3>Customise</h3>You can turn <u>dark mode</u> on/off and change the profile icon.",
+            "<h3>Support the team</h3>Donate and watch ads to support us. Use the about page to get more info about the team.",
+            "Use the report button to let us know of any issues.<br>You can replay this tutorial anytime from settings. Enjoy :)"
     };
 
     public SliderAdapter(Context context) {
@@ -64,7 +71,7 @@ public class SliderAdapter extends PagerAdapter {
         TextView slideText = (TextView) view.findViewById(R.id.tutorialText);
 
         slideImageView.setImageResource(slide_images[position]);
-        slideText.setText(slide_text[position]);
+        slideText.setText(HtmlCompat.fromHtml(slide_text[position], HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         container.addView(view);
 
