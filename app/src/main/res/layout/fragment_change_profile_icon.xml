@@ -3,320 +3,319 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/bg"
     >
 
     <include
         layout="@layout/change_profile_icon_toolbar"
         android:id="@+id/change_profile_toolbar_object"/>
-
-    <GridLayout
-        android:id="@+id/GridLayout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/change_profile_toolbar_object"
-        android:layout_weight="8"
-        android:columnCount="2"
-        android:rowCount="3"
-        android:alignmentMode="alignMargins"
-        android:columnOrderPreserved="false"
-        android:padding="14dp"
-        android:background="?attr/bg"
-        >
+        android:layout_below="@id/change_profile_toolbar_object">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/default_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardElevation="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="?attr/bgh">
+        <RelativeLayout
+            android:id="@+id/RelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:background="?attr/bg"
+            >
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/default_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="0dp"
-                android:orientation="vertical"
-                android:background="?attr/bgh">
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_alignParentStart="true"
+                app:cardElevation="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="?attr/bgh">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/default_icon"
-                    android:layout_width="120dp"
-                    android:layout_height="140dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_profile"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="?attr/primaryTextColor"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:background="?attr/bgh">
 
-                <Button
-                    android:id="@+id/default_button"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:text="Use"
-                    android:textColor="@color/whiteCardColor"
-                    android:textAllCaps="false"
-                    android:background="@drawable/red_with_rounded_corners"
-                    android:bottomRightRadius="10dp"
-                    android:bottomLeftRadius="10dp"
-                    android:topLeftRadius="10dp"
-                    android:topRightRadius="10dp"
-                    />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/default_icon"
+                        android:layout_width="120dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_profile"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="?attr/primaryTextColor"/>
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/default_button"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:text="Use"
+                        android:textColor="@color/whiteCardColor"
+                        android:textAllCaps="false"
+                        android:background="@drawable/red_with_rounded_corners"
+                        android:bottomRightRadius="10dp"
+                        android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="10dp"
+                        android:topRightRadius="10dp"
+                        />
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ash_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardElevation="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="?attr/bgh">
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ash_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="0dp"
-                android:orientation="vertical"
-                android:background="?attr/bgh">
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_toEndOf="@id/default_card"
+                android:layout_alignParentEnd="true"
+                app:cardElevation="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="?attr/bgh">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ash_icon"
-                    android:layout_width="120dp"
-                    android:layout_height="140dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ash"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="?attr/primaryTextColor"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:background="?attr/bgh">
 
-                <Button
-                    android:id="@+id/ash_button"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:text="500 Points"
-                    android:textColor="@color/whiteCardColor"
-                    android:textAllCaps="false"
-                    android:background="@drawable/blue_with_rounded_corners"
-                    android:bottomRightRadius="10dp"
-                    android:bottomLeftRadius="10dp"
-                    android:topLeftRadius="10dp"
-                    android:topRightRadius="10dp"
-                    />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ash_icon"
+                        android:layout_width="120dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ash"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="?attr/primaryTextColor"/>
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/ash_button"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:text="500 Points"
+                        android:textColor="@color/whiteCardColor"
+                        android:textAllCaps="false"
+                        android:background="@drawable/blue_with_rounded_corners"
+                        android:bottomRightRadius="10dp"
+                        android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="10dp"
+                        android:topRightRadius="10dp"
+                        />
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/goku_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardElevation="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="?attr/bgh">
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/goku_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="0dp"
-                android:orientation="vertical"
-                android:background="?attr/bgh">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_below="@id/default_card"
+                android:layout_alignParentStart="true"
+                app:cardElevation="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="?attr/bgh">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/goku_icon"
-                    android:layout_width="120dp"
-                    android:layout_height="140dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/goku"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="?attr/primaryTextColor"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:background="?attr/bgh">
 
-                <Button
-                    android:id="@+id/goku_button"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:text="500 Points"
-                    android:textColor="@color/whiteCardColor"
-                    android:textAllCaps="false"
-                    android:background="@drawable/blue_with_rounded_corners"
-                    android:bottomRightRadius="10dp"
-                    android:bottomLeftRadius="10dp"
-                    android:topLeftRadius="10dp"
-                    android:topRightRadius="10dp"
-                    />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/goku_icon"
+                        android:layout_width="120dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/goku"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="?attr/primaryTextColor"/>
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/goku_button"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:text="500 Points"
+                        android:textColor="@color/whiteCardColor"
+                        android:textAllCaps="false"
+                        android:background="@drawable/blue_with_rounded_corners"
+                        android:bottomRightRadius="10dp"
+                        android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="10dp"
+                        android:topRightRadius="10dp"
+                        />
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/naruto_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardElevation="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="?attr/bgh">
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/naruto_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="0dp"
-                android:orientation="vertical"
-                android:background="?attr/bgh">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_below="@id/default_card"
+                android:layout_toEndOf="@id/goku_card"
+                android:layout_alignParentEnd="true"
+                app:cardElevation="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="?attr/bgh">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/naruto_icon"
-                    android:layout_width="120dp"
-                    android:layout_height="140dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/naruto"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="?attr/primaryTextColor"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:background="?attr/bgh">
 
-                <Button
-                    android:id="@+id/naruto_button"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:text="750 Points"
-                    android:textColor="@color/whiteCardColor"
-                    android:textAllCaps="false"
-                    android:background="@drawable/blue_with_rounded_corners"
-                    android:bottomRightRadius="10dp"
-                    android:bottomLeftRadius="10dp"
-                    android:topLeftRadius="10dp"
-                    android:topRightRadius="10dp"
-                    />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/naruto_icon"
+                        android:layout_width="120dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/naruto"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="?attr/primaryTextColor"/>
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/naruto_button"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:text="750 Points"
+                        android:textColor="@color/whiteCardColor"
+                        android:textAllCaps="false"
+                        android:background="@drawable/blue_with_rounded_corners"
+                        android:bottomRightRadius="10dp"
+                        android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="10dp"
+                        android:topRightRadius="10dp"
+                        />
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/luffy_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardElevation="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="?attr/bgh">
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/luffy_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="0dp"
-                android:orientation="vertical"
-                android:background="?attr/bgh">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_below="@id/goku_card"
+                android:layout_alignParentStart="true"
+                app:cardElevation="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="?attr/bgh">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/luffy_icon"
-                    android:layout_width="120dp"
-                    android:layout_height="140dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/luffy"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="?attr/primaryTextColor"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:background="?attr/bgh">
 
-                <Button
-                    android:id="@+id/luffy_button"
-                    android:layout_width="90dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:text="1000 Points"
-                    android:textColor="@color/whiteCardColor"
-                    android:textAllCaps="false"
-                    android:background="@drawable/blue_with_rounded_corners"
-                    android:bottomRightRadius="10dp"
-                    android:bottomLeftRadius="10dp"
-                    android:topLeftRadius="10dp"
-                    android:topRightRadius="10dp"
-                    />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/luffy_icon"
+                        android:layout_width="120dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/luffy"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="?attr/primaryTextColor"/>
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/luffy_button"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:text="1000 Points"
+                        android:textColor="@color/whiteCardColor"
+                        android:textAllCaps="false"
+                        android:background="@drawable/blue_with_rounded_corners"
+                        android:bottomRightRadius="10dp"
+                        android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="10dp"
+                        android:topRightRadius="10dp"
+                        />
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/eren_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardElevation="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="?attr/bgh">
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/eren_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="0dp"
-                android:orientation="vertical"
-                android:background="?attr/bgh">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_below="@id/goku_card"
+                android:layout_toEndOf="@id/luffy_card"
+                android:layout_alignParentEnd="true"
+                app:cardElevation="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="?attr/bgh">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/eren_icon"
-                    android:layout_width="120dp"
-                    android:layout_height="140dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/eren"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="?attr/primaryTextColor"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:background="?attr/bgh">
 
-                <Button
-                    android:id="@+id/eren_button"
-                    android:layout_width="90dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:text="1000 Points"
-                    android:textColor="@color/whiteCardColor"
-                    android:textAllCaps="false"
-                    android:background="@drawable/blue_with_rounded_corners"
-                    android:bottomRightRadius="10dp"
-                    android:bottomLeftRadius="10dp"
-                    android:topLeftRadius="10dp"
-                    android:topRightRadius="10dp"
-                    />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/eren_icon"
+                        android:layout_width="120dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/eren"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="?attr/primaryTextColor"/>
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/eren_button"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:text="1000 Points"
+                        android:textColor="@color/whiteCardColor"
+                        android:textAllCaps="false"
+                        android:background="@drawable/blue_with_rounded_corners"
+                        android:bottomRightRadius="10dp"
+                        android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="10dp"
+                        android:topRightRadius="10dp"
+                        />
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-    </GridLayout>
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
 
 </RelativeLayout>
