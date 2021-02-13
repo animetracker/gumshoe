@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +48,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsFragment extends Fragment
 {
-    private static final String TAG = "SettingsFragment";
     private Button darkMode;
     private NavController navController;
     private FragmentActivity mContext;
@@ -105,6 +105,16 @@ public class SettingsFragment extends Fragment
         Button changeProfile = view.findViewById(R.id.settings_change_profile);
         changeProfile.setOnClickListener(view15 ->
                 navController.navigate(R.id.action_to_store)
+        );
+
+        Button patreonDonate = view.findViewById(R.id.settings_donate);
+        patreonDonate.setOnClickListener(view16 ->
+                {
+                    String URL = "https://www.patreon.com/gumshoeteam";
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(URL));
+                    requireContext().startActivity(intent);
+                }
         );
 
         pointsText = view.findViewById(R.id.settings_points);
