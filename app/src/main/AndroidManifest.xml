@@ -29,12 +29,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".login.LoginActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".login.RegisterActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+
         <activity android:name=".tutorial.TutorialActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>

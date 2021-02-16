@@ -79,10 +79,23 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/settings_about"
+                android:id="@+id/settings_join_discord"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/settings_report_bug"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/series_row_background_bottom"
+                android:textColor="?attr/primaryTextColor"
+                android:gravity="center"
+                android:text="@string/join_discord"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/settings_about"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/settings_join_discord"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/series_row_background_bottom"
                 android:textColor="?attr/primaryTextColor"

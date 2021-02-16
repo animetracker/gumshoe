@@ -141,4 +141,5 @@
     <string name="hours_error_warning">Hours cannot be set to more than 23, use days instead!</string>
     <string name="days_error_warning">Days cannot be set to more than 6!</string>
     <string name="watch_ads_gain_points"><![CDATA[Watch Ads & gain points]]></string>
+    <string name="join_discord">Join Discord</string>
 </resources>

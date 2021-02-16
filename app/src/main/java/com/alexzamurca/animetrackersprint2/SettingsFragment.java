@@ -110,8 +110,19 @@ public class SettingsFragment extends Fragment
                 navController.navigate(R.id.action_to_store)
         );
 
+        Button joinDiscord = view.findViewById(R.id.settings_join_discord);
+        joinDiscord.setOnClickListener(view16 ->
+                {
+
+                    String URL = "https://discord.gg/s2C8eJ2";
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(URL));
+                    requireContext().startActivity(intent);
+                }
+        );
+
         Button patreonDonate = view.findViewById(R.id.settings_donate);
-        patreonDonate.setOnClickListener(view16 ->
+        patreonDonate.setOnClickListener(view17 ->
                 {
                     String URL = "https://www.patreon.com/gumshoeteam";
                     Intent intent = new Intent(Intent.ACTION_VIEW);
