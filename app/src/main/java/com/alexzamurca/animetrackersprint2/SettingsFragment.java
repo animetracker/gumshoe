@@ -207,7 +207,7 @@ public class SettingsFragment extends Fragment
         MobileAds.initialize(mContext, initializationStatus -> {
         });
         rewardedAd = new RewardedAd(mContext,
-                "ca-app-pub-1681443088426406/8196712694");
+                "ca-app-pub-6172304369506696/4572633194");
 
         RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
             @Override
