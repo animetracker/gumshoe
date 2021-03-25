@@ -37,6 +37,8 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
@@ -48,11 +50,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsFragment extends Fragment
 {
+    private static final String TAG = "SettingsFragment";
+
     private Button darkMode;
     private NavController navController;
     private FragmentActivity mContext;
-    RewardedAd rewardedAd;
-    RewardedAd tempLoadedAd;
+    private RewardedAd mRewardedAd;
+    private AdRequest adRequest;
     TextView pointsText;
     Button adButton;
 
@@ -204,6 +208,7 @@ public class SettingsFragment extends Fragment
         );
 
         //RewardAd
+        /*
         MobileAds.initialize(mContext, initializationStatus -> {
         });
         rewardedAd = new RewardedAd(mContext,
@@ -221,56 +226,19 @@ public class SettingsFragment extends Fragment
             }
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+         */
+
+        adRequest = new AdRequest.Builder().build();
+
+        loadRewardedAd();
 
         pointsText = view.findViewById(R.id.settings_points);
         adButton =view.findViewById(R.id.settings_ads);
 
         adButton.setOnClickListener(v ->
-        {
-            if (rewardedAd.isLoaded())
-            {
-                Activity activityContext = mContext;
-                RewardedAdCallback adCallback = new RewardedAdCallback() {
-                    @Override
-                    public void onRewardedAdOpened()
-                    {
-                        // Ad opened.
-                        tempLoadedAd = createAndLoadRewardedAd();
-                    }
 
-                    @Override
-                    public void onRewardedAdClosed()
-                    {
-                        // Ad closed.
-                        if(tempLoadedAd!=null)
-                        {
-                            rewardedAd = tempLoadedAd;
-                            tempLoadedAd = null;
-                        }
-                    }
-
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
-                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        int points = sharedPreferences.getInt("points", 0);
-                        editor.putInt("points", points + 50);
-                        editor.apply();
-                        pointsText.setText("GUMSHOE Points: "+ (points + 50));
-                    }
-
-                    @Override
-                    public void onRewardedAdFailedToShow(AdError adError) {
-                        // Ad failed to display.
-                    }
-                };
-                rewardedAd.show(activityContext, adCallback);
-            }
-            else {
-                Log.d("TAG", "The rewarded ad wasn't loaded yet.");
-            }
-        });
+            showRewardedAd()
+        );
         return view;
     }
 
@@ -290,22 +258,40 @@ public class SettingsFragment extends Fragment
         return ContextCompat.getDrawable(requireContext(), R.drawable.ic_profile);
     }
 
-    public RewardedAd createAndLoadRewardedAd() {
-        RewardedAd rewardedAd = new RewardedAd(mContext,
-                "ca-app-pub-3940256099942544/5224354917");
-        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+    private void loadRewardedAd()
+    {
+        RewardedAd.load(requireContext(), "ca-app-pub-6172304369506696/4572633194", adRequest, new RewardedAdLoadCallback()
+        {
             @Override
-            public void onRewardedAdLoaded() {
-                // Ad successfully loaded.
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                Log.d(TAG, "onAdFailedToLoad: " + loadAdError.getMessage());
+                mRewardedAd = null;
             }
 
             @Override
-            public void onRewardedAdFailedToLoad(LoadAdError adError) {
-                // Ad failed to load.
+            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                mRewardedAd = rewardedAd;
+                Log.d(TAG, "onAdLoaded");
             }
-        };
-        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
-        return rewardedAd;
+        });
+    }
+
+    private void showRewardedAd()
+    {
+        if (mRewardedAd != null) {
+            Activity activityContext = mContext;
+            mRewardedAd.show(activityContext, rewardItem -> {
+                // Handle the reward.
+                Log.d("TAG", "The user earned the reward.");
+                int rewardAmount = rewardItem.getAmount();
+                String rewardType = rewardItem.getType();
+                Log.d(TAG, "showAd: rewardType: " + rewardType + " and rewardAmount: " + rewardAmount);
+
+                loadRewardedAd();
+            });
+        } else {
+            Log.d("TAG", "The rewarded ad wasn't ready yet.");
+        }
     }
 
     @Override
