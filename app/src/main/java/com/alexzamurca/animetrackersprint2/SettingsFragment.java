@@ -43,6 +43,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -55,6 +56,7 @@ public class SettingsFragment extends Fragment
     private Button darkMode;
     private NavController navController;
     private FragmentActivity mContext;
+    private View mView;
     private RewardedAd mRewardedAd;
     private AdRequest adRequest;
     TextView pointsText;
@@ -71,51 +73,51 @@ public class SettingsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        mView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        Toolbar toolbar = view.findViewById(R.id.settings_toolbar_object);
+        Toolbar toolbar = mView.findViewById(R.id.settings_toolbar_object);
         setHasOptionsMenu(true);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
-        CircleImageView toolbarIcon = view.findViewById(R.id.settings_profile_image);
+        CircleImageView toolbarIcon = mView.findViewById(R.id.settings_profile_image);
         toolbarIcon.setOnClickListener(v->
                 navController.navigate(R.id.storeFragment)
         );
         Drawable profileIcon = getProfileIcon();
         toolbarIcon.setImageDrawable(profileIcon);
 
-        Button reportBug = view.findViewById(R.id.settings_report_bug);
-        reportBug.setOnClickListener(view1 ->
+        Button reportBug = mView.findViewById(R.id.settings_report_bug);
+        reportBug.setOnClickListener(mView1 ->
         {
             ReportBugFragment dialogReportBug = new ReportBugFragment();
             dialogReportBug.show(mContext.getSupportFragmentManager(), "dialog_report_button");
         });
 
-        Button aboutUs = view.findViewById(R.id.settings_about);
-        aboutUs.setOnClickListener(view12 ->
+        Button aboutUs = mView.findViewById(R.id.settings_about);
+        aboutUs.setOnClickListener(mView12 ->
         {
-            NavController navController = Navigation.findNavController(view);
+            NavController navController = Navigation.findNavController(mView);
             navController.navigate(R.id.action_settingsFragment_to_aboutFragment);
         });
 
-        Button tutorial = view.findViewById(R.id.settings_tutorial);
-        tutorial.setOnClickListener(view13 -> {
-            NavController navController = Navigation.findNavController(view);
+        Button tutorial = mView.findViewById(R.id.settings_tutorial);
+        tutorial.setOnClickListener(mView13 -> {
+            NavController navController = Navigation.findNavController(mView);
             navController.navigate(R.id.action_settingsFragment_to_tutorialActivity);
         });
 
-        Button clearList = view.findViewById(R.id.settings_clear_list);
-        clearList.setOnClickListener(view14 ->
+        Button clearList = mView.findViewById(R.id.settings_clear_list);
+        clearList.setOnClickListener(mView14 ->
             clearLocalSeriesList()
         );
 
-        Button changeProfile = view.findViewById(R.id.settings_change_profile);
-        changeProfile.setOnClickListener(view15 ->
+        Button changeProfile = mView.findViewById(R.id.settings_change_profile);
+        changeProfile.setOnClickListener(mView15 ->
                 navController.navigate(R.id.action_to_store)
         );
 
-        Button joinDiscord = view.findViewById(R.id.settings_join_discord);
-        joinDiscord.setOnClickListener(view16 ->
+        Button joinDiscord = mView.findViewById(R.id.settings_join_discord);
+        joinDiscord.setOnClickListener(mView16 ->
                 {
 
                     String URL = "https://discord.gg/s2C8eJ2";
@@ -125,8 +127,8 @@ public class SettingsFragment extends Fragment
                 }
         );
 
-        Button patreonDonate = view.findViewById(R.id.settings_donate);
-        patreonDonate.setOnClickListener(view17 ->
+        Button patreonDonate = mView.findViewById(R.id.settings_donate);
+        patreonDonate.setOnClickListener(mView17 ->
                 {
                     String URL = "https://www.patreon.com/gumshoeteam";
                     Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -135,15 +137,15 @@ public class SettingsFragment extends Fragment
                 }
         );
 
-        pointsText = view.findViewById(R.id.settings_points);
+        pointsText = mView.findViewById(R.id.settings_points);
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
         int points = sharedPreferences.getInt("points", 0);
         pointsText.setText("GUMSHOE Points: " + points);
 
 
         // This method is used to create the dark mode using the button
-        darkMode= view.findViewById(R.id.settings_dark_mode_button);
-        darkMode.setOnClickListener(view15 ->
+        darkMode= mView.findViewById(R.id.settings_dark_mode_button);
+        darkMode.setOnClickListener(mView15 ->
             {
                 SharedPreferences settingsSharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsSharedPreferences.edit();
@@ -154,7 +156,7 @@ public class SettingsFragment extends Fragment
                     String darkModeOffString = "Dark Mode: Off";
                     darkMode.setText(darkModeOffString);
                     darkMode.setTextColor(ContextCompat.getColor(requireContext(), R.color.light));
-                    BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_view);
+                    BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_nav_view);
                     bottomNavigationView.setBackgroundResource(R.color.colorWhite);
                     int[][] states = new int[][] {
                             new int[] { android.R.attr.state_enabled}, // enabled
@@ -206,40 +208,19 @@ public class SettingsFragment extends Fragment
                 navController.navigate(R.id.settingsFragment);
             }
         );
-
-        //RewardAd
-        /*
-        MobileAds.initialize(mContext, initializationStatus -> {
-        });
-        rewardedAd = new RewardedAd(mContext,
-                "ca-app-pub-6172304369506696/4572633194");
-
-        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
-            @Override
-            public void onRewardedAdLoaded() {
-                // Ad successfully loaded.
-            }
-
-            @Override
-            public void onRewardedAdFailedToLoad(LoadAdError adError) {
-                // Ad failed to load.
-            }
-        };
-        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
-         */
-
+        
         adRequest = new AdRequest.Builder().build();
 
         loadRewardedAd();
 
-        pointsText = view.findViewById(R.id.settings_points);
-        adButton =view.findViewById(R.id.settings_ads);
+        pointsText = mView.findViewById(R.id.settings_points);
+        adButton =mView.findViewById(R.id.settings_ads);
 
         adButton.setOnClickListener(v ->
 
             showRewardedAd()
         );
-        return view;
+        return mView;
     }
 
     private Drawable getProfileIcon()
@@ -264,14 +245,16 @@ public class SettingsFragment extends Fragment
         {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                Log.d(TAG, "onAdFailedToLoad: " + loadAdError.getMessage());
+                Snackbar.make(mView, "Ads are not working at the moment, try again later.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
                 mRewardedAd = null;
             }
 
             @Override
             public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                 mRewardedAd = rewardedAd;
-                Log.d(TAG, "onAdLoaded");
+                Snackbar.make(mView, "An ad is loaded, ready to be watched.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
     }
@@ -282,16 +265,21 @@ public class SettingsFragment extends Fragment
             Activity activityContext = mContext;
             mRewardedAd.show(activityContext, rewardItem -> {
                 // Handle the reward.
-                Log.d("TAG", "The user earned the reward.");
                 int rewardAmount = rewardItem.getAmount();
                 String rewardType = rewardItem.getType();
-                Log.d(TAG, "showAd: rewardType: " + rewardType + " and rewardAmount: " + rewardAmount);
-
-                loadRewardedAd();
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Profile Icons", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                int points = sharedPreferences.getInt("points", 0);
+                editor.putInt("points", points + rewardAmount);
+                editor.apply();
+                pointsText.setText("GUMSHOE Points: "+ (points + rewardAmount));
             });
         } else {
+            Snackbar.make(mView, "Ad has not loaded yet, give it some time to load.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             Log.d("TAG", "The rewarded ad wasn't ready yet.");
         }
+        loadRewardedAd();
     }
 
     @Override
@@ -320,7 +308,7 @@ public class SettingsFragment extends Fragment
         {
             Intent myIntent = new Intent(Intent.ACTION_SEND);
             myIntent.setType("text/plain");
-            String shareBody = "Your body here";
+            String shareBody = "Do you watch Anime? Know when the new episodes air! https://play.google.com/store/apps/details?id=com.alexzamurca.animetrackersprint2";
             myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
             startActivity((Intent.createChooser(myIntent, "Share using")));
         }
