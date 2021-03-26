@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: "androidx.navigation.safeargs"
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.alexzamurca.animetrackersprint2"
         minSdkVersion 27
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 30
+        versionCode 3
+        versionName '3.0'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
